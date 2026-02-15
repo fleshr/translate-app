@@ -1,0 +1,26 @@
+.text {
+  --text-fz: var(--mantine-font-size-sm);
+  --text-lh: var(--mantine-line-height-sm);
+
+  --text-color-error: var(--mantine-color-red-8);
+  --text-color-debug: var(--mantine-color-violet-8);
+  --text-color-info: var(--mantine-color-dark-8);
+}
+
+[data-mantine-color-scheme="dark"] .text {
+  --text-color-error: var(--mantine-color-red-4);
+  --text-color-debug: var(--mantine-color-violet-4);
+  --text-color-info: var(--mantine-color-dark-2);
+}
+
+.text[data-type="error"] {
+  --text-color: var(--text-color-error);
+}
+
+.text[data-type="debug"] {
+  --text-color: var(--text-color-debug);
+}
+
+.text[data-type="info"] {
+  --text-color: var(--text-color-info);
+}
