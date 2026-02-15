@@ -1,0 +1,14 @@
+.root {
+  height: 30rem;
+  --border-color: var(--mantine-color-gray-3);
+}
+
+[data-mantine-color-scheme="dark"] .root {
+  --border-color: var(--mantine-color-dark-4);
+}
+
+.list {
+  border-inline-end: 1px solid var(--border-color);
+  margin-inline-end: var(--mantine-spacing-md);
+  padding-inline-end: var(--mantine-spacing-md);
+}

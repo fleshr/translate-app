@@ -1,0 +1,25 @@
+.root {
+  height: 100%;
+  --border-color: var(--mantine-color-gray-3);
+}
+
+[data-mantine-color-scheme="dark"] .root {
+  --border-color: var(--mantine-color-dark-4);
+}
+
+.list {
+  border-inline-end: 1px solid var(--border-color);
+  margin: var(--mantine-spacing-xs);
+  padding-inline-end: var(--mantine-spacing-xs);
+}
+
+.tab {
+  width: calc(2.125rem * var(--mantine-scale));
+  height: calc(2.125rem * var(--mantine-scale));
+  padding: 0;
+}
+
+.content {
+  padding: var(--mantine-spacing-xs);
+  padding-inline-start: 0;
+}

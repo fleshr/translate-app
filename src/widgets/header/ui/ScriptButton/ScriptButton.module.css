@@ -1,0 +1,10 @@
+.modalBody {
+  position: relative;
+  padding: 0;
+}
+
+.closeButton {
+  position: absolute;
+  top: var(--mantine-spacing-xs);
+  right: var(--mantine-spacing-xs);
+}
