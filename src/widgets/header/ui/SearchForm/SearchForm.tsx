@@ -7,8 +7,7 @@ import {
   TextInput,
   type ComboboxItem,
 } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { zod4Resolver } from "mantine-form-zod-resolver";
+import { schemaResolver, useForm } from "@mantine/form";
 import { useIntlayer } from "react-intlayer";
 import {
   SearchFormSchema,
@@ -42,7 +41,7 @@ export const SearchForm = (props: SearchFormProps) => {
 
   const form = useForm<SearchFormValues>({
     onValuesChange: onFormChange,
-    validate: zod4Resolver(SearchFormSchema),
+    validate: schemaResolver(SearchFormSchema, { sync: true }),
     initialValues: {
       searchText: "",
       replaceText: "",

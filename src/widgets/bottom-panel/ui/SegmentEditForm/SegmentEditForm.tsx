@@ -1,8 +1,7 @@
 import type { BaseProps } from "@/shared/model/component";
 import { type TranslationBaseSegment } from "@/shared/model/translation";
 import { Stack, Textarea } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { zod4Resolver } from "mantine-form-zod-resolver";
+import { schemaResolver, useForm } from "@mantine/form";
 import { useIntlayer } from "react-intlayer";
 import {
   segmentEditFormSchema,
@@ -30,7 +29,7 @@ export const SegmentEditForm = (props: BaseProps<SegmentEditFormProps>) => {
 
   const form = useForm<SegmentEditFormValues>({
     onValuesChange: onChange,
-    validate: zod4Resolver(segmentEditFormSchema),
+    validate: schemaResolver(segmentEditFormSchema, { sync: true }),
     enhanceGetInputProps: () => ({ disabled }),
     initialValues: {
       originalText,

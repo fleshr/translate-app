@@ -1,4 +1,8 @@
-import { MantineProvider, type MantineProviderProps } from "@mantine/core";
+import {
+  MantineProvider,
+  v8CssVariablesResolver,
+  type MantineProviderProps,
+} from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import { Locales, type LocalesValues } from "intlayer";
 import type { PropsWithChildren } from "react";
@@ -27,6 +31,7 @@ export const Providers = (props: ProvidersProps) => {
         env={env}
         theme={defaultTheme}
         forceColorScheme={colorScheme}
+        cssVariablesResolver={v8CssVariablesResolver}
       >
         <Notifications />
         {children}

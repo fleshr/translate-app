@@ -6,7 +6,7 @@ import { ActionIconWithTooltip } from "./ActionIconWithTooltip";
 describe("shared/ui/ActionIconWithTooltip", () => {
   it("should render button and tooltip", async () => {
     const { getByTestId, findByTestId } = render(
-      <ActionIconWithTooltip label="Tooltip" children="Button" />,
+      <ActionIconWithTooltip label="Tooltip">Button</ActionIconWithTooltip>,
     );
 
     const button = getByTestId("ActionIconWithTooltip");

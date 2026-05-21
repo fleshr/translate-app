@@ -1,8 +1,7 @@
 import type { BaseProps } from "@/shared/model/component";
 import type { FormField } from "@/shared/model/form";
 import { NumberInput, Stack, Textarea, TextInput } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { zod4Resolver } from "mantine-form-zod-resolver";
+import { schemaResolver, useForm } from "@mantine/form";
 import type { ReactElement } from "react";
 import { mapToObj } from "remeda";
 import { z } from "zod";
@@ -29,7 +28,7 @@ export const DynamicForm = (props: BaseProps<DynamicFormProps>) => {
   } = props;
 
   const form = useForm({
-    validate: schema && zod4Resolver(schema),
+    validate: schema && schemaResolver(schema, { sync: true }),
     initialValues,
   });
 
