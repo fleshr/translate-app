@@ -12,3 +12,11 @@ vi.mock("nanoid", () => ({ nanoid: vi.fn(() => "id") }));
 afterEach(() => {
   cleanup();
 });
+
+// https://mantine.dev/guides/vitest/
+Object.defineProperty(document, "fonts", {
+  value: {
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+  },
+});

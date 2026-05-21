@@ -18,7 +18,7 @@ export const ExtractedFileSegmentSchema = ExtractedBaseSegmentSchema.extend({
   type: z.literal("file"),
 });
 
-export const ExtractedSegmentSchema = z.discriminatedUnion("key", [
+export const ExtractedSegmentSchema = z.discriminatedUnion("type", [
   ExtractedCommonSegmentSchema,
   ExtractedFileSegmentSchema,
 ]);

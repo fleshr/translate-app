@@ -12,6 +12,7 @@ export const theme = createTheme({
   autoContrast: true,
   cursorType: "pointer",
   primaryColor: "dark",
+  defaultRadius: "sm",
   components: {
     ActionIcon: ActionIcon.extend({
       defaultProps: {

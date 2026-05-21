@@ -5,8 +5,7 @@ import {
   useMantineColorScheme,
   type ComboboxItem,
 } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { zod4Resolver } from "mantine-form-zod-resolver";
+import { schemaResolver, useForm } from "@mantine/form";
 import { useIntlayer, useLocale } from "react-intlayer";
 import {
   GeneralSettingsFormSchema,
@@ -32,11 +31,10 @@ export const GeneralSettings = () => {
   }));
 
   const form = useForm<GeneralSettingsFormValues>({
-    validate: zod4Resolver(GeneralSettingsFormSchema),
+    validate: schemaResolver(GeneralSettingsFormSchema, { sync: true }),
     initialValues: {
       theme: colorScheme,
-      // FIXME: fix locale explicit type assertion
-      language: locale as "en" | "ru",
+      language: locale,
     },
   });
 

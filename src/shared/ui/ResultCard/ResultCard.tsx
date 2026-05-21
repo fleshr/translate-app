@@ -86,7 +86,7 @@ export const ResultCard = (props: BaseProps<ResultCardProps>) => {
           )}
           <Text size="sm">{title}</Text>
         </Group>
-        <Collapse in={opened} data-testid={`${dataTestId}.Collapse`}>
+        <Collapse expanded={opened} data-testid={`${dataTestId}.Collapse`}>
           <Divider mx="sm" />
           <Stack gap={0} py={4} data-testid={`${dataTestId}.List`}>
             {items.map(({ label, value }, index) => (

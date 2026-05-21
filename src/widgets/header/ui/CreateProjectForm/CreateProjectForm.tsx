@@ -3,9 +3,8 @@ import { initProject } from "@/shared/model/projectStore";
 import { initSession } from "@/shared/model/sessionStore";
 import { initTranslation } from "@/shared/model/translationStore";
 import { Button, Group, Select, Stack, type ComboboxItem } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { schemaResolver, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
-import { zod4Resolver } from "mantine-form-zod-resolver";
 import { useIntlayer } from "react-intlayer";
 import {
   CreateProjectFormSchema,
@@ -28,7 +27,7 @@ export const CreateProjectForm = (props: CreateProjectFormProps) => {
   }));
 
   const form = useForm<CreateProjectFormValues>({
-    validate: zod4Resolver(CreateProjectFormSchema),
+    validate: schemaResolver(CreateProjectFormSchema, { sync: true }),
   });
 
   const handleSubmit = form.onSubmit((values) => {
