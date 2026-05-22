@@ -1,13 +1,13 @@
-import { AnyModuleSchema, type AnyModule } from "@/shared/model/module";
+import { ModuleUnknownSchema, type ModuleUnknown } from "@/shared/model/module";
 
 export const createModuleFromCode = async (
   code: string,
-): Promise<AnyModule> => {
+): Promise<ModuleUnknown> => {
   const blob = new Blob([code], { type: "text/javascript" });
   const url = URL.createObjectURL(blob);
 
   try {
-    return AnyModuleSchema.parse(await import(/* @vite-ignore */ url));
+    return ModuleUnknownSchema.parse(await import(/* @vite-ignore */ url));
   } finally {
     URL.revokeObjectURL(url);
   }

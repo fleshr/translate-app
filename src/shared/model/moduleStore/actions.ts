@@ -1,7 +1,7 @@
-import type { Module } from "../module/types";
+import type { ModuleExternal } from "../module/types";
 import { useModuleStore, type State } from "./store";
 
-export const addModule = (type: keyof State, module: Module) => {
+export const addModule = (type: keyof State, module: ModuleExternal) => {
   useModuleStore.setState(
     (state) => {
       state[type][module.id] = module;
