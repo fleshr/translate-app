@@ -1,6 +1,6 @@
 import { createParserFromCode } from "@/shared/lib/module";
 import { render, resetStore } from "@/shared/lib/testing";
-import { getModuleMock } from "@/shared/mocks/module";
+import { getModuleExternalMock } from "@/shared/mocks/module";
 import {
   addModule,
   removeModule,
@@ -13,22 +13,26 @@ import { fileOpen } from "browser-fs-access";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ParsersManager } from "./ParsersManager";
 
+const testFile = new File(["test code"], "file.js");
+
 vi.mock("@/shared/model/moduleStore", { spy: true });
 vi.mock("@/shared/lib/module", { spy: true });
+
 vi.mocked(createParserFromCode).mockResolvedValue({
   name: "Test Module",
   version: "1.0.0",
   shortName: "test",
 } as Parser);
 
-const testFile = new File(["test code"], "file.js");
-
 describe("widgets/header/ui/ParsersManager", () => {
   beforeEach(() => {
     useModuleStore.setState({
       parsers: {
-        "test@1.0.0": getModuleMock(),
-        "test@2.0.0": getModuleMock({ id: "test@2.0.0", version: "2.0.0" }),
+        "test@1.0.0": getModuleExternalMock(),
+        "test@2.0.0": getModuleExternalMock({
+          id: "test@2.0.0",
+          version: "2.0.0",
+        }),
       },
     });
   });
@@ -72,6 +76,7 @@ describe("widgets/header/ui/ParsersManager", () => {
       version: "1.0.0",
       shortName: "test",
       code: "test code",
+      type: "external",
     });
     expect(notifications.show).toHaveBeenCalled();
   });

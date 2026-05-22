@@ -28,7 +28,15 @@ export const ParsersManager = () => {
       const { name, version, shortName } = await createParserFromCode(code);
       const id = `${shortName}@${version}`;
 
-      addModule("parsers", { id, name, version, shortName, code });
+      addModule("parsers", {
+        id,
+        name,
+        version,
+        shortName,
+        code,
+        type: "external",
+      });
+
       notifications.show({ message: content.successMessage });
     } catch {
       notifications.show({ message: content.errorMessage });
