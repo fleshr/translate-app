@@ -11,6 +11,10 @@ export default {
       en: "Select parser",
       ru: "Выберите парсер",
     }),
+    parserSaveFullyCheckboxLabel: t({
+      en: "Save parser fully in project",
+      ru: "Сохранить парсер полностью в проекте",
+    }),
     cancelButtonLabel: t({
       en: "Cancel",
       ru: "Отменить",

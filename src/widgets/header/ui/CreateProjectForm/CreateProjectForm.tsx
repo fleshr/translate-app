@@ -1,8 +1,19 @@
-import { selectBaseModules, useModuleStore } from "@/shared/model/moduleStore";
+import {
+  selectModule,
+  selectModules,
+  useModuleStore,
+} from "@/shared/model/moduleStore";
 import { initProject } from "@/shared/model/projectStore";
 import { initSession } from "@/shared/model/sessionStore";
 import { initTranslation } from "@/shared/model/translationStore";
-import { Button, Group, Select, Stack, type ComboboxItem } from "@mantine/core";
+import {
+  Button,
+  Checkbox,
+  Group,
+  Select,
+  Stack,
+  type ComboboxItem,
+} from "@mantine/core";
 import { schemaResolver, useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { useIntlayer } from "react-intlayer";
@@ -19,7 +30,7 @@ interface CreateProjectFormProps {
 export const CreateProjectForm = (props: CreateProjectFormProps) => {
   const { onCancel, onSubmit } = props;
   const content = useIntlayer("CreateProjectForm");
-  const parsers = useModuleStore(selectBaseModules("parsers"));
+  const parsers = useModuleStore(selectModules("parsers"));
 
   const items: ComboboxItem[] = parsers.map((parser) => ({
     label: `${parser.name} (${parser.version})`,
@@ -28,12 +39,24 @@ export const CreateProjectForm = (props: CreateProjectFormProps) => {
 
   const form = useForm<CreateProjectFormValues>({
     validate: schemaResolver(CreateProjectFormSchema, { sync: true }),
+    initialValues: {
+      parser: "",
+      parserSaveFully: false,
+    },
   });
 
   const handleSubmit = form.onSubmit((values) => {
+    const { parser, parserSaveFully } = values;
+    const parserModule = selectModule(
+      "parsers",
+      parser,
+    )(useModuleStore.getState());
+
     initSession([]);
-    initProject(values);
     initTranslation([]);
+    initProject({
+      parser: parserSaveFully && parserModule ? parserModule : parser,
+    });
 
     notifications.show({ message: content.createdNotification });
     onSubmit?.(values);
@@ -42,14 +65,22 @@ export const CreateProjectForm = (props: CreateProjectFormProps) => {
   return (
     <form onSubmit={handleSubmit} data-testid="CreateProjectForm">
       <Stack>
-        <Select
-          data={items}
-          label={content.parserSelectLabel}
-          placeholder={content.parserSelectPlaceholder.value}
-          data-testid="CreateProjectForm.ParserSelect"
-          key={form.key("parser")}
-          {...form.getInputProps("parser")}
-        />
+        <Stack gap="sm">
+          <Select
+            data={items}
+            label={content.parserSelectLabel}
+            placeholder={content.parserSelectPlaceholder.value}
+            data-testid="CreateProjectForm.ParserSelect"
+            key={form.key("parser")}
+            {...form.getInputProps("parser")}
+          />
+          <Checkbox
+            label={content.parserSaveFullyCheckboxLabel}
+            data-testid="CreateProjectForm.ParserSaveFullyCheckbox"
+            key={form.key("parserSaveFully")}
+            {...form.getInputProps("parserSaveFully")}
+          />
+        </Stack>
         <Group justify="flex-end">
           <Button
             variant="outline"
@@ -60,7 +91,7 @@ export const CreateProjectForm = (props: CreateProjectFormProps) => {
           </Button>
           <Button
             type="submit"
-            disabled={!form.isValid()}
+            disabled={!form.isDirty("parser")}
             data-testid="CreateProjectForm.CreateButton"
           >
             {content.createButtonLabel}

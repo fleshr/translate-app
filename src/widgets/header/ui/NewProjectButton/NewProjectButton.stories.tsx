@@ -1,5 +1,5 @@
 import { withStoreState } from "@/shared/lib/storybook";
-import { getModuleMock } from "@/shared/mocks/module";
+import { getModuleExternalMock } from "@/shared/mocks/module";
 import { useModuleStore } from "@/shared/model/moduleStore";
 import { useSessionStore } from "@/shared/model/sessionStore";
 import type { Meta, StoryObj } from "@storybook/react-vite";
@@ -10,7 +10,7 @@ const meta = {
   component: NewProjectButton,
   decorators: [
     withStoreState(useModuleStore, {
-      parsers: { "test@1.0.0": getModuleMock() },
+      parsers: { "test@1.0.0": getModuleExternalMock() },
     }),
   ],
 } satisfies Meta<typeof NewProjectButton>;

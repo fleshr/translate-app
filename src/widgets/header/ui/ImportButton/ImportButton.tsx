@@ -1,9 +1,4 @@
-import { createParserFromCode } from "@/shared/lib/module";
-import { selectModule, useModuleStore } from "@/shared/model/moduleStore";
-import {
-  selectProjectParser,
-  useProjectStore,
-} from "@/shared/model/projectStore";
+import { resolveParser } from "@/shared/lib/parser";
 import {
   initSession,
   selectIsTranslating,
@@ -23,19 +18,14 @@ export const ImportButton = () => {
 
   const handleImportFiles = async () => {
     try {
-      const selectedParser = selectProjectParser(useProjectStore.getState());
-      const parserMeta = selectModule(
-        "parsers",
-        selectedParser,
-      )(useModuleStore.getState());
+      const parser = await resolveParser();
 
-      if (!parserMeta) {
+      if (!parser) {
         notifications.show({ message: content.parserNotFoundMessage });
         return;
       }
 
       const dirFiles = await directoryOpen({ recursive: true });
-      const parser = await createParserFromCode(parserMeta.code);
       const resources = await extractTranslations(dirFiles, parser);
 
       initSession(resources);

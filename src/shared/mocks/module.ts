@@ -1,18 +1,22 @@
 import { createMockFactory } from "../lib/testing";
-import type { BaseModule, Module } from "../model/module";
+import type { ModuleBuiltin, ModuleExternal } from "../model/module";
 
-const mockBaseModule: BaseModule = {
+const mockModuleExternal: ModuleExternal = {
   id: "test@1.0.0",
   name: "Test Module",
   version: "1.0.0",
   shortName: "test",
-};
-
-export const getBaseModuleMock = createMockFactory(mockBaseModule);
-
-const mockModule: Module = {
-  ...mockBaseModule,
+  type: "external",
   code: "test code",
 };
 
-export const getModuleMock = createMockFactory(mockModule);
+const mockModuleBuiltin: ModuleBuiltin = {
+  id: "test@1.0.0",
+  name: "Test Module",
+  version: "1.0.0",
+  shortName: "test",
+  type: "builtin",
+};
+
+export const getModuleExternalMock = createMockFactory(mockModuleExternal);
+export const getModuleBuiltinMock = createMockFactory(mockModuleBuiltin);

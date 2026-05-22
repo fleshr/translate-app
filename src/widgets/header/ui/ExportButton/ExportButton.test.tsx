@@ -1,10 +1,7 @@
-import { createParserFromCode } from "@/shared/lib/module";
+import { resolveParser } from "@/shared/lib/parser";
 import { render, resetStore } from "@/shared/lib/testing";
-import { getModuleMock } from "@/shared/mocks/module";
 import { getTranslationStoreStateMock } from "@/shared/mocks/translationStore";
-import { useModuleStore } from "@/shared/model/moduleStore";
 import type { Parser } from "@/shared/model/parser";
-import { useProjectStore } from "@/shared/model/projectStore";
 import { useSessionStore } from "@/shared/model/sessionStore";
 import { useTranslationStore } from "@/shared/model/translationStore";
 import { notifications } from "@mantine/notifications";
@@ -14,27 +11,22 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { exportTranslationToZip } from "../../lib/exportTranslationToZip/exportTranslationToZip";
 import { ExportButton } from "./ExportButton";
 
-vi.mock("@/shared/lib/module");
-vi.mocked(createParserFromCode).mockResolvedValue({} as Parser);
-
 const testBlob = new Blob(["test"]);
+const testParser = { name: "test" } as Parser;
+
+vi.mock("@/shared/lib/parser");
+vi.mocked(resolveParser).mockResolvedValue(testParser);
+
 vi.mock("../../lib/exportTranslationToZip/exportTranslationToZip");
 vi.mocked(exportTranslationToZip).mockResolvedValue(testBlob);
 
 describe("widgets/header/ui/ExportButton", () => {
   beforeEach(() => {
     useTranslationStore.setState(getTranslationStoreStateMock());
-    useProjectStore.setState({ parser: "test@1.0.0" });
-    useModuleStore.setState({ parsers: { "test@1.0.0": getModuleMock() } });
   });
 
   afterEach(() => {
-    resetStore(
-      useSessionStore,
-      useProjectStore,
-      useModuleStore,
-      useTranslationStore,
-    );
+    resetStore(useSessionStore, useTranslationStore);
   });
 
   it("should be disabled when translating", () => {
@@ -51,7 +43,6 @@ describe("widgets/header/ui/ExportButton", () => {
     const button = getByTestId("ExportButton");
     await userEvent.click(button);
 
-    expect(createParserFromCode).toHaveBeenCalledWith("test code");
     expect(exportTranslationToZip).toHaveBeenCalledWith(
       [
         {
@@ -96,7 +87,7 @@ describe("widgets/header/ui/ExportButton", () => {
           type: "file",
         },
       ],
-      {},
+      testParser,
     );
     expect(fileSave).toHaveBeenCalledWith(testBlob, {
       fileName: "translation.zip",
@@ -105,7 +96,7 @@ describe("widgets/header/ui/ExportButton", () => {
   });
 
   it("should show notification if parser not found", async () => {
-    useProjectStore.setState({ parser: "unknown" });
+    vi.mocked(resolveParser).mockResolvedValue(undefined);
     const { getByTestId } = render(<ExportButton />);
 
     const button = getByTestId("ExportButton");
@@ -116,7 +107,7 @@ describe("widgets/header/ui/ExportButton", () => {
   });
 
   it("should catch errors and show notification", async () => {
-    vi.mocked(createParserFromCode).mockRejectedValue(new Error("error"));
+    vi.mocked(resolveParser).mockRejectedValue(new Error("error"));
     const { getByTestId } = render(<ExportButton />);
 
     const button = getByTestId("ExportButton");

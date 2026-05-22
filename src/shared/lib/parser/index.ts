@@ -1,0 +1,1 @@
+export { resolveParser } from "./resolveParser";
