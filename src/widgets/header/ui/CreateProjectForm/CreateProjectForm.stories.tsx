@@ -1,5 +1,5 @@
 import { withStoreState } from "@/shared/lib/storybook";
-import { getModuleMock } from "@/shared/mocks/module";
+import { getModuleExternalMock } from "@/shared/mocks/module";
 import { useModuleStore } from "@/shared/model/moduleStore";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn } from "storybook/test";
@@ -11,7 +11,7 @@ const meta = {
   args: { onCancel: fn(), onSubmit: fn() },
   decorators: [
     withStoreState(useModuleStore, {
-      parsers: { "test@1.0.0": getModuleMock() },
+      parsers: { "test@1.0.0": getModuleExternalMock() },
     }),
   ],
 } satisfies Meta<typeof CreateProjectForm>;

@@ -1,5 +1,5 @@
 import { render, resetStore } from "@/shared/lib/testing";
-import { getModuleMock } from "@/shared/mocks/module";
+import { getModuleExternalMock } from "@/shared/mocks/module";
 import { useModuleStore } from "@/shared/model/moduleStore";
 import { useSessionStore } from "@/shared/model/sessionStore";
 import { userEvent } from "@testing-library/user-event";
@@ -8,7 +8,9 @@ import { NewProjectButton } from "./NewProjectButton";
 
 describe("widgets/header/ui/NewProjectButton", () => {
   beforeEach(() => {
-    useModuleStore.setState({ parsers: { "test@1.0.0": getModuleMock() } });
+    useModuleStore.setState({
+      parsers: { "test@1.0.0": getModuleExternalMock() },
+    });
   });
 
   afterEach(() => {
