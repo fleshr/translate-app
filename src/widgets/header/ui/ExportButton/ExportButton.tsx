@@ -1,9 +1,4 @@
-import { createParserFromCode } from "@/shared/lib/module";
-import { selectModule, useModuleStore } from "@/shared/model/moduleStore";
-import {
-  selectProjectParser,
-  useProjectStore,
-} from "@/shared/model/projectStore";
+import { resolveParser } from "@/shared/lib/parser";
 import {
   selectIsTranslating,
   useSessionStore,
@@ -25,22 +20,18 @@ export const ExportButton = () => {
 
   const handleSaveProject = async () => {
     try {
-      const selectedParser = selectProjectParser(useProjectStore.getState());
-      const parserMeta = selectModule(
-        "parsers",
-        selectedParser,
-      )(useModuleStore.getState());
+      const parser = await resolveParser();
 
-      if (!parserMeta) {
+      if (!parser) {
         notifications.show({ message: content.parserNotFoundMessage });
         return;
       }
 
       const resources = selectResources(useTranslationStore.getState());
-      const parser = await createParserFromCode(parserMeta.code);
       const blob = await exportTranslationToZip(resources, parser);
 
       await fileSave(blob, { fileName: "translation.zip" });
+
       notifications.show({ message: content.successMessage });
     } catch {
       notifications.show({ message: content.errorMessage });
