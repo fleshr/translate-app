@@ -18,6 +18,7 @@ vi.mock("@/shared/lib/module");
 vi.mocked(createParserFromCode).mockResolvedValue({ name: "test" } as Parser);
 
 vi.mock("@/shared/constants/parsers", () => ({
+  builtinParsersMeta: {},
   builtinParsers: { "test2@1.0.0": { name: "test2" } as Parser },
 }));
 

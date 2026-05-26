@@ -1,5 +1,8 @@
 import { render, resetStore } from "@/shared/lib/testing";
-import { getModuleExternalMock } from "@/shared/mocks/module";
+import {
+  getModuleBuiltinMock,
+  getModuleExternalMock,
+} from "@/shared/mocks/module";
 import { useModuleStore } from "@/shared/model/moduleStore";
 import { initProject } from "@/shared/model/projectStore";
 import { initSession } from "@/shared/model/sessionStore";
@@ -9,7 +12,10 @@ import { userEvent } from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CreateProjectForm } from "./CreateProjectForm";
 
-const testParser = getModuleExternalMock();
+const testParser = getModuleExternalMock({
+  id: "test1@1.0.0",
+  name: "test1",
+});
 
 vi.mock("@/shared/model/sessionStore", { spy: true });
 vi.mock("@/shared/model/projectStore", { spy: true });
@@ -17,25 +23,26 @@ vi.mock("@/shared/model/translationStore", { spy: true });
 
 describe("widgets/header/ui/CreateProjectForm", () => {
   beforeEach(() => {
-    useModuleStore.setState({ parsers: { "test@1.0.0": testParser } });
+    useModuleStore.setState({
+      parsers: {
+        "test1@1.0.0": testParser,
+        "test2@1.0.0": getModuleBuiltinMock({
+          id: "test2@1.0.0",
+          name: "test2",
+        }),
+      },
+    });
   });
 
   afterEach(() => {
     resetStore(useModuleStore);
   });
 
-  it("submit button should be disabled when form is not filled", () => {
+  it("should init parser values with first parser", () => {
     const { getByTestId } = render(<CreateProjectForm />);
-    expect(getByTestId("CreateProjectForm.CreateButton")).toBeDisabled();
-  });
-
-  it("submit button should be enabled when form is filled", async () => {
-    const { getByTestId, getByRole } = render(<CreateProjectForm />);
-
-    await userEvent.click(getByTestId("CreateProjectForm.ParserSelect"));
-    await userEvent.click(getByRole("option", { name: "Test Module (1.0.0)" }));
-
-    expect(getByTestId("CreateProjectForm.CreateButton")).toBeEnabled();
+    expect(getByTestId("CreateProjectForm.ParserSelect")).toHaveValue(
+      "test1 (1.0.0)",
+    );
   });
 
   it("should call onCancel when cancel button is clicked", async () => {
@@ -56,24 +63,42 @@ describe("widgets/header/ui/CreateProjectForm", () => {
     );
 
     await userEvent.click(getByTestId("CreateProjectForm.ParserSelect"));
-    await userEvent.click(getByRole("option", { name: "Test Module (1.0.0)" }));
+    await userEvent.click(getByRole("option", { name: "test2 (1.0.0)" }));
     await userEvent.click(getByTestId("CreateProjectForm.CreateButton"));
 
     expect(handleCreate).toHaveBeenCalledWith({
-      parser: "test@1.0.0",
+      parser: "test2@1.0.0",
       parserSaveFully: false,
     });
+  });
+
+  it("should disable checkbox when parser is not external", async () => {
+    const { getByTestId, getByRole } = render(<CreateProjectForm />);
+
+    await userEvent.click(getByTestId("CreateProjectForm.ParserSelect"));
+    await userEvent.click(getByRole("option", { name: "test1 (1.0.0)" }));
+
+    expect(
+      getByTestId("CreateProjectForm.ParserSaveFullyCheckbox"),
+    ).not.toBeDisabled();
+
+    await userEvent.click(getByTestId("CreateProjectForm.ParserSelect"));
+    await userEvent.click(getByRole("option", { name: "test2 (1.0.0)" }));
+
+    expect(
+      getByTestId("CreateProjectForm.ParserSaveFullyCheckbox"),
+    ).toBeDisabled();
   });
 
   it("should init stores and show notification on submit with minimal parser", async () => {
     const { getByTestId, getByRole } = render(<CreateProjectForm />);
 
     await userEvent.click(getByTestId("CreateProjectForm.ParserSelect"));
-    await userEvent.click(getByRole("option", { name: "Test Module (1.0.0)" }));
+    await userEvent.click(getByRole("option", { name: "test1 (1.0.0)" }));
     await userEvent.click(getByTestId("CreateProjectForm.CreateButton"));
 
     expect(initSession).toHaveBeenCalledWith([]);
-    expect(initProject).toHaveBeenCalledWith({ parser: "test@1.0.0" });
+    expect(initProject).toHaveBeenCalledWith({ parser: "test1@1.0.0" });
     expect(initTranslation).toHaveBeenCalledWith([]);
     expect(notifications.show).toHaveBeenCalled();
   });
@@ -82,7 +107,7 @@ describe("widgets/header/ui/CreateProjectForm", () => {
     const { getByTestId, getByRole } = render(<CreateProjectForm />);
 
     await userEvent.click(getByTestId("CreateProjectForm.ParserSelect"));
-    await userEvent.click(getByRole("option", { name: "Test Module (1.0.0)" }));
+    await userEvent.click(getByRole("option", { name: "test1 (1.0.0)" }));
     await userEvent.click(
       getByTestId("CreateProjectForm.ParserSaveFullyCheckbox"),
     );

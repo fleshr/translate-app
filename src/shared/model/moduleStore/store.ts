@@ -1,3 +1,4 @@
+import { builtinParsersMeta } from "@/shared/constants/parsers";
 import { isDeepEqual } from "remeda";
 import { createJSONStorage, devtools, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
@@ -10,7 +11,7 @@ export interface State {
 }
 
 export const defaultState: State = {
-  parsers: {},
+  parsers: builtinParsersMeta,
 };
 
 export const useModuleStore = createWithEqualityFn<State>()(

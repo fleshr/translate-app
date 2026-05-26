@@ -26,15 +26,14 @@ export const ParsersManager = () => {
 
       const code = await readFile(file);
       const { name, version, shortName } = await createParserFromCode(code);
-      const id = `${shortName}@${version}`;
 
       addModule("parsers", {
-        id,
+        id: `${shortName}@${version}`,
+        type: "external",
         name,
         version,
         shortName,
         code,
-        type: "external",
       });
 
       notifications.show({ message: content.successMessage });
@@ -64,16 +63,18 @@ export const ParsersManager = () => {
                 <Text size="sm">
                   {parser.name} ({parser.version})
                 </Text>
-                <ActionIconWithTooltip
-                  data-testid={`ParsersManager.Item.${index}.RemoveButton`}
-                  onClick={handleRemoveParser(parser.id)}
-                  label={content.removeTooltip}
-                  variant="filled"
-                  color="red"
-                  size="xs"
-                >
-                  <IconTrash size={14} />
-                </ActionIconWithTooltip>
+                {parser.type === "external" && (
+                  <ActionIconWithTooltip
+                    data-testid={`ParsersManager.Item.${index}.RemoveButton`}
+                    onClick={handleRemoveParser(parser.id)}
+                    label={content.removeTooltip}
+                    variant="filled"
+                    color="red"
+                    size="xs"
+                  >
+                    <IconTrash size={14} />
+                  </ActionIconWithTooltip>
+                )}
               </Group>
             ))}
           </Card>
