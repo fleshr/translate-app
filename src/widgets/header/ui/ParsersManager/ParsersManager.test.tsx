@@ -1,6 +1,9 @@
 import { createParserFromCode } from "@/shared/lib/module";
 import { render, resetStore } from "@/shared/lib/testing";
-import { getModuleExternalMock } from "@/shared/mocks/module";
+import {
+  getModuleBuiltinMock,
+  getModuleExternalMock,
+} from "@/shared/mocks/module";
 import {
   addModule,
   removeModule,
@@ -28,7 +31,7 @@ describe("widgets/header/ui/ParsersManager", () => {
   beforeEach(() => {
     useModuleStore.setState({
       parsers: {
-        "test@1.0.0": getModuleExternalMock(),
+        "test@1.0.0": getModuleBuiltinMock(),
         "test@2.0.0": getModuleExternalMock({
           id: "test@2.0.0",
           version: "2.0.0",
@@ -50,6 +53,17 @@ describe("widgets/header/ui/ParsersManager", () => {
     expect(getByTestId("ParsersManager.Item.1")).toHaveTextContent(
       "Test Module (2.0.0)",
     );
+  });
+
+  it("should show remove button only on external parsers", () => {
+    const { queryByTestId } = render(<ParsersManager />);
+
+    expect(
+      queryByTestId("ParsersManager.Item.0.RemoveButton"),
+    ).not.toBeInTheDocument();
+    expect(
+      queryByTestId("ParsersManager.Item.1.RemoveButton"),
+    ).toBeInTheDocument();
   });
 
   it("should remove parser and show notification", async () => {
