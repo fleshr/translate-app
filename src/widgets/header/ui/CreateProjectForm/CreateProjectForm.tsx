@@ -39,8 +39,22 @@ export const CreateProjectForm = (props: CreateProjectFormProps) => {
 
   const form = useForm<CreateProjectFormValues>({
     validate: schemaResolver(CreateProjectFormSchema, { sync: true }),
+    enhanceGetInputProps({ inputProps, field, form }) {
+      if (field === "parserSaveFully") {
+        const parser = parsers.find(
+          (parser) => parser.id === form.values.parser,
+        );
+
+        return {
+          ...inputProps,
+          disabled: parser?.type !== "external",
+        };
+      }
+
+      return inputProps;
+    },
     initialValues: {
-      parser: "",
+      parser: parsers[0]?.id ?? "",
       parserSaveFully: false,
     },
   });
@@ -52,11 +66,11 @@ export const CreateProjectForm = (props: CreateProjectFormProps) => {
       parser,
     )(useModuleStore.getState());
 
+    const isSaveFully = parserSaveFully && parserModule?.type === "external";
+
     initSession([]);
     initTranslation([]);
-    initProject({
-      parser: parserSaveFully && parserModule ? parserModule : parser,
-    });
+    initProject({ parser: isSaveFully ? parserModule : parser });
 
     notifications.show({ message: content.createdNotification });
     onSubmit?.(values);
@@ -89,11 +103,7 @@ export const CreateProjectForm = (props: CreateProjectFormProps) => {
           >
             {content.cancelButtonLabel}
           </Button>
-          <Button
-            type="submit"
-            disabled={!form.isDirty("parser")}
-            data-testid="CreateProjectForm.CreateButton"
-          >
+          <Button type="submit" data-testid="CreateProjectForm.CreateButton">
             {content.createButtonLabel}
           </Button>
         </Group>

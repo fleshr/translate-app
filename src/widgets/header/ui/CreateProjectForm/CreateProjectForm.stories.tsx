@@ -21,7 +21,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-export const Filled: Story = {
+export const ExternalParser: Story = {
   play: async ({ canvas, userEvent }) => {
     const select = canvas.getByTestId("CreateProjectForm.ParserSelect");
     await userEvent.click(select);
