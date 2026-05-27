@@ -35,8 +35,8 @@ export const TranslatorSettings = () => {
   };
 
   return (
-    <Stack h="100%" justify="space-between" data-testid="TranslatorSettings">
-      <ScrollArea>
+    <Stack h="100%" data-testid="TranslatorSettings">
+      <ScrollArea flex={1} mih={0}>
         <Stack>
           <Select
             label={content.translatorSelectLabel}

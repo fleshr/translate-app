@@ -7,7 +7,7 @@ import {
   useModuleStore,
 } from "@/shared/model/moduleStore";
 import { ActionIconWithTooltip } from "@/shared/ui/ActionIconWithTooltip";
-import { Button, Card, Group, Stack, Text } from "@mantine/core";
+import { Button, Card, Group, ScrollArea, Stack, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconCirclePlus, IconDownload, IconTrash } from "@tabler/icons-react";
 import { fileOpen } from "browser-fs-access";
@@ -49,10 +49,10 @@ export const ParsersManager = () => {
 
   return (
     <Stack h="100%" data-testid="ParsersManager">
-      <Stack flex={1}>
-        <Stack gap="xs" flex={1}>
-          <Text size="sm">{content.listTitle}</Text>
-          <Card withBorder py={4} px={8} flex={1}>
+      <Stack gap="xs" flex={1} mih={0}>
+        <Text size="sm">{content.listTitle}</Text>
+        <Card flex={1} py={0} px={0} withBorder>
+          <ScrollArea py={4} px={8}>
             {parsers.map((parser, index) => (
               <Group
                 p={4}
@@ -77,8 +77,8 @@ export const ParsersManager = () => {
                 )}
               </Group>
             ))}
-          </Card>
-        </Stack>
+          </ScrollArea>
+        </Card>
       </Stack>
       <Group grow>
         <Button
