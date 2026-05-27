@@ -31,7 +31,7 @@ export const TranslationControl = () => {
   }
 
   return (
-    <Group>
+    <Group wrap="nowrap">
       <ActionIconWithTooltip
         onClick={stop}
         label={content.stopLabel}

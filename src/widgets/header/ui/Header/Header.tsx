@@ -1,4 +1,4 @@
-import { Tabs } from "@mantine/core";
+import { Scroller, Tabs } from "@mantine/core";
 import { useIntlayer } from "react-intlayer";
 import { HomePanel } from "../HomePanel/HomePanel";
 import { TranslatorPanel } from "../TranslatorPanel/TranslatorPanel";
@@ -17,10 +17,14 @@ export const Header = () => {
         </Tabs.Tab>
       </Tabs.List>
       <Tabs.Panel value="home" p="xs">
-        <HomePanel />
+        <Scroller>
+          <HomePanel />
+        </Scroller>
       </Tabs.Panel>
       <Tabs.Panel value="translator" p="xs">
-        <TranslatorPanel />
+        <Scroller>
+          <TranslatorPanel />
+        </Scroller>
       </Tabs.Panel>
     </Tabs>
   );

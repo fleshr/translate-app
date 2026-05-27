@@ -5,7 +5,7 @@ import { TranslatorSelect } from "../TranslatorSelect/TranslatorSelect";
 export const TranslatorPanel = () => {
   return (
     <Tooltip.Group>
-      <Group gap="xs">
+      <Group gap="xs" wrap="nowrap">
         <TranslatorSelect />
         <Divider orientation="vertical" />
         <TranslationControl />
