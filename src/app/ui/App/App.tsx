@@ -36,9 +36,9 @@ export const App = () => {
         }}
         navbar={{
           width: SIDEBAR_WIDTH,
-          breakpoint: "sm",
+          breakpoint: "xs",
           collapsed: {
-            mobile: true,
+            mobile: !showSidePanel,
             desktop: !showSidePanel,
           },
         }}

@@ -13,7 +13,7 @@ import { SidePanelButton } from "../SidePanelButton/SidePanelButton";
 export const HomePanel = () => {
   return (
     <Tooltip.Group>
-      <Group gap="xs">
+      <Group gap="xs" wrap="nowrap">
         <NewProjectButton />
         <OpenProjectButton />
         <SaveProjectButton />

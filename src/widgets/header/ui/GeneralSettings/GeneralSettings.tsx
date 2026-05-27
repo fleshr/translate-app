@@ -1,5 +1,6 @@
 import {
   Button,
+  ScrollArea,
   Select,
   Stack,
   useMantineColorScheme,
@@ -51,23 +52,25 @@ export const GeneralSettings = () => {
       style={{ height: "100%" }}
       data-testid="GeneralSettings"
     >
-      <Stack h="100%" gap="xl" justify="space-between">
-        <Stack>
-          <Select
-            data={themes}
-            label={content.themeSelectLabel}
-            data-testid="GeneralSettings.ThemeSelect"
-            key={form.key("theme")}
-            {...form.getInputProps("theme")}
-          />
-          <Select
-            data={languages}
-            label={content.languageSelectLabel}
-            data-testid="GeneralSettings.LanguageSelect"
-            key={form.key("language")}
-            {...form.getInputProps("language")}
-          />
-        </Stack>
+      <Stack h="100%">
+        <ScrollArea flex={1} mih={0}>
+          <Stack>
+            <Select
+              data={themes}
+              label={content.themeSelectLabel}
+              data-testid="GeneralSettings.ThemeSelect"
+              key={form.key("theme")}
+              {...form.getInputProps("theme")}
+            />
+            <Select
+              data={languages}
+              label={content.languageSelectLabel}
+              data-testid="GeneralSettings.LanguageSelect"
+              key={form.key("language")}
+              {...form.getInputProps("language")}
+            />
+          </Stack>
+        </ScrollArea>
         <Button type="submit" data-testid="GeneralSettings.SaveButton">
           {content.saveButtonLabel}
         </Button>

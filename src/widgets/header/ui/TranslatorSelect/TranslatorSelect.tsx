@@ -29,6 +29,7 @@ export const TranslatorSelect = () => {
     <Tooltip label={content.selectTooltipLabel}>
       <Select
         size="xs"
+        miw={190}
         data={items}
         onChange={handleChange}
         disabled={isTranslating}
