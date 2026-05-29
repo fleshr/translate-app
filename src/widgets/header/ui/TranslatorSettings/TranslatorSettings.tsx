@@ -44,6 +44,7 @@ export const TranslatorSettings = () => {
             data={items}
             value={activeTranslator}
             onChange={handleChange}
+            data-testid="TranslatorSettings.TranslatorSelect"
           />
           <Divider />
           {translator && (
@@ -54,11 +55,16 @@ export const TranslatorSettings = () => {
               schema={translator.configSchema}
               initialValues={storeConfig}
               onSubmit={handleSubmit}
+              data-testid="TranslatorSettings.DynamicForm"
             />
           )}
         </Stack>
       </ScrollArea>
-      <Button type="submit" form={formId}>
+      <Button
+        type="submit"
+        form={formId}
+        data-testid="TranslatorSettings.SaveButton"
+      >
         {content.saveButtonLabel}
       </Button>
     </Stack>

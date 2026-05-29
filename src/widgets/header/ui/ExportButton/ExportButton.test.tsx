@@ -14,6 +14,15 @@ import { ExportButton } from "./ExportButton";
 const testBlob = new Blob(["test"]);
 const testParser = { name: "test" } as Parser;
 
+const testStore = getTranslationStoreStateMock();
+
+const common1 = testStore.resources.byId["common-1"]!;
+const file1 = testStore.resources.byId["file-1"]!;
+
+const segment1 = testStore.segments.byId["segment-1"]!;
+const segment2 = testStore.segments.byId["segment-2"]!;
+const segment3 = testStore.segments.byId["segment-3"]!;
+
 vi.mock("@/shared/lib/parser");
 vi.mocked(resolveParser).mockResolvedValue(testParser);
 
@@ -22,7 +31,7 @@ vi.mocked(exportTranslationToZip).mockResolvedValue(testBlob);
 
 describe("widgets/header/ui/ExportButton", () => {
   beforeEach(() => {
-    useTranslationStore.setState(getTranslationStoreStateMock());
+    useTranslationStore.setState(testStore);
   });
 
   afterEach(() => {
@@ -45,47 +54,8 @@ describe("widgets/header/ui/ExportButton", () => {
 
     expect(exportTranslationToZip).toHaveBeenCalledWith(
       [
-        {
-          id: "common-1",
-          name: "Common 1",
-          relPath: "*",
-          segments: [
-            {
-              fileOccurrences: {},
-              id: "segment-1",
-              machineTranslation: "Machine translation",
-              manualTranslation: "Manual translation",
-              originalText: "test1",
-              resourceId: "common-1",
-            },
-          ],
-          type: "common",
-        },
-        {
-          content: "content",
-          id: "file-1",
-          name: "File 1",
-          relPath: "files/file-1",
-          segments: [
-            {
-              fileOccurrences: {},
-              id: "segment-2",
-              machineTranslation: "Machine translation",
-              manualTranslation: "Manual translation",
-              originalText: "test2",
-              resourceId: "file-1",
-            },
-            {
-              fileOccurrences: {},
-              id: "segment-3",
-              machineTranslation: "Machine translation",
-              manualTranslation: "Manual translation",
-              originalText: "test3",
-              resourceId: "file-1",
-            },
-          ],
-          type: "file",
-        },
+        { ...common1, segments: [segment1] },
+        { ...file1, segments: [segment2, segment3] },
       ],
       testParser,
     );

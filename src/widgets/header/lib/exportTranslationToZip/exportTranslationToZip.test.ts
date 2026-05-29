@@ -1,10 +1,10 @@
+import { getParserMock } from "@/shared/mocks/parser";
 import {
   getTranslationCommonMock,
   getTranslationFileMock,
   getTranslationFileOccurrenceMock,
   getTranslationSegmentMock,
 } from "@/shared/mocks/translation";
-import type { Parser } from "@/shared/model/parser";
 import type { TranslationResource } from "@/shared/model/translation";
 import JSZip from "jszip";
 import { describe, expect, it, vi } from "vitest";
@@ -47,14 +47,7 @@ const testResources: TranslationResource[] = [
   }),
 ];
 
-const mockParser: Parser = {
-  name: "Mock Parser",
-  version: "1.0.0",
-  shortName: "mock",
-  checkFile: vi.fn(() => true),
-  replaceText: vi.fn(() => new Uint8Array()),
-  extractText: vi.fn(() => ({ content: "", segments: [] })),
-};
+const mockParser = vi.mockObject(getParserMock());
 
 describe("widgets/header/lib/exportTranslationToZip", () => {
   it("should return a zip with files", async () => {
