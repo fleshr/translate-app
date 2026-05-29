@@ -64,7 +64,7 @@ export const SearchPanel = () => {
     setSessionSelectedResource(resourceId);
   };
 
-  const renderResult = (resource: TranslationResource) => {
+  const renderResult = (resource: TranslationResource, index: number) => {
     const { id, name } = resource;
     const items = resource.segments.map((segment) => ({
       value: segment.id,
@@ -81,6 +81,7 @@ export const SearchPanel = () => {
         highlight={searchOptions.text}
         onClick={handleResultClick(id)}
         onSelect={handleSelectSegment(id)}
+        data-testid={`SearchPanel.ResultCard.${index}`}
       />
     );
   };

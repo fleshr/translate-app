@@ -1,13 +1,34 @@
-import { render } from "@/shared/lib/testing";
+import { render, resetStore } from "@/shared/lib/testing";
+import { getTranslatorMock } from "@/shared/mocks/translator";
 import { useSessionStore } from "@/shared/model/sessionStore";
-import { setSettingsSelectedTranslator } from "@/shared/model/settingsStore";
+import {
+  setSettingsSelectedTranslator,
+  useSettingsStore,
+} from "@/shared/model/settingsStore";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { TranslatorSelect } from "./TranslatorSelect";
 
 vi.mock("@/shared/model/settingsStore", { spy: true });
 
+vi.mock(import("@/shared/constants/translators"), () => ({
+  translators: {
+    test1: getTranslatorMock({ name: "test1" }),
+    test2: getTranslatorMock({ name: "test2" }),
+  },
+}));
+
 describe("widgets/header/ui/TranslatorSelect", () => {
+  beforeEach(() => {
+    useSettingsStore.setState({
+      translator: { selected: "test1", configs: {} },
+    });
+  });
+
+  afterEach(() => {
+    resetStore(useSessionStore, useSettingsStore);
+  });
+
   it("should be disabled when translating", () => {
     useSessionStore.setState({ status: "translating" });
     const { getByTestId } = render(<TranslatorSelect />);
@@ -16,27 +37,35 @@ describe("widgets/header/ui/TranslatorSelect", () => {
     expect(select).toBeDisabled();
   });
 
-  it("should display builtin translator", () => {
-    const { getByText } = render(<TranslatorSelect />);
+  it("should display selected translator by default", () => {
+    const { getByTestId } = render(<TranslatorSelect />);
 
-    const fake = getByText("Fake Translator");
-    const openai = getByText("OpenAI Translator");
+    const select = getByTestId("TranslatorSelect");
+    expect(select).toHaveValue("test1");
+  });
 
-    expect(fake).toBeInTheDocument();
-    expect(openai).toBeInTheDocument();
+  it("should display builtin translator", async () => {
+    const { getByTestId, queryByRole } = render(<TranslatorSelect />);
+
+    const select = getByTestId("TranslatorSelect");
+    await userEvent.click(select);
+
+    const option1 = queryByRole("option", { name: "test1" });
+    expect(option1).toBeInTheDocument();
+
+    const option2 = queryByRole("option", { name: "test2" });
+    expect(option2).toBeInTheDocument();
   });
 
   it("should set translator in settings store on change", async () => {
-    const { getByText } = render(<TranslatorSelect />);
+    const { getByTestId, getByRole } = render(<TranslatorSelect />);
 
-    const fake = getByText("Fake Translator");
-    await userEvent.click(fake);
+    const select = getByTestId("TranslatorSelect");
+    await userEvent.click(select);
 
-    expect(setSettingsSelectedTranslator).toHaveBeenCalledWith("fake");
+    const option = getByRole("option", { name: "test2" });
+    await userEvent.click(option);
 
-    const openai = getByText("OpenAI Translator");
-    await userEvent.click(openai);
-
-    expect(setSettingsSelectedTranslator).toHaveBeenCalledWith("openai");
+    expect(setSettingsSelectedTranslator).toHaveBeenCalledWith("test2");
   });
 });

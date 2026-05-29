@@ -4,12 +4,12 @@ import {
   getModuleBuiltinMock,
   getModuleExternalMock,
 } from "@/shared/mocks/module";
+import { getParserMock } from "@/shared/mocks/parser";
 import {
   addModule,
   removeModule,
   useModuleStore,
 } from "@/shared/model/moduleStore";
-import type { Parser } from "@/shared/model/parser";
 import { notifications } from "@mantine/notifications";
 import userEvent from "@testing-library/user-event";
 import { fileOpen } from "browser-fs-access";
@@ -19,13 +19,9 @@ import { ParsersManager } from "./ParsersManager";
 const testFile = new File(["test code"], "file.js");
 
 vi.mock("@/shared/model/moduleStore", { spy: true });
-vi.mock("@/shared/lib/module", { spy: true });
 
-vi.mocked(createParserFromCode).mockResolvedValue({
-  name: "Test Module",
-  version: "1.0.0",
-  shortName: "test",
-} as Parser);
+vi.mock("@/shared/lib/module", { spy: true });
+vi.mocked(createParserFromCode).mockResolvedValue(getParserMock());
 
 describe("widgets/header/ui/ParsersManager", () => {
   beforeEach(() => {
@@ -86,7 +82,7 @@ describe("widgets/header/ui/ParsersManager", () => {
 
     expect(addModule).toHaveBeenCalledWith("parsers", {
       id: "test@1.0.0",
-      name: "Test Module",
+      name: "Test Parser",
       version: "1.0.0",
       shortName: "test",
       code: "test code",

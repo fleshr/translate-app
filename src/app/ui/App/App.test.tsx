@@ -1,5 +1,5 @@
 import { render } from "@/shared/lib/testing";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { App } from "./App";
 
 describe("app/ui/App", () => {
@@ -17,6 +17,14 @@ describe("app/ui/App", () => {
     expect(bottomPanel).toBeInTheDocument();
   });
 
-  it.todo("panels collapse");
-  it.todo("page level alert");
+  it("should show alert on app close", () => {
+    render(<App />);
+
+    const e = new Event("beforeunload");
+    const mock = vi.spyOn(e, "preventDefault");
+
+    window.dispatchEvent(e);
+
+    expect(mock).toHaveBeenCalled();
+  });
 });

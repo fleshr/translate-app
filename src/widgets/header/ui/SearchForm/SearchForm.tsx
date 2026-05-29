@@ -68,7 +68,7 @@ export const SearchForm = (props: SearchFormProps) => {
   };
 
   return (
-    <form>
+    <form data-testid="SearchForm">
       <Stack>
         <TextInput
           label={content.searchLabel}
@@ -81,6 +81,7 @@ export const SearchForm = (props: SearchFormProps) => {
             label={content.replaceLabel}
             key={form.key("replaceText")}
             {...form.getInputProps("replaceText")}
+            data-testid="SearchForm.ReplaceInput"
           />
         )}
         <Group justify="space-between">
@@ -90,6 +91,7 @@ export const SearchForm = (props: SearchFormProps) => {
               data={fields}
               key={form.key("field")}
               {...form.getInputProps("field")}
+              data-testid="SearchForm.FieldSelect"
             />
             <Checkbox
               label={content.replaceLabel}
