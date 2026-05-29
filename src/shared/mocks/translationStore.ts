@@ -37,6 +37,8 @@ export const mockTranslationStoreState: State = {
         id: "segment-3",
         resourceId: "file-1",
         originalText: "test3",
+        machineTranslation: "",
+        manualTranslation: "",
       }),
     },
   },
