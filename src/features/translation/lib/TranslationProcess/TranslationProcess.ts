@@ -34,7 +34,7 @@ interface Callbacks {
   ) => void;
 }
 
-interface TranslationOptions extends Partial<Callbacks> {
+export interface TranslationOptions extends Partial<Callbacks> {
   batch?: boolean;
   translator: Translator;
   translatorConfig?: TranslatorConfig;
