@@ -1,12 +1,12 @@
-import { createMockFactory } from "../lib/testing";
-import type { State } from "../model/translationStore";
+import { createMockFactory } from "@/shared/lib/testing";
+import type { State } from "../model/store/store";
 import {
   getTranslationCommonMock,
   getTranslationFileMock,
   getTranslationSegmentMock,
 } from "./translation";
 
-export const mockTranslationStoreState: State = {
+const mockTranslationStoreState: State = {
   resources: {
     allIds: ["common-1", "file-1"],
     byId: {

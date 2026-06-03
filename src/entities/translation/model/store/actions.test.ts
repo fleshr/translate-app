@@ -1,6 +1,6 @@
 import { resetStore } from "@/shared/lib/testing";
-import { getTranslationStoreStateMock } from "@/shared/mocks/translationStore";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { getTranslationStoreStateMock } from "../../mocks";
 import {
   initTranslation,
   replaceTranslationSegmentsField,

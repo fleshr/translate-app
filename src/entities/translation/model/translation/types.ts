@@ -8,7 +8,7 @@ import type {
   TranslationFlatSegmentSchema,
   TranslationResourceSchema,
   TranslationSegmentSchema,
-} from "../translation";
+} from "./schemas";
 
 export type TranslationFileOccurrence = z.infer<
   typeof TranslationFileOccurrenceSchema

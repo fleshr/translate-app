@@ -1,5 +1,5 @@
+import { IdSchema, MetadataShema, PositionShema } from "@/shared/model/common";
 import { z } from "zod";
-import { IdSchema, MetadataShema, PositionShema } from "../common";
 
 export const TranslationBaseSegmentSchema = z.object({
   id: IdSchema,

@@ -1,9 +1,6 @@
-import {
-  getTranslationFileMock,
-  getTranslationSegmentMock,
-} from "@/shared/mocks/translation";
-import type { TranslationResource } from "@/shared/model/translation";
 import { describe, expect, it } from "vitest";
+import { getTranslationFileMock, getTranslationSegmentMock } from "../mocks";
+import type { TranslationResource } from "../model/translation/types";
 import { calculateResourcesPogress } from "./calculateResourcesPogress";
 
 describe("shared/lib/calculateResourcesPogress", () => {

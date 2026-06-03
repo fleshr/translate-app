@@ -1,10 +1,10 @@
+import type { Id } from "@/shared/model/common";
 import { forEach } from "remeda";
-import type { Id } from "../common";
 import type {
   TranslationBaseSegment,
   TranslationResource,
   TranslationSegment,
-} from "../translation";
+} from "../translation/types";
 import { useTranslationStore, type State } from "./store";
 
 export const initTranslation = (resources: TranslationResource[]) => {

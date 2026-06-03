@@ -1,4 +1,4 @@
-import { createMockFactory } from "../lib/testing";
+import { createMockFactory } from "@/shared/lib/testing";
 import type {
   TranslationBaseResource,
   TranslationBaseSegment,
@@ -7,7 +7,7 @@ import type {
   TranslationFileOccurrence,
   TranslationFlatSegment,
   TranslationSegment,
-} from "../model/translation";
+} from "../model/translation/types";
 
 const mockTranslationBaseSegment: TranslationBaseSegment = {
   id: "segment-1",

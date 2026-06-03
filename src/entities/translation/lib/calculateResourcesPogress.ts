@@ -1,6 +1,6 @@
 import type { Id, Progress } from "@/shared/model/common";
-import type { TranslationResource } from "@/shared/model/translation";
 import { groupByProp, mapValues } from "remeda";
+import type { TranslationResource } from "../model/translation/types";
 
 export const calculateResourcesPogress = (
   resources: TranslationResource[],

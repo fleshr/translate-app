@@ -3,7 +3,10 @@ import type { DistributedOmit } from "type-fest";
 import { devtools } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { createWithEqualityFn } from "zustand/traditional";
-import type { TranslationResource, TranslationSegment } from "../translation";
+import type {
+  TranslationResource,
+  TranslationSegment,
+} from "../translation/types";
 
 type StoreResource = DistributedOmit<TranslationResource, "segments"> & {
   segments: TranslationSegment["id"][];

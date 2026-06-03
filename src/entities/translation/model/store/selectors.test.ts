@@ -1,5 +1,5 @@
-import { getTranslationStoreStateMock } from "@/shared/mocks/translationStore";
 import { describe, expect, it } from "vitest";
+import { getTranslationStoreStateMock } from "../../mocks";
 import {
   selectBaseResource,
   selectBaseResources,

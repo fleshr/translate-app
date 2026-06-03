@@ -3,7 +3,7 @@ import type {
   TranslationBaseResource,
   TranslationResource,
   TranslationSegment,
-} from "../translation";
+} from "../translation/types";
 import { type State } from "./store";
 
 export const selectBaseResource = (id: TranslationResource["id"]) => {
