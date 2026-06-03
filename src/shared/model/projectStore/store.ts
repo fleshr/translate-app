@@ -1,9 +1,9 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import type { ProjectBase } from "../project";
+import type { Project } from "../project";
 
-export type State = ProjectBase;
+export type State = Project;
 
 export const defaultState: State = {
   parser: "entis",
