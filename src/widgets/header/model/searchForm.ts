@@ -1,4 +1,4 @@
-import { TranslationBaseSegmentSchema } from "@/shared/model/translation";
+import { TranslationBaseSegmentSchema } from "@/entities/translation";
 import { z } from "zod";
 
 export const SearchFormSchema = z.object({

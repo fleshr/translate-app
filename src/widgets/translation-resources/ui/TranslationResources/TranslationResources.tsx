@@ -1,14 +1,14 @@
 import {
+  selectBaseResources,
+  useTranslationStore,
+} from "@/entities/translation";
+import {
   selectResourcesProgress,
   selectSelectedResource,
   selectTranslatingResource,
   setSessionSelectedResource,
   useSessionStore,
 } from "@/shared/model/sessionStore";
-import {
-  selectBaseResources,
-  useTranslationStore,
-} from "@/shared/model/translationStore";
 import { Stack } from "@mantine/core";
 import { TranslationResourceButton } from "../TranslationResourceButton/TranslationResourceButton";
 

@@ -1,5 +1,5 @@
+import { getTranslationBaseResourceMock } from "@/entities/translation/mocks";
 import { render } from "@/shared/lib/testing";
-import { getTranslationBaseResourceMock } from "@/shared/mocks/translation";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { TranslationResourceButton } from "./TranslationResourceButton";

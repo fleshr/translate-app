@@ -1,5 +1,5 @@
+import { getTranslationBaseResourceMock } from "@/entities/translation/mocks";
 import { withWidth } from "@/shared/lib/storybook";
-import { getTranslationBaseResourceMock } from "@/shared/mocks/translation";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { TranslationResourceButton } from "./TranslationResourceButton";
 

@@ -1,7 +1,7 @@
 "use no memo";
 
+import type { TranslationSegment } from "@/entities/translation";
 import type { Id } from "@/shared/model/common";
-import type { TranslationSegment } from "@/shared/model/translation";
 import { Table } from "@mantine/core";
 import { type Table as TableType } from "@tanstack/react-table";
 import {

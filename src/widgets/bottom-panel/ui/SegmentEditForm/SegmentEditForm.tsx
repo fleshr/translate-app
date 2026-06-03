@@ -1,5 +1,5 @@
+import { type TranslationBaseSegment } from "@/entities/translation";
 import type { BaseProps } from "@/shared/model/component";
-import { type TranslationBaseSegment } from "@/shared/model/translation";
 import { Stack, Textarea } from "@mantine/core";
 import { schemaResolver, useForm } from "@mantine/form";
 import { useIntlayer } from "react-intlayer";

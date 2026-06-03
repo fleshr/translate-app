@@ -1,12 +1,9 @@
+import { selectResources, useTranslationStore } from "@/entities/translation";
 import { resolveParser } from "@/shared/lib/parser";
 import {
   selectIsTranslating,
   useSessionStore,
 } from "@/shared/model/sessionStore";
-import {
-  selectResources,
-  useTranslationStore,
-} from "@/shared/model/translationStore";
 import { ActionIconWithTooltip } from "@/shared/ui/ActionIconWithTooltip";
 import { notifications } from "@mantine/notifications";
 import { IconFolderUp } from "@tabler/icons-react";

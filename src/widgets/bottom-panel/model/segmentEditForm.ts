@@ -1,4 +1,4 @@
-import { TranslationSegmentSchema } from "@/shared/model/translation";
+import { TranslationSegmentSchema } from "@/entities/translation";
 import type { z } from "zod";
 
 export const segmentEditFormSchema = TranslationSegmentSchema.pick({

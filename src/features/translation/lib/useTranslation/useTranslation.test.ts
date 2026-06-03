@@ -1,6 +1,11 @@
+import {
+  setTranslationSegmentField,
+  setTranslationSegmentsField,
+  useTranslationStore,
+} from "@/entities/translation";
+import { getTranslationSegmentMock } from "@/entities/translation/mocks";
 import { logger } from "@/shared/lib/logger";
 import { renderHook, resetStore } from "@/shared/lib/testing";
-import { getTranslationSegmentMock } from "@/shared/mocks/translation";
 import { getTranslatorMock } from "@/shared/mocks/translator";
 import {
   addSessionTranslatingResourceProgress,
@@ -9,11 +14,6 @@ import {
   useSessionStore,
 } from "@/shared/model/sessionStore";
 import { useSettingsStore } from "@/shared/model/settingsStore";
-import {
-  setTranslationSegmentField,
-  setTranslationSegmentsField,
-  useTranslationStore,
-} from "@/shared/model/translationStore";
 import { notifications } from "@mantine/notifications";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type {
@@ -42,7 +42,7 @@ const mockTranslationProcess = vi.hoisted(() => {
 
 vi.mock("@/shared/lib/logger");
 vi.mock("@/shared/model/sessionStore", { spy: true });
-vi.mock("@/shared/model/translationStore", { spy: true });
+vi.mock("@/entities/translation", { spy: true });
 
 vi.mock(import("../TranslationProcess/TranslationProcess"), () => ({
   translationProcess: mockTranslationProcess,

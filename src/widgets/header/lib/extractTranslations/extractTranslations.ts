@@ -1,3 +1,9 @@
+import type {
+  TranslationCommon,
+  TranslationFile,
+  TranslationFileOccurrence,
+  TranslationResource,
+} from "@/entities/translation";
 import { readFile } from "@/shared/lib/file";
 import type { Id } from "@/shared/model/common";
 import type {
@@ -5,12 +11,6 @@ import type {
   ExtractedCommonSegment,
   Parser,
 } from "@/shared/model/parser";
-import type {
-  TranslationCommon,
-  TranslationFile,
-  TranslationFileOccurrence,
-  TranslationResource,
-} from "@/shared/model/translation";
 import { nanoid } from "nanoid";
 import { filter, groupByProp, map, mapValues, pipe, values } from "remeda";
 

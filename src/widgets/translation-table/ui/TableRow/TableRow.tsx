@@ -1,5 +1,5 @@
+import type { TranslationSegment } from "@/entities/translation";
 import type { BaseProps } from "@/shared/model/component";
-import type { TranslationSegment } from "@/shared/model/translation";
 import { Table } from "@mantine/core";
 import { flexRender, type Row } from "@tanstack/react-table";
 import type { VirtualItem } from "@tanstack/react-virtual";

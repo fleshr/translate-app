@@ -1,4 +1,4 @@
-import { getTranslationBaseSegmentMock } from "@/shared/mocks/translation";
+import { getTranslationBaseSegmentMock } from "@/entities/translation/mocks";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn } from "storybook/test";
 import { SegmentEditForm } from "./SegmentEditForm";

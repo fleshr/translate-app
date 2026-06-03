@@ -1,3 +1,4 @@
+import { initTranslation } from "@/entities/translation";
 import {
   selectModule,
   selectModules,
@@ -5,7 +6,6 @@ import {
 } from "@/shared/model/moduleStore";
 import { initProject } from "@/shared/model/projectStore";
 import { initSession } from "@/shared/model/sessionStore";
-import { initTranslation } from "@/shared/model/translationStore";
 import {
   Button,
   Checkbox,

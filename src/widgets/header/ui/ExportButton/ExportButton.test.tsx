@@ -1,9 +1,9 @@
+import { useTranslationStore } from "@/entities/translation";
+import { getTranslationStoreStateMock } from "@/entities/translation/mocks";
 import { resolveParser } from "@/shared/lib/parser";
 import { render, resetStore } from "@/shared/lib/testing";
-import { getTranslationStoreStateMock } from "@/shared/mocks/translationStore";
 import type { Parser } from "@/shared/model/parser";
 import { useSessionStore } from "@/shared/model/sessionStore";
-import { useTranslationStore } from "@/shared/model/translationStore";
 import { notifications } from "@mantine/notifications";
 import userEvent from "@testing-library/user-event";
 import { fileSave } from "browser-fs-access";

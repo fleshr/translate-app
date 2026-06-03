@@ -1,3 +1,4 @@
+import { initTranslation } from "@/entities/translation";
 import { render, resetStore } from "@/shared/lib/testing";
 import {
   getModuleBuiltinMock,
@@ -6,7 +7,6 @@ import {
 import { useModuleStore } from "@/shared/model/moduleStore";
 import { initProject } from "@/shared/model/projectStore";
 import { initSession } from "@/shared/model/sessionStore";
-import { initTranslation } from "@/shared/model/translationStore";
 import { notifications } from "@mantine/notifications";
 import { userEvent } from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -19,7 +19,7 @@ const testParser = getModuleExternalMock({
 
 vi.mock("@/shared/model/sessionStore", { spy: true });
 vi.mock("@/shared/model/projectStore", { spy: true });
-vi.mock("@/shared/model/translationStore", { spy: true });
+vi.mock("@/entities/translation", { spy: true });
 
 describe("widgets/header/ui/CreateProjectForm", () => {
   beforeEach(() => {

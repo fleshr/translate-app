@@ -1,3 +1,4 @@
+import { initTranslation } from "@/entities/translation";
 import { readFile } from "@/shared/lib/file";
 import { parseJson } from "@/shared/lib/json";
 import { ProjectSchema } from "@/shared/model/project";
@@ -7,7 +8,6 @@ import {
   selectIsTranslating,
   useSessionStore,
 } from "@/shared/model/sessionStore";
-import { initTranslation } from "@/shared/model/translationStore";
 import { ActionIconWithTooltip } from "@/shared/ui/ActionIconWithTooltip";
 import { notifications } from "@mantine/notifications";
 import { IconFolderOpen } from "@tabler/icons-react";

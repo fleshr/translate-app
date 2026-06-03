@@ -1,7 +1,7 @@
 import {
   getTranslationFileMock,
   getTranslationSegmentMock,
-} from "@/shared/mocks/translation";
+} from "@/entities/translation/mocks";
 import { describe, expect, it } from "vitest";
 import { getTranslationsSearchResults } from "./getTranslationsSearchResults";
 

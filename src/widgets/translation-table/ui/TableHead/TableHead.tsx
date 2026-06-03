@@ -1,6 +1,6 @@
 "use no memo";
 
-import type { TranslationSegment } from "@/shared/model/translation";
+import type { TranslationSegment } from "@/entities/translation";
 import { Table } from "@mantine/core";
 import { flexRender, type Table as TableType } from "@tanstack/react-table";
 

@@ -1,5 +1,5 @@
+import { getTranslationSegmentMock } from "@/entities/translation/mocks";
 import { render } from "@/shared/lib/testing";
-import { getTranslationSegmentMock } from "@/shared/mocks/translation";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { SegmentEditForm } from "./SegmentEditForm";

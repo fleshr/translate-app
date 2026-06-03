@@ -1,7 +1,7 @@
+import type { TranslationBaseResource } from "@/entities/translation";
 import { getPercentage } from "@/shared/lib/getPercentage";
 import type { Id, Progress } from "@/shared/model/common";
 import type { BaseProps } from "@/shared/model/component";
-import type { TranslationBaseResource } from "@/shared/model/translation";
 import { Badge, Button, Group, Loader, Tooltip } from "@mantine/core";
 
 interface TranslationResourceButtonProps {

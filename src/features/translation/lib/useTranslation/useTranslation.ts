@@ -1,3 +1,9 @@
+import {
+  selectUntranslatedSegments,
+  setTranslationSegmentField,
+  setTranslationSegmentsField,
+  useTranslationStore,
+} from "@/entities/translation";
 import { translators } from "@/shared/constants/translators";
 import { stringifyJson } from "@/shared/lib/json";
 import { logger } from "@/shared/lib/logger";
@@ -13,12 +19,6 @@ import {
   selectTranslatorConfig,
   useSettingsStore,
 } from "@/shared/model/settingsStore";
-import {
-  selectUntranslatedSegments,
-  setTranslationSegmentField,
-  setTranslationSegmentsField,
-  useTranslationStore,
-} from "@/shared/model/translationStore";
 import { notifications } from "@mantine/notifications";
 import { useIntlayer } from "react-intlayer";
 import { translationProcess } from "../TranslationProcess/TranslationProcess";

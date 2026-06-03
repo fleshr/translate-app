@@ -1,10 +1,10 @@
+import { initTranslation } from "@/entities/translation";
 import { resolveParser } from "@/shared/lib/parser";
 import {
   initSession,
   selectIsTranslating,
   useSessionStore,
 } from "@/shared/model/sessionStore";
-import { initTranslation } from "@/shared/model/translationStore";
 import { ActionIconWithTooltip } from "@/shared/ui/ActionIconWithTooltip";
 import { notifications } from "@mantine/notifications";
 import { IconFileImport } from "@tabler/icons-react";

@@ -1,5 +1,5 @@
+import type { TranslationFlatSegment } from "@/entities/translation";
 import type { Replacement } from "@/shared/model/parser";
-import type { TranslationFlatSegment } from "@/shared/model/translation";
 
 export const mapFlatSegmentToReplacement = (
   segment: TranslationFlatSegment,
