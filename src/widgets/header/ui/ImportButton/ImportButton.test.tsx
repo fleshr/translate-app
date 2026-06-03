@@ -1,7 +1,8 @@
 import { initTranslation } from "@/entities/translation";
+import { getTranslationFileMock } from "@/entities/translation/mocks";
 import { resolveParser } from "@/shared/lib/parser";
 import { render, resetStore } from "@/shared/lib/testing";
-import type { Parser } from "@/shared/model/parser";
+import { getParserMock } from "@/shared/mocks/parser";
 import { initSession, useSessionStore } from "@/shared/model/sessionStore";
 import { notifications } from "@mantine/notifications";
 import userEvent from "@testing-library/user-event";
@@ -11,13 +12,14 @@ import { extractTranslations } from "../../lib/extractTranslations/extractTransl
 import { ImportButton } from "./ImportButton";
 
 const testFile = new File(["test"], "file.js");
-const testParser = { name: "test" } as Parser;
+const testParser = getParserMock();
+const testResource = getTranslationFileMock();
 
 vi.mock("@/shared/lib/parser");
 vi.mocked(resolveParser).mockResolvedValue(testParser);
 
 vi.mock("../../lib/extractTranslations/extractTranslations");
-vi.mocked(extractTranslations).mockResolvedValue([]);
+vi.mocked(extractTranslations).mockResolvedValue([testResource]);
 
 vi.mock("@/shared/model/sessionStore", { spy: true });
 vi.mock("@/entities/translation", { spy: true });
@@ -46,8 +48,8 @@ describe("widgets/header/ui/ImportButton", () => {
     expect(directoryOpen).toHaveBeenCalled();
     expect(extractTranslations).toHaveBeenCalledWith([testFile], testParser);
 
-    expect(initSession).toHaveBeenCalledWith([]);
-    expect(initTranslation).toHaveBeenCalledWith([]);
+    expect(initSession).toHaveBeenCalledWith(testResource.id);
+    expect(initTranslation).toHaveBeenCalledWith([testResource]);
 
     expect(notifications.show).toHaveBeenCalled();
   });

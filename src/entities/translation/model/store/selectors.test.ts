@@ -6,8 +6,10 @@ import {
   selectResource,
   selectResources,
   selectResourceSegments,
+  selectResourcesProgress,
   selectSegment,
   selectSegments,
+  selectSegmentsProgress,
   selectUntranslatedSegments,
 } from "./selectors";
 
@@ -20,7 +22,7 @@ const segment1 = testStore.segments.byId["segment-1"]!;
 const segment2 = testStore.segments.byId["segment-2"]!;
 const segment3 = testStore.segments.byId["segment-3"]!;
 
-describe("shared/model/translationStore/selectors", () => {
+describe("entities/translation/model/store/selectors", () => {
   describe("selectBaseResource", () => {
     it("should return base resource", () => {
       const resource = selectBaseResource("file-1")(testStore);
@@ -92,6 +94,25 @@ describe("shared/model/translationStore/selectors", () => {
     it("should return all untranslated segments", () => {
       const segments = selectUntranslatedSegments(testStore);
       expect(segments).toEqual([segment3]);
+    });
+  });
+
+  describe("selectSegmentsProgress", () => {
+    it("should return segments progress", () => {
+      const progress = selectSegmentsProgress("file-1")(testStore);
+      expect(progress).toEqual({ done: 1, total: 2 });
+    });
+
+    it("should return undefined if resource not found", () => {
+      const progress = selectSegmentsProgress("unknown")(testStore);
+      expect(progress).toBeUndefined();
+    });
+  });
+
+  describe("selectResourcesProgress", () => {
+    it("should return resources progress", () => {
+      const progress = selectResourcesProgress(testStore);
+      expect(progress).toEqual({ done: 1, total: 2 });
     });
   });
 });

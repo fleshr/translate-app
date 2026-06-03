@@ -6,6 +6,9 @@ import { useSessionStore } from "@/shared/model/sessionStore";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { TranslationResources } from "./TranslationResources";
 
+const testStore = getTranslationStoreStateMock();
+const testResource = testStore.resources.byId["file-1"]!;
+
 const meta = {
   title: "widgets/translation-resources/TranslationResources",
   component: TranslationResources,
@@ -20,7 +23,7 @@ export const Empty: Story = {};
 export const WithProgress: Story = {
   decorators: [
     withStoreState(useSessionStore, getSessionStoreStateMock()),
-    withStoreState(useTranslationStore, getTranslationStoreStateMock()),
+    withStoreState(useTranslationStore, testStore),
   ],
 };
 
@@ -29,10 +32,10 @@ export const SelectedWithProgressing: Story = {
     withStoreState(
       useSessionStore,
       getSessionStoreStateMock({
-        selectedResource: "file-1",
-        translatingResource: "file-1",
+        selectedResource: testResource.id,
+        translatingResource: testResource.id,
       }),
     ),
-    withStoreState(useTranslationStore, getTranslationStoreStateMock()),
+    withStoreState(useTranslationStore, testStore),
   ],
 };

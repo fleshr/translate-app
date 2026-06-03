@@ -1,13 +1,19 @@
-import { getTranslationBaseResourceMock } from "@/entities/translation/mocks";
-import { withWidth } from "@/shared/lib/storybook";
+import { useTranslationStore } from "@/entities/translation";
+import { getTranslationStoreStateMock } from "@/entities/translation/mocks";
+import { withStoreState, withWidth } from "@/shared/lib/storybook";
+import { getSessionStoreStateMock } from "@/shared/mocks/sessionStore";
+import { useSessionStore } from "@/shared/model/sessionStore";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { TranslationResourceButton } from "./TranslationResourceButton";
+
+const testStore = getTranslationStoreStateMock();
+const testResource = testStore.resources.byId["file-1"]!;
 
 const meta = {
   title: "widgets/translation-resources/TranslationResourceButton",
   component: TranslationResourceButton,
-  args: { resource: getTranslationBaseResourceMock() },
-  decorators: [withWidth()],
+  args: { resource: testResource },
+  decorators: [withWidth(), withStoreState(useTranslationStore, testStore)],
 } satisfies Meta<typeof TranslationResourceButton>;
 
 export default meta;
@@ -15,50 +21,14 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-export const Selected: Story = {
-  args: { isSelected: true },
-};
-
-export const Processing: Story = {
-  args: { isProcessing: true },
-};
-
-export const WithProgress: Story = {
-  args: {
-    progress: {
-      done: 50,
-      total: 100,
-    },
-  },
-};
-
-export const SelectedWithProgress: Story = {
-  args: {
-    progress: {
-      done: 50,
-      total: 100,
-    },
-    isSelected: true,
-  },
-};
-
-export const ProcessingWithProgress: Story = {
-  args: {
-    progress: {
-      done: 50,
-      total: 100,
-    },
-    isProcessing: true,
-  },
-};
-
-export const ProcessingSelectedWithProgress: Story = {
-  args: {
-    progress: {
-      done: 50,
-      total: 100,
-    },
-    isProcessing: true,
-    isSelected: true,
-  },
+export const SelectedWithProgressing: Story = {
+  decorators: [
+    withStoreState(
+      useSessionStore,
+      getSessionStoreStateMock({
+        selectedResource: testResource.id,
+        translatingResource: testResource.id,
+      }),
+    ),
+  ],
 };

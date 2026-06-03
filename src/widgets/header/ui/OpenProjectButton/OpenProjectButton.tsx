@@ -29,7 +29,7 @@ export const OpenProjectButton = () => {
       const { project, resources } = ProjectFileSchema.parse(parseJson(json));
 
       initProject(project);
-      initSession(resources);
+      initSession(resources[0]?.id ?? null);
       initTranslation(resources);
 
       notifications.show({ message: content.openedMessage });

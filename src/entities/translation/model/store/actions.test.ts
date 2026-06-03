@@ -19,7 +19,7 @@ const segment1 = testStore.segments.byId["segment-1"]!;
 const segment2 = testStore.segments.byId["segment-2"]!;
 const segment3 = testStore.segments.byId["segment-3"]!;
 
-describe("shared/model/translationStore/actions", () => {
+describe("entities/translation/model/store/actions", () => {
   beforeEach(() => {
     useTranslationStore.setState(testStore);
   });

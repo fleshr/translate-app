@@ -28,7 +28,7 @@ export const ImportButton = () => {
       const dirFiles = await directoryOpen({ recursive: true });
       const resources = await extractTranslations(dirFiles, parser);
 
-      initSession(resources);
+      initSession(resources[0]?.id ?? null);
       initTranslation(resources);
 
       notifications.show({ message: content.successMessage });

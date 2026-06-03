@@ -8,7 +8,6 @@ import { logger } from "@/shared/lib/logger";
 import { renderHook, resetStore } from "@/shared/lib/testing";
 import { getTranslatorMock } from "@/shared/mocks/translator";
 import {
-  addSessionTranslatingResourceProgress,
   setSessionStatus,
   setSessionTranslatingResource,
   useSessionStore,
@@ -165,7 +164,6 @@ describe("features/translation/lib/useTranslation", () => {
     expect(setTranslationSegmentsField).toHaveBeenCalledWith([
       { id: "segment-1", translation: "test" },
     ]);
-    expect(addSessionTranslatingResourceProgress).toHaveBeenCalledWith(1);
 
     expect(logger.info).toHaveBeenCalled();
   });
@@ -189,7 +187,6 @@ describe("features/translation/lib/useTranslation", () => {
       untranslatedSegment.id,
       "test",
     );
-    expect(addSessionTranslatingResourceProgress).toHaveBeenCalledWith(1);
 
     expect(logger.info).toHaveBeenCalled();
   });

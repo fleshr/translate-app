@@ -16,7 +16,7 @@ vi.mock("@/entities/translation", { spy: true });
 
 const testResource = getTranslationFileMock();
 const testProject = {
-  parser: "test",
+  project: { parser: "test" },
   resources: [testResource],
 };
 
@@ -54,7 +54,7 @@ describe("widgets/header/ui/OpenProjectButton", () => {
     await userEvent.click(button);
 
     expect(initProject).toHaveBeenCalledWith({ parser: "test" });
-    expect(initSession).toHaveBeenCalledWith([testResource]);
+    expect(initSession).toHaveBeenCalledWith(testResource.id);
     expect(initTranslation).toHaveBeenCalledWith([testResource]);
     expect(notifications.show).toHaveBeenCalled();
   });

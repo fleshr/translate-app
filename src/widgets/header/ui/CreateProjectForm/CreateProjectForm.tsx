@@ -68,7 +68,7 @@ export const CreateProjectForm = (props: CreateProjectFormProps) => {
 
     const isSaveFully = parserSaveFully && parserModule?.type === "external";
 
-    initSession([]);
+    initSession(null);
     initTranslation([]);
     initProject({ parser: isSaveFully ? parserModule : parser });
 

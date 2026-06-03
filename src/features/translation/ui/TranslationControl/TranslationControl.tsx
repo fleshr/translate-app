@@ -1,7 +1,11 @@
 import {
+  selectResourcesProgress,
+  selectSegmentsProgress,
+  useTranslationStore,
+} from "@/entities/translation";
+import {
   selectIsTranslating,
-  selectTotalProgress,
-  selectTranslatingResourceProgress,
+  selectTranslatingResource,
   useSessionStore,
 } from "@/shared/model/sessionStore";
 import { ActionIconWithTooltip } from "@/shared/ui/ActionIconWithTooltip";
@@ -14,8 +18,12 @@ import { useTranslation } from "../../lib/useTranslation/useTranslation";
 export const TranslationControl = () => {
   const content = useIntlayer("TranslationControl");
   const isTranslating = useSessionStore(selectIsTranslating);
-  const totalProgress = useSessionStore(selectTotalProgress);
-  const resourceProgress = useSessionStore(selectTranslatingResourceProgress);
+  const translatingResource = useSessionStore(selectTranslatingResource);
+  const resourcesProgress = useTranslationStore(selectResourcesProgress);
+  const segmentsProgeress = useTranslationStore(
+    selectSegmentsProgress(translatingResource),
+  );
+
   const { start, stop } = useTranslation();
 
   if (!isTranslating) {
@@ -41,16 +49,16 @@ export const TranslationControl = () => {
       </ActionIconWithTooltip>
       <ProgressBar
         title={content.totalProgressTitle}
-        done={totalProgress.done}
-        total={totalProgress.total}
-        data-testid="TranslationControl.TotalProgressBar"
+        done={resourcesProgress.done}
+        total={resourcesProgress.total}
+        data-testid="TranslationControl.ResourcesProgressBar"
       />
-      {resourceProgress && (
+      {segmentsProgeress && (
         <ProgressBar
           title={content.resourceProgressTitle}
-          done={resourceProgress.done}
-          total={resourceProgress.total}
-          data-testid="TranslationControl.ResourceProgressBar"
+          done={segmentsProgeress.done}
+          total={segmentsProgeress.total}
+          data-testid="TranslationControl.SegmentsProgressBar"
         />
       )}
     </Group>

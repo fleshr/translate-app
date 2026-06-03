@@ -1,4 +1,6 @@
+import type { Progress } from "@/shared/model/common";
 import { filter, isDefined, map, pick, pipe } from "remeda";
+import { isSegmentTranslated, isSegmentUntranslated } from "../../lib/helpers";
 import type {
   TranslationBaseResource,
   TranslationResource,
@@ -77,8 +79,32 @@ export const selectUntranslatedSegments = (
     state.segments.allIds,
     map((id) => selectSegment(id)(state)),
     filter(isDefined),
-    filter((segment) => {
-      return !segment.machineTranslation && !segment.manualTranslation;
-    }),
+    filter(isSegmentUntranslated),
   );
+};
+
+export const selectSegmentsProgress = (
+  id: TranslationResource["id"] | null,
+) => {
+  return (state: State): Progress | undefined => {
+    if (!id || !state.resources.byId[id]) {
+      return;
+    }
+
+    const segments = selectResourceSegments(id)(state);
+    const translated = segments.filter(isSegmentTranslated);
+
+    return { done: translated.length, total: segments.length };
+  };
+};
+
+export const selectResourcesProgress = (state: State): Progress => {
+  const resources = state.resources.allIds;
+  const done = resources.filter((id) => {
+    const progress = selectSegmentsProgress(id)(state);
+
+    return progress && progress.done === progress.total;
+  });
+
+  return { done: done.length, total: resources.length };
 };

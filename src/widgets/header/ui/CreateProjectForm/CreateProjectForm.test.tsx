@@ -97,7 +97,7 @@ describe("widgets/header/ui/CreateProjectForm", () => {
     await userEvent.click(getByRole("option", { name: "test1 (1.0.0)" }));
     await userEvent.click(getByTestId("CreateProjectForm.CreateButton"));
 
-    expect(initSession).toHaveBeenCalledWith([]);
+    expect(initSession).toHaveBeenCalledWith(null);
     expect(initProject).toHaveBeenCalledWith({ parser: "test1@1.0.0" });
     expect(initTranslation).toHaveBeenCalledWith([]);
     expect(notifications.show).toHaveBeenCalled();
@@ -113,7 +113,7 @@ describe("widgets/header/ui/CreateProjectForm", () => {
     );
     await userEvent.click(getByTestId("CreateProjectForm.CreateButton"));
 
-    expect(initSession).toHaveBeenCalledWith([]);
+    expect(initSession).toHaveBeenCalledWith(null);
     expect(initProject).toHaveBeenCalledWith({ parser: testParser });
     expect(initTranslation).toHaveBeenCalledWith([]);
     expect(notifications.show).toHaveBeenCalled();

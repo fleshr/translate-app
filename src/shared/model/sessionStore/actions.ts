@@ -1,5 +1,4 @@
-import { calculateResourcesPogress } from "@/shared/lib/calculateResourcesPogress";
-import type { TranslationResource } from "../translation";
+import type { Id } from "../common";
 import { useSessionStore, type State } from "./store";
 
 export const setSessionSelectedResource = (
@@ -26,31 +25,6 @@ export const setSessionStatus = (status: State["status"]) => {
   useSessionStore.setState({ status }, undefined, "setSessionStatus");
 };
 
-export const setSessionResourcesProgress = (
-  resourcesProgress: State["resourcesProgress"],
-) => {
-  useSessionStore.setState(
-    { resourcesProgress },
-    undefined,
-    "setSessionResourcesProgress",
-  );
-};
-
-export const addSessionTranslatingResourceProgress = (count = 1) => {
-  useSessionStore.setState(
-    (state) => {
-      const resourceProgress =
-        state.resourcesProgress[state.translatingResource ?? ""];
-
-      if (resourceProgress) {
-        resourceProgress.done += count;
-      }
-    },
-    undefined,
-    "addSessionTranslatingResourceProgress",
-  );
-};
-
 export const setSessionTranslatingResource = (
   translatingResource: State["translatingResource"],
 ) => {
@@ -61,18 +35,9 @@ export const setSessionTranslatingResource = (
   );
 };
 
-export const initSession = (resources: TranslationResource[]) => {
+export const initSession = (selectedResource: Id | null) => {
   useSessionStore.setState(
-    (): State => {
-      const resourcesProgress = calculateResourcesPogress(resources);
-      const selectedResource = resources[0]?.id ?? null;
-
-      return {
-        ...useSessionStore.getInitialState(),
-        resourcesProgress,
-        selectedResource,
-      };
-    },
+    { ...useSessionStore.getInitialState(), selectedResource },
     undefined,
     "initSession",
   );

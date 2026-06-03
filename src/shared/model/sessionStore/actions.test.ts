@@ -1,10 +1,7 @@
 import { resetStore } from "@/shared/lib/testing";
-import { getTranslationFileMock } from "@/shared/mocks/translation";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import {
-  addSessionTranslatingResourceProgress,
   initSession,
-  setSessionResourcesProgress,
   setSessionSelectedResource,
   setSessionSelectedSegment,
   setSessionStatus,
@@ -41,16 +38,6 @@ describe("shared/model/sessionStore/actions", () => {
     });
   });
 
-  describe("setSessionResourcesProgress", () => {
-    it("should set resources progress", () => {
-      setSessionResourcesProgress({ test: { done: 50, total: 100 } });
-
-      expect(useSessionStore.getState().resourcesProgress).toEqual({
-        test: { done: 50, total: 100 },
-      });
-    });
-  });
-
   describe("setSessionTranslatingResource", () => {
     it("should set selected segment", () => {
       setSessionTranslatingResource("test");
@@ -59,60 +46,17 @@ describe("shared/model/sessionStore/actions", () => {
     });
   });
 
-  describe("addSessionTranslatingResourceProgress", () => {
-    beforeEach(() => {
-      useSessionStore.setState({
-        resourcesProgress: { test: { done: 50, total: 100 } },
-      });
-    });
-
-    it("should do nothing if no translating resource", () => {
-      useSessionStore.setState({ translatingResource: null });
-
-      addSessionTranslatingResourceProgress();
-
-      expect(useSessionStore.getState().resourcesProgress).toEqual({
-        test: { done: 50, total: 100 },
-      });
-    });
-
-    it("should increase progress by 1 by default", () => {
-      useSessionStore.setState({ translatingResource: "test" });
-
-      addSessionTranslatingResourceProgress();
-
-      expect(useSessionStore.getState().resourcesProgress).toEqual({
-        test: { done: 51, total: 100 },
-      });
-    });
-
-    it("should increase progress by count", () => {
-      useSessionStore.setState({ translatingResource: "test" });
-
-      addSessionTranslatingResourceProgress(5);
-
-      expect(useSessionStore.getState().resourcesProgress).toEqual({
-        test: { done: 55, total: 100 },
-      });
-    });
-  });
-
   describe("initSession", () => {
-    it("should initialize session", () => {
-      const testResource = getTranslationFileMock();
-
-      initSession([testResource]);
+    it("should initialize session with selected resource", () => {
+      initSession("file-1");
 
       expect(useSessionStore.getState()).toEqual(
-        expect.objectContaining({
-          selectedResource: testResource.id,
-          resourcesProgress: { [testResource.id]: { done: 0, total: 0 } },
-        }),
+        expect.objectContaining({ selectedResource: "file-1" }),
       );
     });
 
-    it("should do nothing if no resources", () => {
-      initSession([]);
+    it("should initialize session without selected resource", () => {
+      initSession(null);
 
       expect(useSessionStore.getState()).toEqual(defaultState);
     });

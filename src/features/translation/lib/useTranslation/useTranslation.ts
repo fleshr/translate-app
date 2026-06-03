@@ -8,7 +8,6 @@ import { translators } from "@/shared/constants/translators";
 import { stringifyJson } from "@/shared/lib/json";
 import { logger } from "@/shared/lib/logger";
 import {
-  addSessionTranslatingResourceProgress,
   selectIsTranslating,
   setSessionStatus,
   setSessionTranslatingResource,
@@ -69,7 +68,6 @@ export const useTranslation = () => {
       },
       onSegmentBatchComplete(translations, response) {
         setTranslationSegmentsField(translations);
-        addSessionTranslatingResourceProgress(translations.length);
 
         logger.info(
           content.completeSegmentMessage({ text: stringifyJson(response) }),
@@ -82,7 +80,6 @@ export const useTranslation = () => {
       },
       onSegmentSequentialComplete(segment, translation) {
         setTranslationSegmentField(segment.id, translation);
-        addSessionTranslatingResourceProgress(1);
 
         logger.info(content.completeSegmentMessage({ text: translation }));
       },
