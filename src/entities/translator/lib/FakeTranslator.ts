@@ -1,10 +1,10 @@
 import { stringifyJson } from "@/shared/lib/json";
+import { generate, type JsonSchema } from "json-schema-faker";
 import type {
   Translator,
   TranslatorConfig,
   TranslatorOptions,
-} from "@/shared/model/translator";
-import { generate, type JsonSchema } from "json-schema-faker";
+} from "../model/translator";
 
 interface Config extends TranslatorConfig {
   delay: number;

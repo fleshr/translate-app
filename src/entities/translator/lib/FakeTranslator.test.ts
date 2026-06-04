@@ -13,7 +13,7 @@ const testSchema = z.object({
   test: z.string(),
 });
 
-describe("shared/lib/translator/FakeTranslator", () => {
+describe("entities/translator/lib/FakeTranslator", () => {
   beforeEach(() => {
     vi.useFakeTimers();
   });

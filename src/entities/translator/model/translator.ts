@@ -1,5 +1,5 @@
+import type { FormField } from "@/shared/model/form";
 import type { z } from "zod";
-import type { FormField } from "./form";
 
 export type TranslatorConfig = Record<string, unknown>;
 

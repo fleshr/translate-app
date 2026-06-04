@@ -27,7 +27,7 @@ const { mockCreate, mockOpenAI } = vi.hoisted(() => {
 
 vi.mock("openai", () => ({ default: mockOpenAI }));
 
-describe("shared/lib/translator/OpenAITranslator", () => {
+describe("entities/translator/lib/OpenAITranslator", () => {
   it("should apply config to OpenAI client", async () => {
     const abortController = new AbortController();
 

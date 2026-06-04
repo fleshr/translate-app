@@ -1,7 +1,7 @@
-import { createMockFactory } from "../lib/testing";
+import { createMockFactory } from "@/shared/lib/testing";
 import type { Translator } from "../model/translator";
 
-export const mockTranslator: Translator = {
+const mockTranslator: Translator = {
   name: "Mock Translator",
   version: "0.0.1",
   configFields: [],

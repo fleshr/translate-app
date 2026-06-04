@@ -1,0 +1,1 @@
+export { getTranslatorMock } from "./translator";

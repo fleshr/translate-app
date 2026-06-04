@@ -1,11 +1,11 @@
+import OpenAI from "openai";
+import { zodTextFormat } from "openai/helpers/zod";
+import { z } from "zod";
 import type {
   Translator,
   TranslatorConfig,
   TranslatorOptions,
-} from "@/shared/model/translator";
-import OpenAI from "openai";
-import { zodTextFormat } from "openai/helpers/zod";
-import { z } from "zod";
+} from "../model/translator";
 
 const instructions = `You are an expert Eroge Game translator who translates Japanese text to English.
 You are going to be translating text from a videogame.
