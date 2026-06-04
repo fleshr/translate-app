@@ -1,3 +1,4 @@
+import { getParserMock } from "@/entities/parser/mocks";
 import type { TranslationResource } from "@/entities/translation";
 import {
   getTranslationCommonMock,
@@ -5,7 +6,6 @@ import {
   getTranslationFileOccurrenceMock,
   getTranslationSegmentMock,
 } from "@/entities/translation/mocks";
-import { getParserMock } from "@/shared/mocks/parser";
 import JSZip from "jszip";
 import { describe, expect, it, vi } from "vitest";
 import { exportTranslationToZip } from "./exportTranslationToZip";

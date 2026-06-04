@@ -1,8 +1,7 @@
+import { resolveParser, type Parser } from "@/entities/parser";
 import { useTranslationStore } from "@/entities/translation";
 import { getTranslationStoreStateMock } from "@/entities/translation/mocks";
-import { resolveParser } from "@/shared/lib/parser";
 import { render, resetStore } from "@/shared/lib/testing";
-import type { Parser } from "@/shared/model/parser";
 import { useSessionStore } from "@/shared/model/sessionStore";
 import { notifications } from "@mantine/notifications";
 import userEvent from "@testing-library/user-event";
@@ -23,7 +22,7 @@ const segment1 = testStore.segments.byId["segment-1"]!;
 const segment2 = testStore.segments.byId["segment-2"]!;
 const segment3 = testStore.segments.byId["segment-3"]!;
 
-vi.mock("@/shared/lib/parser");
+vi.mock("@/entities/parser", { spy: true });
 vi.mocked(resolveParser).mockResolvedValue(testParser);
 
 vi.mock("../../lib/exportTranslationToZip/exportTranslationToZip");

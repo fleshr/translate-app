@@ -1,5 +1,9 @@
+import { resolveParser } from "@/entities/parser";
 import { initTranslation } from "@/entities/translation";
-import { resolveParser } from "@/shared/lib/parser";
+import {
+  selectProjectParser,
+  useProjectStore,
+} from "@/shared/model/projectStore";
 import {
   initSession,
   selectIsTranslating,
@@ -18,7 +22,8 @@ export const ImportButton = () => {
 
   const handleImportFiles = async () => {
     try {
-      const parser = await resolveParser();
+      const projectParser = selectProjectParser(useProjectStore.getState());
+      const parser = await resolveParser(projectParser);
 
       if (!parser) {
         notifications.show({ message: content.parserNotFoundMessage });

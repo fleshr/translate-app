@@ -1,9 +1,5 @@
+import { selectParser, selectParsers, useParserStore } from "@/entities/parser";
 import { initTranslation } from "@/entities/translation";
-import {
-  selectModule,
-  selectModules,
-  useModuleStore,
-} from "@/shared/model/moduleStore";
 import { initProject } from "@/shared/model/projectStore";
 import { initSession } from "@/shared/model/sessionStore";
 import {
@@ -30,7 +26,7 @@ interface CreateProjectFormProps {
 export const CreateProjectForm = (props: CreateProjectFormProps) => {
   const { onCancel, onSubmit } = props;
   const content = useIntlayer("CreateProjectForm");
-  const parsers = useModuleStore(selectModules("parsers"));
+  const parsers = useParserStore(selectParsers);
 
   const items: ComboboxItem[] = parsers.map((parser) => ({
     label: `${parser.name} (${parser.version})`,
@@ -61,10 +57,7 @@ export const CreateProjectForm = (props: CreateProjectFormProps) => {
 
   const handleSubmit = form.onSubmit((values) => {
     const { parser, parserSaveFully } = values;
-    const parserModule = selectModule(
-      "parsers",
-      parser,
-    )(useModuleStore.getState());
+    const parserModule = selectParser(parser)(useParserStore.getState());
 
     const isSaveFully = parserSaveFully && parserModule?.type === "external";
 

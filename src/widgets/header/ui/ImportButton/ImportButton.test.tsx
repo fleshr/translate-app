@@ -1,8 +1,8 @@
+import { resolveParser } from "@/entities/parser";
+import { getParserMock } from "@/entities/parser/mocks";
 import { initTranslation } from "@/entities/translation";
 import { getTranslationFileMock } from "@/entities/translation/mocks";
-import { resolveParser } from "@/shared/lib/parser";
 import { render, resetStore } from "@/shared/lib/testing";
-import { getParserMock } from "@/shared/mocks/parser";
 import { initSession, useSessionStore } from "@/shared/model/sessionStore";
 import { notifications } from "@mantine/notifications";
 import userEvent from "@testing-library/user-event";
@@ -15,7 +15,7 @@ const testFile = new File(["test"], "file.js");
 const testParser = getParserMock();
 const testResource = getTranslationFileMock();
 
-vi.mock("@/shared/lib/parser");
+vi.mock("@/entities/parser", { spy: true });
 vi.mocked(resolveParser).mockResolvedValue(testParser);
 
 vi.mock("../../lib/extractTranslations/extractTranslations");

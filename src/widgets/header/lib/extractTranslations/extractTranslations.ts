@@ -1,4 +1,9 @@
 import type {
+  ExtractedBaseSegment,
+  ExtractedCommonSegment,
+  Parser,
+} from "@/entities/parser";
+import type {
   TranslationCommon,
   TranslationFile,
   TranslationFileOccurrence,
@@ -6,11 +11,6 @@ import type {
 } from "@/entities/translation";
 import { readFile } from "@/shared/lib/file";
 import type { Id } from "@/shared/model/common";
-import type {
-  ExtractedBaseSegment,
-  ExtractedCommonSegment,
-  Parser,
-} from "@/shared/model/parser";
 import { nanoid } from "nanoid";
 import { filter, groupByProp, map, mapValues, pipe, values } from "remeda";
 

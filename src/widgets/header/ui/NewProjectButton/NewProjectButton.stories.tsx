@@ -1,3 +1,5 @@
+import { useParserStore } from "@/entities/parser";
+import { getParserStoreStateMock } from "@/entities/parser/mocks";
 import { withStoreState } from "@/shared/lib/storybook";
 import { getModuleExternalMock } from "@/shared/mocks/module";
 import { useModuleStore } from "@/shared/model/moduleStore";
@@ -8,11 +10,7 @@ import { NewProjectButton } from "./NewProjectButton";
 const meta = {
   title: "widgets/header/NewProjectButton",
   component: NewProjectButton,
-  decorators: [
-    withStoreState(useModuleStore, {
-      parsers: { "test@1.0.0": getModuleExternalMock() },
-    }),
-  ],
+  decorators: [withStoreState(useParserStore, getParserStoreStateMock())],
 } satisfies Meta<typeof NewProjectButton>;
 
 export default meta;

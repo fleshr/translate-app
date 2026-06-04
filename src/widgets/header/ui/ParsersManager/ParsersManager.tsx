@@ -1,11 +1,11 @@
-import { readFile } from "@/shared/lib/file";
-import { createParserFromCode } from "@/shared/lib/module";
 import {
-  addModule,
-  removeModule,
-  selectModules,
-  useModuleStore,
-} from "@/shared/model/moduleStore";
+  addParser,
+  createParserFromCode,
+  removeParser,
+  selectParsers,
+  useParserStore,
+} from "@/entities/parser";
+import { readFile } from "@/shared/lib/file";
 import { ActionIconWithTooltip } from "@/shared/ui/ActionIconWithTooltip";
 import { Button, Card, Group, ScrollArea, Stack, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
@@ -15,7 +15,7 @@ import { useIntlayer } from "react-intlayer";
 
 export const ParsersManager = () => {
   const content = useIntlayer("ParsersManager");
-  const parsers = useModuleStore(selectModules("parsers"));
+  const parsers = useParserStore(selectParsers);
 
   const handleAddParser = async () => {
     try {
@@ -27,7 +27,7 @@ export const ParsersManager = () => {
       const code = await readFile(file);
       const { name, version, shortName } = await createParserFromCode(code);
 
-      addModule("parsers", {
+      addParser({
         id: `${shortName}@${version}`,
         type: "external",
         name,
@@ -43,7 +43,7 @@ export const ParsersManager = () => {
   };
 
   const handleRemoveParser = (id: string) => () => {
-    removeModule("parsers", id);
+    removeParser(id);
     notifications.show({ message: content.removeMessage });
   };
 

@@ -1,15 +1,14 @@
-import { createParserFromCode } from "@/shared/lib/module";
+import {
+  addParser,
+  createParserFromCode,
+  removeParser,
+  useParserStore,
+} from "@/entities/parser";
+import {
+  getParserMock,
+  getParserStoreStateMock,
+} from "@/entities/parser/mocks";
 import { render, resetStore } from "@/shared/lib/testing";
-import {
-  getModuleBuiltinMock,
-  getModuleExternalMock,
-} from "@/shared/mocks/module";
-import { getParserMock } from "@/shared/mocks/parser";
-import {
-  addModule,
-  removeModule,
-  useModuleStore,
-} from "@/shared/model/moduleStore";
 import { notifications } from "@mantine/notifications";
 import userEvent from "@testing-library/user-event";
 import { fileOpen } from "browser-fs-access";
@@ -20,57 +19,56 @@ const testFile = new File(["test code"], "file.js");
 
 vi.mock("@/shared/model/moduleStore", { spy: true });
 
-vi.mock("@/shared/lib/module", { spy: true });
+vi.mock("@/entities/parser", { spy: true });
 vi.mocked(createParserFromCode).mockResolvedValue(getParserMock());
 
 describe("widgets/header/ui/ParsersManager", () => {
   beforeEach(() => {
-    useModuleStore.setState({
-      parsers: {
-        "test@1.0.0": getModuleBuiltinMock(),
-        "test@2.0.0": getModuleExternalMock({
-          id: "test@2.0.0",
-          version: "2.0.0",
-        }),
-      },
-    });
+    useParserStore.setState(getParserStoreStateMock());
   });
 
   afterEach(() => {
-    resetStore(useModuleStore);
+    resetStore(useParserStore);
   });
 
   it("should show parsers list", () => {
     const { getByTestId } = render(<ParsersManager />);
 
-    expect(getByTestId("ParsersManager.Item.0")).toHaveTextContent(
-      "Test Module (1.0.0)",
-    );
-    expect(getByTestId("ParsersManager.Item.1")).toHaveTextContent(
-      "Test Module (2.0.0)",
-    );
+    const parser1 = getByTestId("ParsersManager.Item.0");
+    const parser2 = getByTestId("ParsersManager.Item.1");
+    const parser3 = getByTestId("ParsersManager.Item.2");
+
+    expect(parser1).toHaveTextContent("Test Module 1 (1.0.0)");
+    expect(parser2).toHaveTextContent("Test Module 2 (1.0.0)");
+    expect(parser3).toHaveTextContent("Test Module 3 (1.0.0)");
   });
 
   it("should show remove button only on external parsers", () => {
     const { queryByTestId } = render(<ParsersManager />);
 
-    expect(
-      queryByTestId("ParsersManager.Item.0.RemoveButton"),
-    ).not.toBeInTheDocument();
-    expect(
-      queryByTestId("ParsersManager.Item.1.RemoveButton"),
-    ).toBeInTheDocument();
+    const removeButton1 = queryByTestId("ParsersManager.Item.0.RemoveButton");
+    const removeButton2 = queryByTestId("ParsersManager.Item.1.RemoveButton");
+    const removeButton3 = queryByTestId("ParsersManager.Item.2.RemoveButton");
+
+    expect(removeButton1).toBeInTheDocument();
+    expect(removeButton2).not.toBeInTheDocument();
+    expect(removeButton3).not.toBeInTheDocument();
   });
 
   it("should remove parser and show notification", async () => {
-    const { getByTestId, queryByTestId } = render(<ParsersManager />);
+    const { getByTestId, queryAllByTestId } = render(<ParsersManager />);
 
-    const removeButton = getByTestId("ParsersManager.Item.1.RemoveButton");
+    let items = queryAllByTestId(/ParsersManager.Item.\d+$/);
+    expect(items).toHaveLength(3);
+
+    const removeButton = getByTestId("ParsersManager.Item.0.RemoveButton");
     await userEvent.click(removeButton);
 
-    expect(removeModule).toHaveBeenCalledWith("parsers", "test@2.0.0");
+    items = queryAllByTestId(/ParsersManager.Item.\d+$/);
+    expect(items).toHaveLength(2);
+
+    expect(removeParser).toHaveBeenCalledWith("test1@1.0.0");
     expect(notifications.show).toHaveBeenCalled();
-    expect(queryByTestId("ParsersManager.Item.1")).not.toBeInTheDocument();
   });
 
   it("should add parser and show notification", async () => {
@@ -80,7 +78,7 @@ describe("widgets/header/ui/ParsersManager", () => {
     const addButton = getByTestId("ParsersManager.AddParserButton");
     await userEvent.click(addButton);
 
-    expect(addModule).toHaveBeenCalledWith("parsers", {
+    expect(addParser).toHaveBeenCalledWith({
       id: "test@1.0.0",
       name: "Test Parser",
       version: "1.0.0",
@@ -98,7 +96,7 @@ describe("widgets/header/ui/ParsersManager", () => {
     const addButton = getByTestId("ParsersManager.AddParserButton");
     await userEvent.click(addButton);
 
-    expect(addModule).not.toHaveBeenCalled();
+    expect(addParser).not.toHaveBeenCalled();
     expect(notifications.show).toHaveBeenCalled();
   });
 });

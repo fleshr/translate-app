@@ -1,4 +1,4 @@
-import type { Parser } from "@/shared/model/parser";
+import type { Parser } from "@/entities/parser";
 import { nanoid } from "nanoid";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { extractTranslations } from "./extractTranslations";
