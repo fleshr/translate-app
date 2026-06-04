@@ -4,7 +4,12 @@ import {
   setTranslationSegmentsField,
   useTranslationStore,
 } from "@/entities/translation";
-import { translators } from "@/shared/constants/translators";
+import {
+  selectSelectedTranslator,
+  selectTranslatorConfig,
+  translators,
+  useTranslatorStore,
+} from "@/entities/translator";
 import { stringifyJson } from "@/shared/lib/json";
 import { logger } from "@/shared/lib/logger";
 import {
@@ -13,11 +18,6 @@ import {
   setSessionTranslatingResource,
   useSessionStore,
 } from "@/shared/model/sessionStore";
-import {
-  selectSelectedTranslator,
-  selectTranslatorConfig,
-  useSettingsStore,
-} from "@/shared/model/settingsStore";
 import { notifications } from "@mantine/notifications";
 import { useIntlayer } from "react-intlayer";
 import { translationProcess } from "../TranslationProcess/TranslationProcess";
@@ -34,12 +34,12 @@ export const useTranslation = () => {
     }
 
     const selectedTranslator = selectSelectedTranslator(
-      useSettingsStore.getState(),
+      useTranslatorStore.getState(),
     );
 
     const translator = translators[selectedTranslator];
     const translatorConfig = selectTranslatorConfig(selectedTranslator)(
-      useSettingsStore.getState(),
+      useTranslatorStore.getState(),
     );
 
     if (!translator) {

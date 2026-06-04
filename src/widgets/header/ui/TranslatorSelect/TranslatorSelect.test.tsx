@@ -1,32 +1,29 @@
-import { render, resetStore } from "@/shared/lib/testing";
-import { getTranslatorMock } from "@/shared/mocks/translator";
-import { useSessionStore } from "@/shared/model/sessionStore";
+import * as translatorModule from "@/entities/translator";
 import {
-  setSettingsSelectedTranslator,
-  useSettingsStore,
-} from "@/shared/model/settingsStore";
+  setSelectedTranslator,
+  useTranslatorStore,
+} from "@/entities/translator";
+import { getTranslatorMock } from "@/entities/translator/mocks";
+import { render, resetStore } from "@/shared/lib/testing";
+import { useSessionStore } from "@/shared/model/sessionStore";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { TranslatorSelect } from "./TranslatorSelect";
 
-vi.mock("@/shared/model/settingsStore", { spy: true });
+vi.mock("@/entities/translator", { spy: true });
 
-vi.mock(import("@/shared/constants/translators"), () => ({
-  translators: {
-    test1: getTranslatorMock({ name: "test1" }),
-    test2: getTranslatorMock({ name: "test2" }),
-  },
-}));
+vi.spyOn(translatorModule, "translators", "get").mockReturnValue({
+  test1: getTranslatorMock({ name: "test1" }),
+  test2: getTranslatorMock({ name: "test2" }),
+});
 
 describe("widgets/header/ui/TranslatorSelect", () => {
   beforeEach(() => {
-    useSettingsStore.setState({
-      translator: { selected: "test1", configs: {} },
-    });
+    useTranslatorStore.setState({ selected: "test1", configs: {} });
   });
 
   afterEach(() => {
-    resetStore(useSessionStore, useSettingsStore);
+    resetStore(useSessionStore, useTranslatorStore);
   });
 
   it("should be disabled when translating", () => {
@@ -66,6 +63,6 @@ describe("widgets/header/ui/TranslatorSelect", () => {
     const option = getByRole("option", { name: "test2" });
     await userEvent.click(option);
 
-    expect(setSettingsSelectedTranslator).toHaveBeenCalledWith("test2");
+    expect(setSelectedTranslator).toHaveBeenCalledWith("test2");
   });
 });
