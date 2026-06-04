@@ -1,10 +1,4 @@
 import {
-  BOTTOM_PANEL_HEIGHT,
-  SIDEBAR_WIDTH,
-  TOP_PANEL_HEIGHT,
-} from "@/app/constants";
-import { Providers } from "@/app/providers";
-import {
   selectViewShowBottomPanel,
   selectViewShowSidePanel,
   useSettingsStore,
@@ -16,6 +10,12 @@ import { TranslationTable } from "@/widgets/translation-table";
 import { AppShell, ScrollArea } from "@mantine/core";
 import { useWindowEvent } from "@mantine/hooks";
 import { useLocale } from "react-intlayer";
+import {
+  BOTTOM_PANEL_HEIGHT,
+  SIDEBAR_WIDTH,
+  TOP_PANEL_HEIGHT,
+} from "../../config";
+import { Providers } from "../../providers";
 
 export const App = () => {
   const { locale } = useLocale();

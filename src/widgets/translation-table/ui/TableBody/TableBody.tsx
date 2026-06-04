@@ -9,7 +9,7 @@ import {
   type VirtualItem,
 } from "@tanstack/react-virtual";
 import { useEffectEvent, useLayoutEffect } from "react";
-import { ROW_HEIGHT } from "../../constants/table";
+import { ROW_HEIGHT } from "../../config/table";
 import { TableRow } from "../TableRow/TableRow";
 
 interface TableBodyProps {
