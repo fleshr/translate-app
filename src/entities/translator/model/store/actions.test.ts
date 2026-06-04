@@ -15,6 +15,12 @@ describe("entities/translator/model/store/actions", () => {
       expect(useTranslatorStore.getState().configs).toEqual({
         test: { testField1: "testValue1" },
       });
+
+      setTranslatorConfig("test", { testField1: "test" });
+
+      expect(useTranslatorStore.getState().configs).toEqual({
+        test: { testField1: "test" },
+      });
     });
   });
 
