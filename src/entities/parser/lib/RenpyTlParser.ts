@@ -3,7 +3,7 @@ import type {
   ExtractedSegment,
   Parser,
   Replacement,
-} from "@/shared/model/parser";
+} from "../model/parser/types";
 
 export const RenpyTlParser: Parser = {
   name: "Renpy Translation Parser",

@@ -22,7 +22,7 @@ const content = `
 </xscript>
 `;
 
-describe("shared/lib/parsers/EntisParser", () => {
+describe("entities/parser/lib/EntisParser", () => {
   it("should check file", () => {
     expect(EntisParser.checkFile(new File(["test"], "test.srcxml"))).toBe(true);
     expect(EntisParser.checkFile(new File(["test"], "test.js"))).toBe(false);

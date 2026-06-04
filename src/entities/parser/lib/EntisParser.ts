@@ -1,10 +1,10 @@
+import escapeHtml from "escape-html";
 import type {
   ExtractedData,
   ExtractedSegment,
   Parser,
   Replacement,
-} from "@/shared/model/parser";
-import escapeHtml from "escape-html";
+} from "../model/parser/types";
 
 export const EntisParser: Parser = {
   name: "Entis Parser",

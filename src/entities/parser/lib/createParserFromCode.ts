@@ -1,5 +1,6 @@
-import { ParserShema, type Parser } from "@/shared/model/parser";
-import { createModuleFromCode } from "./createModuleFromCode";
+import { createModuleFromCode } from "@/shared/lib/module";
+import { ParserShema } from "../model/parser/schemas";
+import type { Parser } from "../model/parser/types";
 
 export const createParserFromCode = async (code: string): Promise<Parser> => {
   const module = await createModuleFromCode(code);

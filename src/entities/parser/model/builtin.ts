@@ -1,6 +1,7 @@
-import { EntisParser, RenpyTlParser } from "@/shared/lib/parsers";
-import type { ModuleBuiltin } from "../model/module";
-import type { Parser } from "../model/parser";
+import type { ModuleBuiltin } from "@/shared/model/module";
+import { EntisParser } from "../lib/EntisParser";
+import { RenpyTlParser } from "../lib/RenpyTlParser";
+import type { Parser } from "./parser/types";
 
 const parsers = [EntisParser, RenpyTlParser];
 

@@ -1,7 +1,7 @@
-import { createMockFactory } from "../lib/testing";
-import type { Parser } from "../model/parser";
+import { createMockFactory } from "@/shared/lib/testing";
+import type { Parser } from "../model/parser/types";
 
-export const mockParser: Parser = {
+const mockParser: Parser = {
   name: "Test Parser",
   version: "1.0.0",
   shortName: "test",

@@ -1,7 +1,7 @@
 import { del, get, set } from "idb-keyval";
 import { type StateStorage } from "zustand/middleware";
 
-export const storage: StateStorage = {
+export const idbStorage: StateStorage = {
   getItem: async (name: string): Promise<string | null> => {
     return (await get(name)) ?? null;
   },

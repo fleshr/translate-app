@@ -27,7 +27,7 @@ translate russian strings:
     new ""
 `;
 
-describe("shared/lib/parsers/RenpyTlParser", () => {
+describe("entities/parser/lib/RenpyTlParser", () => {
   it("should check file", () => {
     expect(RenpyTlParser.checkFile(new File(["test"], "test.rpy"))).toBe(true);
     expect(RenpyTlParser.checkFile(new File(["test"], "test.js"))).toBe(false);

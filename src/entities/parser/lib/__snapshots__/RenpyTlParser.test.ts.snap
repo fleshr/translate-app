@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`shared/lib/parsers/RenpyTlParser > should extract text 1`] = `
+exports[`entities/parser/lib/RenpyTlParser > should extract text 1`] = `
 {
   "content": "
 # TODO: Translation updated at 2026-05-26 10:11
@@ -38,7 +38,7 @@ translate russian start_f41f55d7:
 }
 `;
 
-exports[`shared/lib/parsers/RenpyTlParser > should extract text 2`] = `
+exports[`entities/parser/lib/RenpyTlParser > should extract text 2`] = `
 {
   "content": "
 # TODO: Translation updated at 2026-05-26 10:11
@@ -62,7 +62,7 @@ translate russian strings:
 }
 `;
 
-exports[`shared/lib/parsers/RenpyTlParser > should replace text 1`] = `
+exports[`entities/parser/lib/RenpyTlParser > should replace text 1`] = `
 "
 # TODO: Translation updated at 2026-05-26 10:11
 
@@ -80,7 +80,7 @@ translate russian start_f41f55d7:
 "
 `;
 
-exports[`shared/lib/parsers/RenpyTlParser > should replace text 2`] = `
+exports[`entities/parser/lib/RenpyTlParser > should replace text 2`] = `
 "
 # TODO: Translation updated at 2026-05-26 10:11
 

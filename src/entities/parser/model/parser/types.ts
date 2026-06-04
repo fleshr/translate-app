@@ -6,7 +6,7 @@ import {
   ExtractedSegmentSchema,
   ParserShema,
   ReplacementSchema,
-} from "../parser";
+} from "./schemas";
 
 export type ExtractedBaseSegment = z.infer<typeof ExtractedBaseSegmentSchema>;
 export type ExtractedCommonSegment = z.infer<

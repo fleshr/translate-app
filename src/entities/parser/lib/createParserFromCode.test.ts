@@ -1,13 +1,13 @@
-import { getParserMock } from "@/shared/mocks/parser";
+import { createModuleFromCode } from "@/shared/lib/module";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { createModuleFromCode } from "./createModuleFromCode";
+import { getParserMock } from "../mocks";
 import { createParserFromCode } from "./createParserFromCode";
 
 const mockParser = getParserMock();
 
-vi.mock("./createModuleFromCode");
+vi.mock("@/shared/lib/module");
 
-describe("shared/lib/module/createParserFromCode", () => {
+describe("entities/parser/lib/createParserFromCode", () => {
   beforeEach(() => {
     vi.stubGlobal(
       "Blob",
