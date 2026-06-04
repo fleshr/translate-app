@@ -6,10 +6,6 @@ const mockSessionStoreState: State = {
     showBottomPanel: true,
     showSidePanel: true,
   },
-  translator: {
-    selected: "openai",
-    configs: {},
-  },
 };
 
 export const getSettingsStoreStateMock = createMockFactory(
