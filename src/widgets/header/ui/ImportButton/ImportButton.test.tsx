@@ -1,8 +1,9 @@
-import { resolveParser } from "@/shared/lib/parser";
+import { resolveParser } from "@/entities/parser";
+import { getParserMock } from "@/entities/parser/mocks";
+import { initTranslation } from "@/entities/translation";
+import { getTranslationFileMock } from "@/entities/translation/mocks";
 import { render, resetStore } from "@/shared/lib/testing";
-import type { Parser } from "@/shared/model/parser";
 import { initSession, useSessionStore } from "@/shared/model/sessionStore";
-import { initTranslation } from "@/shared/model/translationStore";
 import { notifications } from "@mantine/notifications";
 import userEvent from "@testing-library/user-event";
 import { directoryOpen } from "browser-fs-access";
@@ -11,16 +12,17 @@ import { extractTranslations } from "../../lib/extractTranslations/extractTransl
 import { ImportButton } from "./ImportButton";
 
 const testFile = new File(["test"], "file.js");
-const testParser = { name: "test" } as Parser;
+const testParser = getParserMock();
+const testResource = getTranslationFileMock();
 
-vi.mock("@/shared/lib/parser");
+vi.mock("@/entities/parser", { spy: true });
 vi.mocked(resolveParser).mockResolvedValue(testParser);
 
 vi.mock("../../lib/extractTranslations/extractTranslations");
-vi.mocked(extractTranslations).mockResolvedValue([]);
+vi.mocked(extractTranslations).mockResolvedValue([testResource]);
 
 vi.mock("@/shared/model/sessionStore", { spy: true });
-vi.mock("@/shared/model/translationStore", { spy: true });
+vi.mock("@/entities/translation", { spy: true });
 
 vi.mocked(directoryOpen).mockResolvedValue([testFile]);
 
@@ -46,8 +48,8 @@ describe("widgets/header/ui/ImportButton", () => {
     expect(directoryOpen).toHaveBeenCalled();
     expect(extractTranslations).toHaveBeenCalledWith([testFile], testParser);
 
-    expect(initSession).toHaveBeenCalledWith([]);
-    expect(initTranslation).toHaveBeenCalledWith([]);
+    expect(initSession).toHaveBeenCalledWith(testResource.id);
+    expect(initTranslation).toHaveBeenCalledWith([testResource]);
 
     expect(notifications.show).toHaveBeenCalled();
   });

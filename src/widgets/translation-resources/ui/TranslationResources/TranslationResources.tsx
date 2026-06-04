@@ -1,22 +1,12 @@
 import {
-  selectResourcesProgress,
-  selectSelectedResource,
-  selectTranslatingResource,
-  setSessionSelectedResource,
-  useSessionStore,
-} from "@/shared/model/sessionStore";
-import {
   selectBaseResources,
   useTranslationStore,
-} from "@/shared/model/translationStore";
+} from "@/entities/translation";
 import { Stack } from "@mantine/core";
 import { TranslationResourceButton } from "../TranslationResourceButton/TranslationResourceButton";
 
 export const TranslationResources = () => {
   const resources = useTranslationStore(selectBaseResources);
-  const progress = useSessionStore(selectResourcesProgress);
-  const selectedResource = useSessionStore(selectSelectedResource);
-  const translatingResource = useSessionStore(selectTranslatingResource);
 
   return (
     <Stack gap="xs" p="xs" data-testid="TranslationResources">
@@ -26,10 +16,6 @@ export const TranslationResources = () => {
             <TranslationResourceButton
               key={resource.id}
               resource={resource}
-              onSelect={setSessionSelectedResource}
-              progress={progress[resource.id]}
-              isSelected={resource.id === selectedResource}
-              isProcessing={resource.id === translatingResource}
               data-testid={`TranslationResources.Item.${index}`}
             />
           ))}

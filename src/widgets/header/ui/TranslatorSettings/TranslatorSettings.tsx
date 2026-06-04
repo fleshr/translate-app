@@ -1,12 +1,12 @@
-import { translators } from "@/shared/constants/translators";
-import { getComboboxItems } from "@/shared/lib/getComboboxItems";
 import {
   selectSelectedTranslator,
   selectTranslatorConfig,
-  setSettingsTranslatorConfig,
-  useSettingsStore,
-} from "@/shared/model/settingsStore";
-import type { TranslatorConfig } from "@/shared/model/translator";
+  setTranslatorConfig,
+  translators,
+  useTranslatorStore,
+  type TranslatorConfig,
+} from "@/entities/translator";
+import { getComboboxItems } from "@/shared/lib/getComboboxItems";
 import { DynamicForm } from "@/shared/ui/DynamicForm";
 import { Button, Divider, ScrollArea, Select, Stack } from "@mantine/core";
 import { useId, useState } from "react";
@@ -15,10 +15,10 @@ import { useIntlayer } from "react-intlayer";
 export const TranslatorSettings = () => {
   const formId = useId();
   const content = useIntlayer("TranslatorSettings");
-  const selectedTranslator = useSettingsStore(selectSelectedTranslator);
+  const selectedTranslator = useTranslatorStore(selectSelectedTranslator);
   const [activeTranslator, setActiveTranslator] = useState(selectedTranslator);
   const translator = translators[activeTranslator];
-  const storeConfig = useSettingsStore(
+  const storeConfig = useTranslatorStore(
     selectTranslatorConfig(activeTranslator),
   );
 
@@ -31,7 +31,7 @@ export const TranslatorSettings = () => {
   };
 
   const handleSubmit = (values: TranslatorConfig) => {
-    setSettingsTranslatorConfig(activeTranslator, values);
+    setTranslatorConfig(activeTranslator, values);
   };
 
   return (

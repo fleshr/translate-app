@@ -1,10 +1,10 @@
-import { render } from "@/shared/lib/testing";
-import { getTranslationSegmentMock } from "@/shared/mocks/translation";
 import {
   selectSegments,
   setTranslationSegments,
   useTranslationStore,
-} from "@/shared/model/translationStore";
+} from "@/entities/translation";
+import { getTranslationSegmentMock } from "@/entities/translation/mocks";
+import { render } from "@/shared/lib/testing";
 import { notifications } from "@mantine/notifications";
 import { act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -23,7 +23,7 @@ const segments = [
   { ...getTranslationSegmentMock(), id: "segment-1" },
   { ...getTranslationSegmentMock(), id: "segment-2" },
 ];
-vi.mock("@/shared/model/translationStore");
+vi.mock("@/entities/translation");
 vi.mocked(selectSegments).mockReturnValue(segments);
 
 describe("widgets/header/ui/ScriptEditor", () => {

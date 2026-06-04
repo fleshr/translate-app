@@ -1,14 +1,14 @@
+import type { TranslationResource } from "@/entities/translation";
+import {
+  replaceTranslationSegmentsField,
+  selectResources,
+  useTranslationStore,
+} from "@/entities/translation";
 import type { Id } from "@/shared/model/common";
 import {
   setSessionSelectedResource,
   setSessionSelectedSegment,
 } from "@/shared/model/sessionStore";
-import type { TranslationResource } from "@/shared/model/translation";
-import {
-  replaceTranslationSegmentsField,
-  selectResources,
-  useTranslationStore,
-} from "@/shared/model/translationStore";
 import { ResultCard } from "@/shared/ui/ResultCard";
 import { Divider, ScrollArea, Stack, Text } from "@mantine/core";
 import { useState } from "react";

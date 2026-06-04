@@ -1,9 +1,9 @@
-import type { Parser } from "@/shared/model/parser";
+import type { Parser } from "@/entities/parser";
 import {
   isTranslationCommon,
   isTranslationFile,
   type TranslationResource,
-} from "@/shared/model/translation";
+} from "@/entities/translation";
 import JSZip from "jszip";
 import { concat, filter, flatMap, map, merge, omit, pipe } from "remeda";
 import { mapFlatSegmentToReplacement } from "../mapFileSegmentToReplacement/mapFlatSegmentToReplacement";

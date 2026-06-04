@@ -1,66 +1,42 @@
-import { getPercentage } from "@/shared/lib/getPercentage";
-import type { Id, Progress } from "@/shared/model/common";
+import {
+  selectSegmentsProgress,
+  useTranslationStore,
+  type TranslationBaseResource,
+} from "@/entities/translation";
 import type { BaseProps } from "@/shared/model/component";
-import type { TranslationBaseResource } from "@/shared/model/translation";
-import { Badge, Button, Group, Loader, Tooltip } from "@mantine/core";
+import {
+  selectSelectedResource,
+  selectTranslatingResource,
+  setSessionSelectedResource,
+  useSessionStore,
+} from "@/shared/model/sessionStore";
+import { ProgressButton } from "@/shared/ui/ProgressButton";
 
 interface TranslationResourceButtonProps {
   resource: TranslationBaseResource;
-  progress?: Progress;
-  isSelected?: boolean;
-  isProcessing?: boolean;
-  onSelect?: (id: Id) => void;
 }
 
 export const TranslationResourceButton = (
   props: BaseProps<TranslationResourceButtonProps>,
 ) => {
-  const {
-    resource,
-    progress,
-    isSelected = false,
-    isProcessing = false,
-    onSelect,
-    "data-testid": dataTestId = "TranslationResourceButton",
-  } = props;
+  const { resource, "data-testid": dataTestId = "TranslationResourceButton" } =
+    props;
+  const selectedResource = useSessionStore(selectSelectedResource);
+  const translatingResource = useSessionStore(selectTranslatingResource);
+  const progress = useTranslationStore(selectSegmentsProgress(resource.id));
 
-  const badge = progress && (
-    <Tooltip
-      position="right"
-      label={`${progress.done}/${progress.total}`}
-      data-testid={`${dataTestId}.Tooltip`}
-    >
-      <Badge
-        size="xs"
-        variant={isSelected ? "white" : "filled"}
-        data-testid={`${dataTestId}.Badge`}
-      >
-        {getPercentage(progress.done, progress.total)}
-      </Badge>
-    </Tooltip>
-  );
+  const handleButtonClick = () => {
+    setSessionSelectedResource(resource.id);
+  };
 
   return (
-    <Button
-      size="xs"
-      onClick={() => onSelect?.(resource.id)}
-      variant={isSelected ? "filled" : "subtle"}
-      justify="space-between"
-      rightSection={badge}
-      fullWidth
+    <ProgressButton
+      progress={progress}
+      label={resource.name}
+      onClick={handleButtonClick}
+      isSelected={resource.id === selectedResource}
+      isProcessing={resource.id === translatingResource}
       data-testid={dataTestId}
-    >
-      <Group gap="xs">
-        {resource.name}
-        {isProcessing && (
-          <Loader
-            size={12}
-            variant=""
-            color={isSelected ? "white" : "dark"}
-            data-testid={`${dataTestId}.Loader`}
-          />
-        )}
-      </Group>
-    </Button>
+    />
   );
 };

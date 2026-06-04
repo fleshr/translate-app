@@ -1,8 +1,8 @@
+import { useTranslationStore } from "@/entities/translation";
+import { getTranslationStoreStateMock } from "@/entities/translation/mocks";
 import { render, resetStore } from "@/shared/lib/testing";
 import { getSessionStoreStateMock } from "@/shared/mocks/sessionStore";
-import { getTranslationStoreStateMock } from "@/shared/mocks/translationStore";
 import { useSessionStore } from "@/shared/model/sessionStore";
-import { useTranslationStore } from "@/shared/model/translationStore";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { SelectedSegmentRawJson } from "./SelectedSegmentRawJson";
 

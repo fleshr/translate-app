@@ -1,4 +1,5 @@
 import { withStoreState } from "@/shared/lib/storybook";
+import { getSettingsStoreStateMock } from "@/shared/mocks/settingsStore";
 import { useSettingsStore } from "@/shared/model/settingsStore";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { BottomPanelButton } from "./BottomPanelButton";
@@ -15,6 +16,14 @@ export const BottomPanelShown: Story = {};
 
 export const BottomPanelHidden: Story = {
   decorators: [
-    withStoreState(useSettingsStore, { view: { showBottomPanel: false } }),
+    withStoreState(
+      useSettingsStore,
+      getSettingsStoreStateMock({
+        view: {
+          showBottomPanel: false,
+          showSidePanel: true,
+        },
+      }),
+    ),
   ],
 };

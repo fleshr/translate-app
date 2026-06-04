@@ -1,3 +1,5 @@
+import { useTranslationStore } from "@/entities/translation";
+import { getTranslationStoreStateMock } from "@/entities/translation/mocks";
 import {
   withHeight,
   withLoggerMessages,
@@ -9,9 +11,7 @@ import {
   mockInfoMessage,
 } from "@/shared/mocks/logger";
 import { getSessionStoreStateMock } from "@/shared/mocks/sessionStore";
-import { getTranslationStoreStateMock } from "@/shared/mocks/translationStore";
 import { useSessionStore } from "@/shared/model/sessionStore";
-import { useTranslationStore } from "@/shared/model/translationStore";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { BottomPanel } from "./BottomPanel";
 

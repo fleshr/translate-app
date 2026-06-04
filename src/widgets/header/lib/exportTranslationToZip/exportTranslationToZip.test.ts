@@ -1,11 +1,11 @@
-import { getParserMock } from "@/shared/mocks/parser";
+import { getParserMock } from "@/entities/parser/mocks";
+import type { TranslationResource } from "@/entities/translation";
 import {
   getTranslationCommonMock,
   getTranslationFileMock,
   getTranslationFileOccurrenceMock,
   getTranslationSegmentMock,
-} from "@/shared/mocks/translation";
-import type { TranslationResource } from "@/shared/model/translation";
+} from "@/entities/translation/mocks";
 import JSZip from "jszip";
 import { describe, expect, it, vi } from "vitest";
 import { exportTranslationToZip } from "./exportTranslationToZip";

@@ -1,13 +1,13 @@
 import {
+  selectSegment,
+  setTranslationSegmentField,
+  useTranslationStore,
+} from "@/entities/translation";
+import {
   selectIsTranslating,
   selectSelectedSegment,
   useSessionStore,
 } from "@/shared/model/sessionStore";
-import {
-  selectSegment,
-  setTranslationSegmentField,
-  useTranslationStore,
-} from "@/shared/model/translationStore";
 import { Placeholder } from "@/shared/ui/Placeholder";
 import { useDebouncedCallback } from "@mantine/hooks";
 import { useIntlayer } from "react-intlayer";

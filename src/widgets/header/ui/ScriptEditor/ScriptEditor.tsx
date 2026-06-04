@@ -1,10 +1,10 @@
-import { readFile } from "@/shared/lib/file";
-import type { TranslationSegment } from "@/shared/model/translation";
 import {
   selectSegments,
   setTranslationSegments,
   useTranslationStore,
-} from "@/shared/model/translationStore";
+  type TranslationSegment,
+} from "@/entities/translation";
+import { readFile } from "@/shared/lib/file";
 import { ActionIconWithTooltip } from "@/shared/ui/ActionIconWithTooltip";
 import { javascript } from "@codemirror/lang-javascript";
 import { Divider, Group, Stack } from "@mantine/core";

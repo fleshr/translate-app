@@ -1,12 +1,9 @@
+import { selectSegment, useTranslationStore } from "@/entities/translation";
 import { stringifyJson } from "@/shared/lib/json";
 import {
   selectSelectedSegment,
   useSessionStore,
 } from "@/shared/model/sessionStore";
-import {
-  selectSegment,
-  useTranslationStore,
-} from "@/shared/model/translationStore";
 import { Placeholder } from "@/shared/ui/Placeholder";
 import { json } from "@codemirror/lang-json";
 import CodeMirror from "@uiw/react-codemirror";

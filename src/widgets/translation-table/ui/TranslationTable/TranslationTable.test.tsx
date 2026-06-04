@@ -1,11 +1,11 @@
+import { useTranslationStore } from "@/entities/translation";
+import { getTranslationStoreStateMock } from "@/entities/translation/mocks";
 import { render, resetStore } from "@/shared/lib/testing";
 import { getSessionStoreStateMock } from "@/shared/mocks/sessionStore";
-import { getTranslationStoreStateMock } from "@/shared/mocks/translationStore";
 import {
   setSessionSelectedSegment,
   useSessionStore,
 } from "@/shared/model/sessionStore";
-import { useTranslationStore } from "@/shared/model/translationStore";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { TranslationTable } from "./TranslationTable";

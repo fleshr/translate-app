@@ -1,9 +1,9 @@
+import { initTranslation } from "@/entities/translation";
+import { getTranslationFileMock } from "@/entities/translation/mocks";
 import { stringifyJson } from "@/shared/lib/json";
 import { render, resetStore } from "@/shared/lib/testing";
-import { getTranslationFileMock } from "@/shared/mocks/translation";
 import { initProject } from "@/shared/model/projectStore";
 import { initSession, useSessionStore } from "@/shared/model/sessionStore";
-import { initTranslation } from "@/shared/model/translationStore";
 import { notifications } from "@mantine/notifications";
 import userEvent from "@testing-library/user-event";
 import { fileOpen } from "browser-fs-access";
@@ -12,11 +12,11 @@ import { OpenProjectButton } from "./OpenProjectButton";
 
 vi.mock("@/shared/model/sessionStore", { spy: true });
 vi.mock("@/shared/model/projectStore", { spy: true });
-vi.mock("@/shared/model/translationStore", { spy: true });
+vi.mock("@/entities/translation", { spy: true });
 
 const testResource = getTranslationFileMock();
 const testProject = {
-  parser: "test",
+  project: { parser: "test" },
   resources: [testResource],
 };
 
@@ -54,7 +54,7 @@ describe("widgets/header/ui/OpenProjectButton", () => {
     await userEvent.click(button);
 
     expect(initProject).toHaveBeenCalledWith({ parser: "test" });
-    expect(initSession).toHaveBeenCalledWith([testResource]);
+    expect(initSession).toHaveBeenCalledWith(testResource.id);
     expect(initTranslation).toHaveBeenCalledWith([testResource]);
     expect(notifications.show).toHaveBeenCalled();
   });

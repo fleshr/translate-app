@@ -1,0 +1,93 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`entities/parser/lib/EntisParser > should extract text 1`] = `
+{
+  "content": "
+<?xml version="1.0" encoding="utf-8"?>
+<xscript>
+	<debug editor="test" src="test.txt"/>
+	<code>
+		<description @l="1" text="testText1"/>
+		<wait_chgmv/>
+		<bg @l="6" src="bg08c" time="1000"/>
+		<bgm @l="7" src="bgm06" volume="1."/>
+		<se @l="8" buf="1" src="se006" volume="1."/>
+		<wait_chgmv/>
+		<bg @l="9" src="bg09c" time="1000"/>
+		<waitse @l="10" buf="1"/>
+		<chgmview @l="11" mode="0"/>
+		<msg @l="13" char_id="-1" frame_id="0" name="testName1" text="testText2" voices="v00000"/>
+		<msg @l="14" char_id="0" frame_id="0" name="testName2" text="testText3" voices="v01000"/>
+		<return @l="103" value=""/>
+	</code>
+</xscript>
+",
+  "segments": [
+    {
+      "position": {
+        "end": 134,
+        "start": 125,
+      },
+      "text": "testText1",
+      "type": "file",
+    },
+    {
+      "position": {
+        "end": 467,
+        "start": 458,
+      },
+      "text": "testText2",
+      "type": "file",
+    },
+    {
+      "position": {
+        "end": 559,
+        "start": 550,
+      },
+      "text": "testText3",
+      "type": "file",
+    },
+    {
+      "key": "names",
+      "position": {
+        "end": 450,
+        "start": 441,
+      },
+      "text": "testName1",
+      "type": "common",
+    },
+    {
+      "key": "names",
+      "position": {
+        "end": 542,
+        "start": 533,
+      },
+      "text": "testName2",
+      "type": "common",
+    },
+  ],
+}
+`;
+
+exports[`entities/parser/lib/EntisParser > should replace text 1`] = `
+"
+<?xml version="1.0" encoding="utf-8"?>
+<xscript>
+	<debug editor="test" src="test.txt"/>
+	<code>
+		<description @l="1" text="test1"/>
+		<wait_chgmv/>
+		<bg @l="6" src="bg08c" time="1000"/>
+		<bgm @l="7" src="bgm06" volume="1."/>
+		<se @l="8" buf="1" src="se006" volume="1."/>
+		<wait_chgmv/>
+		<bg @l="9" src="bg09c" time="1000"/>
+		<waitse @l="10" buf="1"/>
+		<chgmview @l="11" mode="0"/>
+		<msg @l="13" char_id="-1" frame_id="0" name="test4" text="test2" voices="v00000"/>
+		<msg @l="14" char_id="0" frame_id="0" name="test5" text="test3" voices="v01000"/>
+		<return @l="103" value=""/>
+	</code>
+</xscript>
+"
+`;

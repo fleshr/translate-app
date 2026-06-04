@@ -1,60 +1,52 @@
+import * as translatorModule from "@/entities/translator";
+import { setTranslatorConfig, useTranslatorStore } from "@/entities/translator";
+import { getTranslatorMock } from "@/entities/translator/mocks";
 import { render, resetStore } from "@/shared/lib/testing";
-import { getTranslatorMock } from "@/shared/mocks/translator";
-import {
-  setSettingsTranslatorConfig,
-  useSettingsStore,
-} from "@/shared/model/settingsStore";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { TranslatorSettings } from "./TranslatorSettings";
 
-vi.mock("@/shared/model/settingsStore", { spy: true });
+vi.mock("@/entities/translator", { spy: true });
 
-vi.mock(import("@/shared/constants/translators"), () => ({
-  translators: {
-    test1: getTranslatorMock({
-      name: "test1",
-      configFields: [
-        {
-          key: "testField1",
-          label: "Test Field 1",
-          type: "text",
-          initial: "initial value 1",
-        },
-      ],
-    }),
-    test2: getTranslatorMock({
-      name: "test2",
-      configFields: [
-        {
-          key: "testField2",
-          label: "Test Field 2",
-          type: "text",
-          initial: "initial value 2",
-        },
-      ],
-    }),
-  },
-}));
+vi.spyOn(translatorModule, "translators", "get").mockReturnValue({
+  test1: getTranslatorMock({
+    name: "test1",
+    configFields: [
+      {
+        key: "testField1",
+        label: "Test Field 1",
+        type: "text",
+        initial: "initial value 1",
+      },
+    ],
+  }),
+  test2: getTranslatorMock({
+    name: "test2",
+    configFields: [
+      {
+        key: "testField2",
+        label: "Test Field 2",
+        type: "text",
+        initial: "initial value 2",
+      },
+    ],
+  }),
+});
 
 describe("widgets/header/ui/TranslatorSettings", () => {
   beforeEach(() => {
-    useSettingsStore.setState({
-      translator: {
-        selected: "test1",
-        configs: { test1: { testField1: "test" } },
-      },
+    useTranslatorStore.setState({
+      selected: "test1",
+      configs: { test1: { testField1: "test" } },
     });
   });
 
   afterEach(() => {
-    resetStore(useSettingsStore);
+    resetStore(useTranslatorStore);
   });
 
   it("should not render DynamicForm when translator is not found", () => {
-    useSettingsStore.setState({
-      translator: { selected: "test3", configs: {} },
-    });
+    useTranslatorStore.setState({ selected: "test3", configs: {} });
     const { queryByTestId } = render(<TranslatorSettings />);
 
     const dynamicForm = queryByTestId("TranslatorSettings.DynamicForm");
@@ -105,7 +97,7 @@ describe("widgets/header/ui/TranslatorSettings", () => {
     const button = getByTestId("TranslatorSettings.SaveButton");
     await userEvent.click(button);
 
-    expect(setSettingsTranslatorConfig).toHaveBeenCalledWith("test1", {
+    expect(setTranslatorConfig).toHaveBeenCalledWith("test1", {
       testField1: "new value",
     });
   });

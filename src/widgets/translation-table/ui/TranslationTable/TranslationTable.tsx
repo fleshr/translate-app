@@ -1,14 +1,14 @@
 import {
+  selectResourceSegments,
+  useTranslationStore,
+  type TranslationSegment,
+} from "@/entities/translation";
+import {
   selectSelectedResource,
   selectSelectedSegment,
   setSessionSelectedSegment,
   useSessionStore,
 } from "@/shared/model/sessionStore";
-import type { TranslationSegment } from "@/shared/model/translation";
-import {
-  selectResourceSegments,
-  useTranslationStore,
-} from "@/shared/model/translationStore";
 import { Table } from "@mantine/core";
 import {
   createColumnHelper,

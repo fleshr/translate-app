@@ -1,18 +1,18 @@
+import { initTranslation } from "@/entities/translation";
 import { readFile } from "@/shared/lib/file";
 import { parseJson } from "@/shared/lib/json";
-import { ProjectSchema } from "@/shared/model/project";
 import { initProject } from "@/shared/model/projectStore";
 import {
   initSession,
   selectIsTranslating,
   useSessionStore,
 } from "@/shared/model/sessionStore";
-import { initTranslation } from "@/shared/model/translationStore";
 import { ActionIconWithTooltip } from "@/shared/ui/ActionIconWithTooltip";
 import { notifications } from "@mantine/notifications";
 import { IconFolderOpen } from "@tabler/icons-react";
 import { fileOpen } from "browser-fs-access";
 import { useIntlayer } from "react-intlayer";
+import { ProjectFileSchema } from "../../model/projectFile";
 
 export const OpenProjectButton = () => {
   const content = useIntlayer("OpenProjectButton");
@@ -26,10 +26,10 @@ export const OpenProjectButton = () => {
       });
 
       const json = await readFile(translationFile);
-      const { resources, ...project } = ProjectSchema.parse(parseJson(json));
+      const { project, resources } = ProjectFileSchema.parse(parseJson(json));
 
       initProject(project);
-      initSession(resources);
+      initSession(resources[0]?.id ?? null);
       initTranslation(resources);
 
       notifications.show({ message: content.openedMessage });

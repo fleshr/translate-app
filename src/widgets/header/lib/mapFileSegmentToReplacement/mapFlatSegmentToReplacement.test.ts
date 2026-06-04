@@ -1,4 +1,4 @@
-import { getTranslationFlatSegmentMock } from "@/shared/mocks/translation";
+import { getTranslationFlatSegmentMock } from "@/entities/translation/mocks";
 import { describe, expect, it } from "vitest";
 import { mapFlatSegmentToReplacement } from "./mapFlatSegmentToReplacement";
 

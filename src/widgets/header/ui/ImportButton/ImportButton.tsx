@@ -1,10 +1,14 @@
-import { resolveParser } from "@/shared/lib/parser";
+import { resolveParser } from "@/entities/parser";
+import { initTranslation } from "@/entities/translation";
+import {
+  selectProjectParser,
+  useProjectStore,
+} from "@/shared/model/projectStore";
 import {
   initSession,
   selectIsTranslating,
   useSessionStore,
 } from "@/shared/model/sessionStore";
-import { initTranslation } from "@/shared/model/translationStore";
 import { ActionIconWithTooltip } from "@/shared/ui/ActionIconWithTooltip";
 import { notifications } from "@mantine/notifications";
 import { IconFileImport } from "@tabler/icons-react";
@@ -18,7 +22,8 @@ export const ImportButton = () => {
 
   const handleImportFiles = async () => {
     try {
-      const parser = await resolveParser();
+      const projectParser = selectProjectParser(useProjectStore.getState());
+      const parser = await resolveParser(projectParser);
 
       if (!parser) {
         notifications.show({ message: content.parserNotFoundMessage });
@@ -28,7 +33,7 @@ export const ImportButton = () => {
       const dirFiles = await directoryOpen({ recursive: true });
       const resources = await extractTranslations(dirFiles, parser);
 
-      initSession(resources);
+      initSession(resources[0]?.id ?? null);
       initTranslation(resources);
 
       notifications.show({ message: content.successMessage });

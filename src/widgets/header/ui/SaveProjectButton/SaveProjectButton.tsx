@@ -1,13 +1,10 @@
+import { selectResources, useTranslationStore } from "@/entities/translation";
 import { stringifyJson } from "@/shared/lib/json";
 import { selectProject, useProjectStore } from "@/shared/model/projectStore";
 import {
   selectIsTranslating,
   useSessionStore,
 } from "@/shared/model/sessionStore";
-import {
-  selectResources,
-  useTranslationStore,
-} from "@/shared/model/translationStore";
 import { ActionIconWithTooltip } from "@/shared/ui/ActionIconWithTooltip";
 import { notifications } from "@mantine/notifications";
 import { IconDeviceFloppy } from "@tabler/icons-react";

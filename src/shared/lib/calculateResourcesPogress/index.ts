@@ -1,1 +1,0 @@
-export { calculateResourcesPogress } from "./calculateResourcesPogress";

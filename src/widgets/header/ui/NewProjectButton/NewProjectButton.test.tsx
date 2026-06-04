@@ -1,6 +1,6 @@
+import { useParserStore } from "@/entities/parser";
+import { getParserStoreStateMock } from "@/entities/parser/mocks";
 import { render, resetStore } from "@/shared/lib/testing";
-import { getModuleExternalMock } from "@/shared/mocks/module";
-import { useModuleStore } from "@/shared/model/moduleStore";
 import { useSessionStore } from "@/shared/model/sessionStore";
 import { userEvent } from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -8,13 +8,11 @@ import { NewProjectButton } from "./NewProjectButton";
 
 describe("widgets/header/ui/NewProjectButton", () => {
   beforeEach(() => {
-    useModuleStore.setState({
-      parsers: { "test@1.0.0": getModuleExternalMock() },
-    });
+    useParserStore.setState(getParserStoreStateMock());
   });
 
   afterEach(() => {
-    resetStore(useSessionStore, useModuleStore);
+    resetStore(useSessionStore, useParserStore);
   });
 
   it("should open modal", async () => {
@@ -47,7 +45,9 @@ describe("widgets/header/ui/NewProjectButton", () => {
 
     await userEvent.click(getByTestId("NewProjectButton"));
     await userEvent.click(getByTestId("CreateProjectForm.ParserSelect"));
-    await userEvent.click(getByRole("option", { name: "Test Module (1.0.0)" }));
+    await userEvent.click(
+      getByRole("option", { name: "Test Module 1 (1.0.0)" }),
+    );
     await userEvent.click(getByTestId("CreateProjectForm.CreateButton"));
 
     expect(queryByTestId("CreateProjectForm")).not.toBeInTheDocument();

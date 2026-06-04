@@ -4,7 +4,7 @@ import { Placeholder } from "@/shared/ui/Placeholder";
 import { Stack, Text } from "@mantine/core";
 import { useEffect, useRef, useState } from "react";
 import { useIntlayer } from "react-intlayer";
-import { LOGS_LIMIT } from "../../constants/logs";
+import { LOGS_LIMIT } from "../../config/logs";
 import classes from "./LogsContainer.module.css";
 
 export const LogsContainer = () => {

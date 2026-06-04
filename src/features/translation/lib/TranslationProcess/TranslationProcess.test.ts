@@ -1,6 +1,6 @@
+import { getTranslationSegmentMock } from "@/entities/translation/mocks";
+import { getTranslatorMock } from "@/entities/translator/mocks";
 import { stringifyJson } from "@/shared/lib/json";
-import { getTranslationSegmentMock } from "@/shared/mocks/translation";
-import { getTranslatorMock } from "@/shared/mocks/translator";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { translationProcess } from "./TranslationProcess";
 

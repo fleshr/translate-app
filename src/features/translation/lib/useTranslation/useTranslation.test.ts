@@ -1,19 +1,19 @@
-import { logger } from "@/shared/lib/logger";
-import { renderHook, resetStore } from "@/shared/lib/testing";
-import { getTranslationSegmentMock } from "@/shared/mocks/translation";
-import { getTranslatorMock } from "@/shared/mocks/translator";
-import {
-  addSessionTranslatingResourceProgress,
-  setSessionStatus,
-  setSessionTranslatingResource,
-  useSessionStore,
-} from "@/shared/model/sessionStore";
-import { useSettingsStore } from "@/shared/model/settingsStore";
 import {
   setTranslationSegmentField,
   setTranslationSegmentsField,
   useTranslationStore,
-} from "@/shared/model/translationStore";
+} from "@/entities/translation";
+import { getTranslationSegmentMock } from "@/entities/translation/mocks";
+import * as translatorModule from "@/entities/translator";
+import { useTranslatorStore } from "@/entities/translator";
+import { getTranslatorMock } from "@/entities/translator/mocks";
+import { logger } from "@/shared/lib/logger";
+import { renderHook, resetStore } from "@/shared/lib/testing";
+import {
+  setSessionStatus,
+  setSessionTranslatingResource,
+  useSessionStore,
+} from "@/shared/model/sessionStore";
 import { notifications } from "@mantine/notifications";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type {
@@ -42,15 +42,16 @@ const mockTranslationProcess = vi.hoisted(() => {
 
 vi.mock("@/shared/lib/logger");
 vi.mock("@/shared/model/sessionStore", { spy: true });
-vi.mock("@/shared/model/translationStore", { spy: true });
+vi.mock("@/entities/translation", { spy: true });
+vi.mock("@/entities/translator", { spy: true });
 
 vi.mock(import("../TranslationProcess/TranslationProcess"), () => ({
   translationProcess: mockTranslationProcess,
 }));
 
-vi.mock(import("@/shared/constants/translators"), () => ({
-  translators: { test1: getTranslatorMock() },
-}));
+vi.spyOn(translatorModule, "translators", "get").mockReturnValue({
+  test1: getTranslatorMock(),
+});
 
 describe("features/translation/lib/useTranslation", () => {
   beforeEach(() => {
@@ -63,16 +64,14 @@ describe("features/translation/lib/useTranslation", () => {
         },
       },
     });
-    useSettingsStore.setState({
-      translator: {
-        selected: "test1",
-        configs: { test1: { testField1: "test" } },
-      },
+    useTranslatorStore.setState({
+      selected: "test1",
+      configs: { test1: { testField1: "test" } },
     });
   });
 
   afterEach(() => {
-    resetStore(useSessionStore, useTranslationStore, useSettingsStore);
+    resetStore(useSessionStore, useTranslationStore, useTranslatorStore);
   });
 
   it("should stop translation process on stop", () => {
@@ -94,9 +93,7 @@ describe("features/translation/lib/useTranslation", () => {
   });
 
   it("should not start process and show notification if translator not found", async () => {
-    useSettingsStore.setState({
-      translator: { selected: "test2", configs: {} },
-    });
+    useTranslatorStore.setState({ selected: "test2", configs: {} });
     const { result } = renderHook(() => useTranslation());
 
     await result.current.start();
@@ -165,7 +162,6 @@ describe("features/translation/lib/useTranslation", () => {
     expect(setTranslationSegmentsField).toHaveBeenCalledWith([
       { id: "segment-1", translation: "test" },
     ]);
-    expect(addSessionTranslatingResourceProgress).toHaveBeenCalledWith(1);
 
     expect(logger.info).toHaveBeenCalled();
   });
@@ -189,7 +185,6 @@ describe("features/translation/lib/useTranslation", () => {
       untranslatedSegment.id,
       "test",
     );
-    expect(addSessionTranslatingResourceProgress).toHaveBeenCalledWith(1);
 
     expect(logger.info).toHaveBeenCalled();
   });

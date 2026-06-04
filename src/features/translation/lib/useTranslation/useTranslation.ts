@@ -1,24 +1,23 @@
-import { translators } from "@/shared/constants/translators";
-import { stringifyJson } from "@/shared/lib/json";
-import { logger } from "@/shared/lib/logger";
-import {
-  addSessionTranslatingResourceProgress,
-  selectIsTranslating,
-  setSessionStatus,
-  setSessionTranslatingResource,
-  useSessionStore,
-} from "@/shared/model/sessionStore";
-import {
-  selectSelectedTranslator,
-  selectTranslatorConfig,
-  useSettingsStore,
-} from "@/shared/model/settingsStore";
 import {
   selectUntranslatedSegments,
   setTranslationSegmentField,
   setTranslationSegmentsField,
   useTranslationStore,
-} from "@/shared/model/translationStore";
+} from "@/entities/translation";
+import {
+  selectSelectedTranslator,
+  selectTranslatorConfig,
+  translators,
+  useTranslatorStore,
+} from "@/entities/translator";
+import { stringifyJson } from "@/shared/lib/json";
+import { logger } from "@/shared/lib/logger";
+import {
+  selectIsTranslating,
+  setSessionStatus,
+  setSessionTranslatingResource,
+  useSessionStore,
+} from "@/shared/model/sessionStore";
 import { notifications } from "@mantine/notifications";
 import { useIntlayer } from "react-intlayer";
 import { translationProcess } from "../TranslationProcess/TranslationProcess";
@@ -35,12 +34,12 @@ export const useTranslation = () => {
     }
 
     const selectedTranslator = selectSelectedTranslator(
-      useSettingsStore.getState(),
+      useTranslatorStore.getState(),
     );
 
     const translator = translators[selectedTranslator];
     const translatorConfig = selectTranslatorConfig(selectedTranslator)(
-      useSettingsStore.getState(),
+      useTranslatorStore.getState(),
     );
 
     if (!translator) {
@@ -69,7 +68,6 @@ export const useTranslation = () => {
       },
       onSegmentBatchComplete(translations, response) {
         setTranslationSegmentsField(translations);
-        addSessionTranslatingResourceProgress(translations.length);
 
         logger.info(
           content.completeSegmentMessage({ text: stringifyJson(response) }),
@@ -82,7 +80,6 @@ export const useTranslation = () => {
       },
       onSegmentSequentialComplete(segment, translation) {
         setTranslationSegmentField(segment.id, translation);
-        addSessionTranslatingResourceProgress(1);
 
         logger.info(content.completeSegmentMessage({ text: translation }));
       },

@@ -1,20 +1,20 @@
+import {
+  replaceTranslationSegmentsField,
+  useTranslationStore,
+} from "@/entities/translation";
+import { getTranslationStoreStateMock } from "@/entities/translation/mocks";
 import { render, resetStore } from "@/shared/lib/testing";
-import { getTranslationStoreStateMock } from "@/shared/mocks/translationStore";
 import {
   setSessionSelectedResource,
   setSessionSelectedSegment,
   useSessionStore,
 } from "@/shared/model/sessionStore";
-import {
-  replaceTranslationSegmentsField,
-  useTranslationStore,
-} from "@/shared/model/translationStore";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { SearchPanel } from "./SearchPanel";
 
 vi.mock("@/shared/model/sessionStore", { spy: true });
-vi.mock("@/shared/model/translationStore", { spy: true });
+vi.mock("@/entities/translation", { spy: true });
 
 describe("widgets/header/ui/SearchPanel", () => {
   beforeEach(() => {

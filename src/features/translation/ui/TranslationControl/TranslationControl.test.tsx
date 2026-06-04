@@ -1,3 +1,5 @@
+import { useTranslationStore } from "@/entities/translation";
+import { getTranslationStoreStateMock } from "@/entities/translation/mocks";
 import { render, resetStore } from "@/shared/lib/testing";
 import { getSessionStoreStateMock } from "@/shared/mocks/sessionStore";
 import { useSessionStore } from "@/shared/model/sessionStore";
@@ -15,26 +17,22 @@ vi.mock("../../lib/useTranslation/useTranslation", () => ({
 
 describe("features/translation/ui/TranslationControl", () => {
   beforeEach(() => {
+    useTranslationStore.setState(getTranslationStoreStateMock());
     useSessionStore.setState(getSessionStoreStateMock());
   });
 
   afterEach(() => {
-    resetStore(useSessionStore);
+    resetStore(useSessionStore, useTranslationStore);
   });
 
   it("should show only start button when not translating", () => {
     const { queryByTestId } = render(<TranslationControl />);
 
-    expect(queryByTestId("TranslationControl.StartButton")).toBeInTheDocument();
-    expect(
-      queryByTestId("TranslationControl.StopButton"),
-    ).not.toBeInTheDocument();
-    expect(
-      queryByTestId("TranslationControl.TotalProgressBar"),
-    ).not.toBeInTheDocument();
-    expect(
-      queryByTestId("TranslationControl.ResourceProgressBar"),
-    ).not.toBeInTheDocument();
+    const startButton = queryByTestId("TranslationControl.StartButton");
+    const stopButton = queryByTestId("TranslationControl.StopButton");
+
+    expect(startButton).toBeInTheDocument();
+    expect(stopButton).not.toBeInTheDocument();
   });
 
   it("should show stop button and correct progress bars when translating", () => {
@@ -42,36 +40,41 @@ describe("features/translation/ui/TranslationControl", () => {
       status: "translating",
       translatingResource: "file-1",
     });
-    const { queryByTestId, getByText } = render(<TranslationControl />);
+    const { queryByTestId } = render(<TranslationControl />);
 
-    expect(
-      queryByTestId("TranslationControl.StartButton"),
-    ).not.toBeInTheDocument();
-    expect(queryByTestId("TranslationControl.StopButton")).toBeInTheDocument();
-    expect(
-      queryByTestId("TranslationControl.TotalProgressBar"),
-    ).toBeInTheDocument();
-    expect(
-      queryByTestId("TranslationControl.ResourceProgressBar"),
-    ).toBeInTheDocument();
+    const startButton = queryByTestId("TranslationControl.StartButton");
+    const stopButton = queryByTestId("TranslationControl.StopButton");
 
-    expect(getByText("1/2")).toBeInTheDocument();
-    expect(getByText("5/20")).toBeInTheDocument();
+    expect(startButton).not.toBeInTheDocument();
+    expect(stopButton).toBeInTheDocument();
+
+    const resourcesProgressBar = queryByTestId(
+      "TranslationControl.ResourcesProgressBar",
+    );
+    const segmentsProgressBar = queryByTestId(
+      "TranslationControl.SegmentsProgressBar",
+    );
+
+    expect(resourcesProgressBar).toHaveTextContent("1/2");
+    expect(segmentsProgressBar).toHaveTextContent("1/2");
   });
 
-  it("should not show resource progress if not exists", () => {
+  it("should not show segments progress if progress not provided", () => {
     useSessionStore.setState({
       status: "translating",
       translatingResource: null,
     });
     const { queryByTestId } = render(<TranslationControl />);
 
-    expect(
-      queryByTestId("TranslationControl.TotalProgressBar"),
-    ).toBeInTheDocument();
-    expect(
-      queryByTestId("TranslationControl.ResourceProgressBar"),
-    ).not.toBeInTheDocument();
+    const resourcesProgressBar = queryByTestId(
+      "TranslationControl.ResourcesProgressBar",
+    );
+    const segmentsProgressBar = queryByTestId(
+      "TranslationControl.SegmentsProgressBar",
+    );
+
+    expect(resourcesProgressBar).toBeInTheDocument();
+    expect(segmentsProgressBar).not.toBeInTheDocument();
   });
 
   it("should call start translation on start button click", async () => {

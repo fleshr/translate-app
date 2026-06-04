@@ -1,4 +1,4 @@
-import type { TranslationResource } from "@/shared/model/translation";
+import type { TranslationResource } from "@/entities/translation";
 import type { SearchOptions } from "../../model/search";
 
 export const getTranslationsSearchResults = (

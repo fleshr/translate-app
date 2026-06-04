@@ -1,16 +1,16 @@
-import { readFile } from "@/shared/lib/file";
-import type { Id } from "@/shared/model/common";
 import type {
   ExtractedBaseSegment,
   ExtractedCommonSegment,
   Parser,
-} from "@/shared/model/parser";
+} from "@/entities/parser";
 import type {
   TranslationCommon,
   TranslationFile,
   TranslationFileOccurrence,
   TranslationResource,
-} from "@/shared/model/translation";
+} from "@/entities/translation";
+import { readFile } from "@/shared/lib/file";
+import type { Id } from "@/shared/model/common";
 import { nanoid } from "nanoid";
 import { filter, groupByProp, map, mapValues, pipe, values } from "remeda";
 

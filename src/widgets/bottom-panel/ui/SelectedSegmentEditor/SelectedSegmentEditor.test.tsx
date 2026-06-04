@@ -1,17 +1,17 @@
-import { render, resetStore } from "@/shared/lib/testing";
-import { getSessionStoreStateMock } from "@/shared/mocks/sessionStore";
-import { getTranslationStoreStateMock } from "@/shared/mocks/translationStore";
-import { useSessionStore } from "@/shared/model/sessionStore";
 import {
   setTranslationSegmentField,
   useTranslationStore,
-} from "@/shared/model/translationStore";
+} from "@/entities/translation";
+import { getTranslationStoreStateMock } from "@/entities/translation/mocks";
+import { render, resetStore } from "@/shared/lib/testing";
+import { getSessionStoreStateMock } from "@/shared/mocks/sessionStore";
+import { useSessionStore } from "@/shared/model/sessionStore";
 import { waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { SelectedSegmentEditor } from "./SelectedSegmentEditor";
 
-vi.mock("@/shared/model/translationStore", { spy: true });
+vi.mock("@/entities/translation", { spy: true });
 
 describe("widgets/bottom-panel/ui/SelectedSegmentEditor", () => {
   beforeEach(() => {

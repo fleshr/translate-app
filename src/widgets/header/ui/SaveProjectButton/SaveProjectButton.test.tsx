@@ -1,9 +1,9 @@
+import { useTranslationStore } from "@/entities/translation";
+import { getTranslationFileMock } from "@/entities/translation/mocks";
 import { stringifyJson } from "@/shared/lib/json";
 import { render, resetStore } from "@/shared/lib/testing";
-import { getTranslationFileMock } from "@/shared/mocks/translation";
 import { selectProject, useProjectStore } from "@/shared/model/projectStore";
 import { useSessionStore } from "@/shared/model/sessionStore";
-import { useTranslationStore } from "@/shared/model/translationStore";
 import { notifications } from "@mantine/notifications";
 import userEvent from "@testing-library/user-event";
 import { fileSave } from "browser-fs-access";
@@ -11,7 +11,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { SaveProjectButton } from "./SaveProjectButton";
 
 vi.mock("@/shared/model/projectStore", { spy: true });
-vi.mock("@/shared/model/translationStore", { spy: true });
+vi.mock("@/entities/translation", { spy: true });
 
 const testFile = getTranslationFileMock();
 

@@ -1,7 +1,7 @@
+import type { TranslationBaseSegment } from "@/entities/translation";
+import type { Translator, TranslatorConfig } from "@/entities/translator";
 import { parseJson, stringifyJson } from "@/shared/lib/json";
 import type { Id } from "@/shared/model/common";
-import type { TranslationBaseSegment } from "@/shared/model/translation";
-import type { Translator, TranslatorConfig } from "@/shared/model/translator";
 import { jsonrepair } from "jsonrepair";
 import {
   chunk,

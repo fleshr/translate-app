@@ -1,12 +1,13 @@
-import { resolveParser } from "@/shared/lib/parser";
+import { resolveParser } from "@/entities/parser";
+import { selectResources, useTranslationStore } from "@/entities/translation";
+import {
+  selectProjectParser,
+  useProjectStore,
+} from "@/shared/model/projectStore";
 import {
   selectIsTranslating,
   useSessionStore,
 } from "@/shared/model/sessionStore";
-import {
-  selectResources,
-  useTranslationStore,
-} from "@/shared/model/translationStore";
 import { ActionIconWithTooltip } from "@/shared/ui/ActionIconWithTooltip";
 import { notifications } from "@mantine/notifications";
 import { IconFolderUp } from "@tabler/icons-react";
@@ -20,7 +21,8 @@ export const ExportButton = () => {
 
   const handleSaveProject = async () => {
     try {
-      const parser = await resolveParser();
+      const projectParser = selectProjectParser(useProjectStore.getState());
+      const parser = await resolveParser(projectParser);
 
       if (!parser) {
         notifications.show({ message: content.parserNotFoundMessage });
