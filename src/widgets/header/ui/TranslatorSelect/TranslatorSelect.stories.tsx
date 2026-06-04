@@ -1,4 +1,5 @@
 import { withStoreState, withWidth } from "@/shared/lib/storybook";
+import { getSessionStoreStateMock } from "@/shared/mocks/sessionStore";
 import { useSessionStore } from "@/shared/model/sessionStore";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { TranslatorSelect } from "./TranslatorSelect";
@@ -15,5 +16,10 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 export const IsTranslating: Story = {
-  decorators: [withStoreState(useSessionStore, { status: "translating" })],
+  decorators: [
+    withStoreState(
+      useSessionStore,
+      getSessionStoreStateMock({ status: "translating" }),
+    ),
+  ],
 };
