@@ -91,14 +91,22 @@ describe("widgets/header/ui/TranslatorSettings", () => {
     const { getByTestId } = render(<TranslatorSettings />);
 
     const field1 = getByTestId("TranslatorSettings.DynamicForm.testField1");
+    const button = getByTestId("TranslatorSettings.SaveButton");
+
     await userEvent.clear(field1);
     await userEvent.type(field1, "new value");
-
-    const button = getByTestId("TranslatorSettings.SaveButton");
     await userEvent.click(button);
 
     expect(setTranslatorConfig).toHaveBeenCalledWith("test1", {
       testField1: "new value",
+    });
+
+    await userEvent.clear(field1);
+    await userEvent.type(field1, "test");
+    await userEvent.click(button);
+
+    expect(setTranslatorConfig).toHaveBeenCalledWith("test1", {
+      testField1: "test",
     });
   });
 });

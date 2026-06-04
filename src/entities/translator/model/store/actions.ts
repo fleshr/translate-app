@@ -7,7 +7,7 @@ export const setTranslatorConfig = (
 ) => {
   useTranslatorStore.setState(
     (state) => {
-      state.configs[translator] = config;
+      state.configs[translator] = { ...config };
     },
     undefined,
     "setTranslatorConfig",
