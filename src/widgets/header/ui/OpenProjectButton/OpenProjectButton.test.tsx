@@ -8,6 +8,7 @@ import { notifications } from "@mantine/notifications";
 import userEvent from "@testing-library/user-event";
 import { fileOpen } from "browser-fs-access";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import type { ProjectFile } from "../../model/projectFile";
 import { OpenProjectButton } from "./OpenProjectButton";
 
 vi.mock("@/shared/model/sessionStore", { spy: true });
@@ -15,7 +16,7 @@ vi.mock("@/shared/model/projectStore", { spy: true });
 vi.mock("@/entities/translation", { spy: true });
 
 const testResource = getTranslationFileMock();
-const testProject = {
+const testProject: ProjectFile = {
   project: { parser: "test" },
   resources: [testResource],
 };
