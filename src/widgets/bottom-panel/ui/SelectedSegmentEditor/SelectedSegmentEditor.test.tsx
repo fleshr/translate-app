@@ -3,6 +3,7 @@ import {
   useTranslationStore,
 } from "@/entities/translation";
 import { getTranslationStoreStateMock } from "@/entities/translation/mocks";
+import { useTranslationProcessStore } from "@/features/translation-process";
 import { render, resetStore } from "@/shared/lib/testing";
 import { getSessionStoreStateMock } from "@/shared/mocks/sessionStore";
 import { useSessionStore } from "@/shared/model/sessionStore";
@@ -22,12 +23,15 @@ describe("widgets/bottom-panel/ui/SelectedSegmentEditor", () => {
   });
 
   afterEach(() => {
-    resetStore(useTranslationStore, useSessionStore);
+    resetStore(
+      useSessionStore,
+      useTranslationStore,
+      useTranslationProcessStore,
+    );
   });
 
   it("should show placeholder if no selected segment", () => {
     useSessionStore.setState({ selectedSegment: null });
-
     const { queryByTestId } = render(<SelectedSegmentEditor />);
 
     const placeholder = queryByTestId("SelectedSegmentEditor.Placeholder");
@@ -48,8 +52,7 @@ describe("widgets/bottom-panel/ui/SelectedSegmentEditor", () => {
   });
 
   it("should disable form if translating", () => {
-    useSessionStore.setState({ status: "translating" });
-
+    useTranslationProcessStore.setState({ status: "translating" });
     const { getByTestId } = render(<SelectedSegmentEditor />);
 
     const input = getByTestId("SegmentEditForm.originalText");

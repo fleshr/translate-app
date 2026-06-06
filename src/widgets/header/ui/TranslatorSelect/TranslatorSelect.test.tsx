@@ -4,8 +4,8 @@ import {
   useTranslatorStore,
 } from "@/entities/translator";
 import { getTranslatorMock } from "@/entities/translator/mocks";
+import { useTranslationProcessStore } from "@/features/translation-process";
 import { render, resetStore } from "@/shared/lib/testing";
-import { useSessionStore } from "@/shared/model/sessionStore";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { TranslatorSelect } from "./TranslatorSelect";
@@ -23,11 +23,11 @@ describe("widgets/header/ui/TranslatorSelect", () => {
   });
 
   afterEach(() => {
-    resetStore(useSessionStore, useTranslatorStore);
+    resetStore(useTranslationProcessStore, useTranslatorStore);
   });
 
   it("should be disabled when translating", () => {
-    useSessionStore.setState({ status: "translating" });
+    useTranslationProcessStore.setState({ status: "translating" });
     const { getByTestId } = render(<TranslatorSelect />);
 
     const select = getByTestId("TranslatorSelect");

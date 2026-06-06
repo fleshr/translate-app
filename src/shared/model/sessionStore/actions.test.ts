@@ -4,8 +4,6 @@ import {
   initSession,
   setSessionSelectedResource,
   setSessionSelectedSegment,
-  setSessionStatus,
-  setSessionTranslatingResource,
 } from "./actions";
 import { defaultState, useSessionStore } from "./store";
 
@@ -27,22 +25,6 @@ describe("shared/model/sessionStore/actions", () => {
       setSessionSelectedSegment("test");
 
       expect(useSessionStore.getState().selectedSegment).toEqual("test");
-    });
-  });
-
-  describe("setSessionStatus", () => {
-    it("should set session status", () => {
-      setSessionStatus("translating");
-
-      expect(useSessionStore.getState().status).toEqual("translating");
-    });
-  });
-
-  describe("setSessionTranslatingResource", () => {
-    it("should set selected segment", () => {
-      setSessionTranslatingResource("test");
-
-      expect(useSessionStore.getState().translatingResource).toEqual("test");
     });
   });
 

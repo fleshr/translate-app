@@ -1,16 +1,16 @@
-import { render } from "@/shared/lib/testing";
-import { useSessionStore } from "@/shared/model/sessionStore";
+import { useTranslationProcessStore } from "@/features/translation-process";
+import { render, resetStore } from "@/shared/lib/testing";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it } from "vitest";
 import { ScriptButton } from "./ScriptButton";
 
 describe("widgets/header/ui/ScriptButton", () => {
   afterEach(() => {
-    useSessionStore.setState(useSessionStore.getInitialState());
+    resetStore(useTranslationProcessStore);
   });
 
   it("should be disabled when translating", () => {
-    useSessionStore.setState({ status: "translating" });
+    useTranslationProcessStore.setState({ status: "translating" });
     const { getByTestId } = render(<ScriptButton />);
 
     const button = getByTestId("ScriptButton");

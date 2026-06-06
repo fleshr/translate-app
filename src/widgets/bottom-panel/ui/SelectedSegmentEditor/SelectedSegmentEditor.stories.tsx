@@ -1,5 +1,7 @@
 import { useTranslationStore } from "@/entities/translation";
 import { getTranslationStoreStateMock } from "@/entities/translation/mocks";
+import { useTranslationProcessStore } from "@/features/translation-process";
+import { getTranslationProcessStoreStateMock } from "@/features/translation-process/mocks";
 import { withStoreState } from "@/shared/lib/storybook";
 import { getSessionStoreStateMock } from "@/shared/mocks/sessionStore";
 import { useSessionStore } from "@/shared/model/sessionStore";
@@ -21,9 +23,7 @@ export const Default: Story = {
   decorators: [
     withStoreState(
       useSessionStore,
-      getSessionStoreStateMock({
-        selectedSegment: "segment-1",
-      }),
+      getSessionStoreStateMock({ selectedSegment: "segment-1" }),
     ),
   ],
 };
@@ -32,10 +32,11 @@ export const IsTranslating: Story = {
   decorators: [
     withStoreState(
       useSessionStore,
-      getSessionStoreStateMock({
-        status: "translating",
-        selectedSegment: "segment-1",
-      }),
+      getSessionStoreStateMock({ selectedSegment: "segment-1" }),
+    ),
+    withStoreState(
+      useTranslationProcessStore,
+      getTranslationProcessStoreStateMock({ status: "translating" }),
     ),
   ],
 };

@@ -1,7 +1,7 @@
 import {
   selectIsTranslating,
-  useSessionStore,
-} from "@/shared/model/sessionStore";
+  useTranslationProcessStore,
+} from "@/features/translation-process";
 import { Scroller, Tabs, useMatches } from "@mantine/core";
 import { useIntlayer } from "react-intlayer";
 import { GeneralSettings } from "../GeneralSettings/GeneralSettings";
@@ -11,7 +11,7 @@ import classes from "./SettingsTabs.module.css";
 
 export const SettingsTabs = () => {
   const content = useIntlayer("SettingsTabs");
-  const isTranslating = useSessionStore(selectIsTranslating);
+  const isTranslating = useTranslationProcessStore(selectIsTranslating);
   const isMobile = useMatches({ base: true, xs: false });
 
   const tabs = (

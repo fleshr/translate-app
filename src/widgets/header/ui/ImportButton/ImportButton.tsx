@@ -1,14 +1,14 @@
 import { resolveParser } from "@/entities/parser";
 import { initTranslation } from "@/entities/translation";
 import {
+  selectIsTranslating,
+  useTranslationProcessStore,
+} from "@/features/translation-process";
+import {
   selectProjectParser,
   useProjectStore,
 } from "@/shared/model/projectStore";
-import {
-  initSession,
-  selectIsTranslating,
-  useSessionStore,
-} from "@/shared/model/sessionStore";
+import { initSession } from "@/shared/model/sessionStore";
 import { ActionIconWithTooltip } from "@/shared/ui/ActionIconWithTooltip";
 import { notifications } from "@mantine/notifications";
 import { IconFileImport } from "@tabler/icons-react";
@@ -18,7 +18,7 @@ import { extractTranslations } from "../../lib/extractTranslations/extractTransl
 
 export const ImportButton = () => {
   const content = useIntlayer("ImportButton");
-  const isTranslating = useSessionStore(selectIsTranslating);
+  const isTranslating = useTranslationProcessStore(selectIsTranslating);
 
   const handleImportFiles = async () => {
     try {

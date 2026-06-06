@@ -1,13 +1,13 @@
 import { resolveParser } from "@/entities/parser";
 import { selectResources, useTranslationStore } from "@/entities/translation";
 import {
+  selectIsTranslating,
+  useTranslationProcessStore,
+} from "@/features/translation-process";
+import {
   selectProjectParser,
   useProjectStore,
 } from "@/shared/model/projectStore";
-import {
-  selectIsTranslating,
-  useSessionStore,
-} from "@/shared/model/sessionStore";
 import { ActionIconWithTooltip } from "@/shared/ui/ActionIconWithTooltip";
 import { notifications } from "@mantine/notifications";
 import { IconFolderUp } from "@tabler/icons-react";
@@ -17,7 +17,7 @@ import { exportTranslationToZip } from "../../lib/exportTranslationToZip/exportT
 
 export const ExportButton = () => {
   const content = useIntlayer("ExportButton");
-  const isTranslating = useSessionStore(selectIsTranslating);
+  const isTranslating = useTranslationProcessStore(selectIsTranslating);
 
   const handleSaveProject = async () => {
     try {

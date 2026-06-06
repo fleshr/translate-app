@@ -3,10 +3,13 @@ import {
   useTranslationStore,
   type TranslationBaseResource,
 } from "@/entities/translation";
+import {
+  selectTranslatingResource,
+  useTranslationProcessStore,
+} from "@/features/translation-process";
 import type { BaseProps } from "@/shared/model/component";
 import {
   selectSelectedResource,
-  selectTranslatingResource,
   setSessionSelectedResource,
   useSessionStore,
 } from "@/shared/model/sessionStore";
@@ -22,7 +25,9 @@ export const TranslationResourceButton = (
   const { resource, "data-testid": dataTestId = "TranslationResourceButton" } =
     props;
   const selectedResource = useSessionStore(selectSelectedResource);
-  const translatingResource = useSessionStore(selectTranslatingResource);
+  const translatingResource = useTranslationProcessStore(
+    selectTranslatingResource,
+  );
   const progress = useTranslationStore(selectSegmentsProgress(resource.id));
 
   const handleButtonClick = () => {
