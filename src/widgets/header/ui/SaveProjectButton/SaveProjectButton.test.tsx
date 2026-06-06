@@ -8,12 +8,17 @@ import { notifications } from "@mantine/notifications";
 import userEvent from "@testing-library/user-event";
 import { fileSave } from "browser-fs-access";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import type { ProjectFile } from "../../model/projectFile";
 import { SaveProjectButton } from "./SaveProjectButton";
 
 vi.mock("@/shared/model/projectStore", { spy: true });
 vi.mock("@/entities/translation", { spy: true });
 
 const testFile = getTranslationFileMock();
+const testProject: ProjectFile = {
+  project: { parser: "test" },
+  resources: [testFile],
+};
 
 describe("widgets/header/ui/SaveProjectButton", () => {
   beforeEach(() => {
@@ -58,7 +63,7 @@ describe("widgets/header/ui/SaveProjectButton", () => {
     await userEvent.click(button);
 
     expect(fileSave).toHaveBeenCalledWith(
-      new Blob([stringifyJson({ parser: "test", resources: [testFile] })]),
+      new Blob([stringifyJson(testProject)]),
       { fileName: "translation.json" },
     );
     expect(notifications.show).toHaveBeenCalled();
