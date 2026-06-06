@@ -6,3 +6,5 @@ export const ProjectFileSchema = z.object({
   project: ProjectSchema,
   resources: TranslationResourceSchema.array(),
 });
+
+export type ProjectFile = z.infer<typeof ProjectFileSchema>;

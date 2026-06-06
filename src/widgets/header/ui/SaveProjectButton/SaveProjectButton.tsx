@@ -10,6 +10,7 @@ import { notifications } from "@mantine/notifications";
 import { IconDeviceFloppy } from "@tabler/icons-react";
 import { fileSave } from "browser-fs-access";
 import { useIntlayer } from "react-intlayer";
+import type { ProjectFile } from "../../model/projectFile";
 
 export const SaveProjectButton = () => {
   const content = useIntlayer("SaveProjectButton");
@@ -20,7 +21,8 @@ export const SaveProjectButton = () => {
       const project = selectProject(useProjectStore.getState());
       const resources = selectResources(useTranslationStore.getState());
 
-      const blob = new Blob([stringifyJson({ ...project, resources })]);
+      const projectFile: ProjectFile = { project, resources };
+      const blob = new Blob([stringifyJson(projectFile)]);
       await fileSave(blob, { fileName: "translation.json" });
 
       notifications.show({ message: content.savedMessage });
