@@ -9,7 +9,7 @@ const mockTranslator = getTranslatorMock({
   translate: vi.fn(() => Promise.resolve("translated")),
 });
 
-describe("features/translation/lib/TranslationProcess", () => {
+describe("features/translation-process/lib/TranslationProcess", () => {
   it("should call common callbacks", async () => {
     const onStart = vi.fn();
     const onStop = vi.fn();
@@ -25,6 +25,7 @@ describe("features/translation/lib/TranslationProcess", () => {
       onError,
       onResourceStart,
       onResourceComplete,
+      mode: "sequential",
       translator: mockTranslator,
       translatorConfig: { test: "test" },
     });
@@ -43,6 +44,7 @@ describe("features/translation/lib/TranslationProcess", () => {
 
     void translationProcess.start([testSegment], {
       onStop,
+      mode: "sequential",
       translator: mockTranslator,
       translatorConfig: { test: "test" },
     });
@@ -59,6 +61,7 @@ describe("features/translation/lib/TranslationProcess", () => {
 
     void translationProcess.start([testSegment], {
       onError,
+      mode: "sequential",
       translator: mockTranslator,
       translatorConfig: { test: "test" },
     });
@@ -73,6 +76,7 @@ describe("features/translation/lib/TranslationProcess", () => {
 
     it("should execute translator with given options", async () => {
       await translationProcess.start([testSegment], {
+        mode: "sequential",
         translator: mockTranslator,
         translatorConfig: { test: "test" },
       });
@@ -93,6 +97,7 @@ describe("features/translation/lib/TranslationProcess", () => {
       await translationProcess.start([testSegment], {
         onSegmentSequentialStart,
         onSegmentSequentialComplete,
+        mode: "sequential",
         translator: mockTranslator,
         translatorConfig: { test: "test" },
       });
@@ -114,7 +119,7 @@ describe("features/translation/lib/TranslationProcess", () => {
 
     it("should execute translator with given options", async () => {
       await translationProcess.start([testSegment], {
-        batch: true,
+        mode: "batch",
         translator: mockTranslator,
         translatorConfig: { test: "test" },
       });
@@ -136,7 +141,7 @@ describe("features/translation/lib/TranslationProcess", () => {
       const onSegmentBatchComplete = vi.fn();
 
       await translationProcess.start([testSegment], {
-        batch: true,
+        mode: "batch",
         onSegmentBatchStart,
         onSegmentBatchComplete,
         translator: mockTranslator,

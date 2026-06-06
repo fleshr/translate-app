@@ -1,7 +1,7 @@
 import { insert, t, type Dictionary } from "intlayer";
 
 export default {
-  key: "useTranslation",
+  key: "useTranslationProcess",
   content: {
     startMessage: t({
       en: "Translation started",

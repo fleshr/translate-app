@@ -12,21 +12,25 @@ import {
 } from "@/entities/translator";
 import { stringifyJson } from "@/shared/lib/json";
 import { logger } from "@/shared/lib/logger";
-import {
-  selectIsTranslating,
-  setSessionStatus,
-  setSessionTranslatingResource,
-  useSessionStore,
-} from "@/shared/model/sessionStore";
 import { notifications } from "@mantine/notifications";
 import { useIntlayer } from "react-intlayer";
+import {
+  setTranslationProcessStatus,
+  setTranslationProcessTranslatingResource,
+} from "../../model/processStore/actions";
+import { selectIsTranslating } from "../../model/processStore/selectors";
+import { useTranslationProcessStore } from "../../model/processStore/store";
+import { selectMode } from "../../model/settingsStore/selectors";
+import { useTranslationProcessSettingsStore } from "../../model/settingsStore/store";
 import { translationProcess } from "../TranslationProcess/TranslationProcess";
 
-export const useTranslation = () => {
-  const content = useIntlayer("useTranslation");
+export const useTranslationProcess = () => {
+  const content = useIntlayer("useTranslationProcess");
 
   const start = async () => {
-    const isTranslating = selectIsTranslating(useSessionStore.getState());
+    const isTranslating = selectIsTranslating(
+      useTranslationProcessStore.getState(),
+    );
 
     if (isTranslating) {
       notifications.show({ message: content.alreadyTranslatingMessage });
@@ -47,19 +51,21 @@ export const useTranslation = () => {
       return;
     }
 
+    const mode = selectMode(useTranslationProcessSettingsStore.getState());
     const segments = selectUntranslatedSegments(useTranslationStore.getState());
+
     await translationProcess.start(segments, {
-      batch: true,
+      mode,
       translator,
       translatorConfig,
       onStart: () => {
-        setSessionStatus("translating");
+        setTranslationProcessStatus("translating");
 
         logger.info(content.startMessage);
         notifications.show({ message: content.startMessage });
       },
       onResourceStart: (resourceId) => {
-        setSessionTranslatingResource(resourceId);
+        setTranslationProcessTranslatingResource(resourceId);
       },
       onSegmentBatchStart(batch) {
         logger.info(
@@ -84,22 +90,22 @@ export const useTranslation = () => {
         logger.info(content.completeSegmentMessage({ text: translation }));
       },
       onEnd: () => {
-        setSessionStatus("idle");
-        setSessionTranslatingResource(null);
+        setTranslationProcessStatus("idle");
+        setTranslationProcessTranslatingResource(null);
 
         logger.info(content.completeMessage);
         notifications.show({ message: content.completeMessage });
       },
       onStop: () => {
-        setSessionStatus("stopped");
-        setSessionTranslatingResource(null);
+        setTranslationProcessStatus("idle");
+        setTranslationProcessTranslatingResource(null);
 
         logger.info(content.stopMessage);
         notifications.show({ message: content.stopMessage });
       },
       onError() {
-        setSessionStatus("stopped");
-        setSessionTranslatingResource(null);
+        setTranslationProcessStatus("idle");
+        setTranslationProcessTranslatingResource(null);
 
         logger.error(content.errorMessage);
         notifications.show({ message: content.errorMessage });
