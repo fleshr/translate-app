@@ -1,9 +1,9 @@
 import { useTranslationStore } from "@/entities/translation";
 import { getTranslationFileMock } from "@/entities/translation/mocks";
+import { useTranslationProcessStore } from "@/features/translation-process";
 import { stringifyJson } from "@/shared/lib/json";
 import { render, resetStore } from "@/shared/lib/testing";
 import { selectProject, useProjectStore } from "@/shared/model/projectStore";
-import { useSessionStore } from "@/shared/model/sessionStore";
 import { notifications } from "@mantine/notifications";
 import userEvent from "@testing-library/user-event";
 import { fileSave } from "browser-fs-access";
@@ -32,11 +32,15 @@ describe("widgets/header/ui/SaveProjectButton", () => {
   });
 
   afterEach(() => {
-    resetStore(useSessionStore, useProjectStore, useTranslationStore);
+    resetStore(
+      useProjectStore,
+      useTranslationStore,
+      useTranslationProcessStore,
+    );
   });
 
   it("should be disabled when translating", () => {
-    useSessionStore.setState({ status: "translating" });
+    useTranslationProcessStore.setState({ status: "translating" });
     const { getByTestId } = render(<SaveProjectButton />);
 
     const button = getByTestId("SaveProjectButton");

@@ -1,10 +1,10 @@
 import { selectResources, useTranslationStore } from "@/entities/translation";
-import { stringifyJson } from "@/shared/lib/json";
-import { selectProject, useProjectStore } from "@/shared/model/projectStore";
 import {
   selectIsTranslating,
-  useSessionStore,
-} from "@/shared/model/sessionStore";
+  useTranslationProcessStore,
+} from "@/features/translation-process";
+import { stringifyJson } from "@/shared/lib/json";
+import { selectProject, useProjectStore } from "@/shared/model/projectStore";
 import { ActionIconWithTooltip } from "@/shared/ui/ActionIconWithTooltip";
 import { notifications } from "@mantine/notifications";
 import { IconDeviceFloppy } from "@tabler/icons-react";
@@ -14,7 +14,7 @@ import type { ProjectFile } from "../../model/projectFile";
 
 export const SaveProjectButton = () => {
   const content = useIntlayer("SaveProjectButton");
-  const isTranslating = useSessionStore(selectIsTranslating);
+  const isTranslating = useTranslationProcessStore(selectIsTranslating);
 
   const handleSaveProject = async () => {
     try {

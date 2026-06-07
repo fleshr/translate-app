@@ -1,12 +1,12 @@
+import { useTranslationProcessStore } from "@/features/translation-process";
 import { render, resetStore } from "@/shared/lib/testing";
-import { useSessionStore } from "@/shared/model/sessionStore";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it } from "vitest";
 import { SettingsTabs } from "./SettingsTabs";
 
 describe("widgets/header/ui/SettingsTabs", () => {
   afterEach(() => {
-    resetStore(useSessionStore);
+    resetStore(useTranslationProcessStore);
   });
 
   it("general settings tab opened by default", () => {
@@ -31,7 +31,7 @@ describe("widgets/header/ui/SettingsTabs", () => {
   });
 
   it("translator and parsers tabs should be disabled when translating", () => {
-    useSessionStore.setState({ status: "translating" });
+    useTranslationProcessStore.setState({ status: "translating" });
     const { getByTestId } = render(<SettingsTabs />);
 
     expect(getByTestId("SettingsTabs.TranslatorTab")).toBeDisabled();

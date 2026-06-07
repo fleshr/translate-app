@@ -1,7 +1,7 @@
 import {
   selectIsTranslating,
-  useSessionStore,
-} from "@/shared/model/sessionStore";
+  useTranslationProcessStore,
+} from "@/features/translation-process";
 import { ActionIconWithTooltip } from "@/shared/ui/ActionIconWithTooltip";
 import { Modal } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
@@ -13,7 +13,7 @@ import classes from "./ScriptButton.module.css";
 export const ScriptButton = () => {
   const content = useIntlayer("ScriptButton");
   const [opened, { open, close }] = useDisclosure(false);
-  const isTranslating = useSessionStore(selectIsTranslating);
+  const isTranslating = useTranslationProcessStore(selectIsTranslating);
 
   return (
     <>

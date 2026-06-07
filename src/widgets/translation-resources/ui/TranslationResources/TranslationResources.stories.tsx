@@ -1,5 +1,7 @@
 import { useTranslationStore } from "@/entities/translation";
 import { getTranslationStoreStateMock } from "@/entities/translation/mocks";
+import { useTranslationProcessStore } from "@/features/translation-process";
+import { getTranslationProcessStoreStateMock } from "@/features/translation-process/mocks";
 import { withStoreState, withWidth } from "@/shared/lib/storybook";
 import { getSessionStoreStateMock } from "@/shared/mocks/sessionStore";
 import { useSessionStore } from "@/shared/model/sessionStore";
@@ -31,8 +33,11 @@ export const SelectedWithProgressing: Story = {
   decorators: [
     withStoreState(
       useSessionStore,
-      getSessionStoreStateMock({
-        selectedResource: testResource.id,
+      getSessionStoreStateMock({ selectedResource: testResource.id }),
+    ),
+    withStoreState(
+      useTranslationProcessStore,
+      getTranslationProcessStoreStateMock({
         translatingResource: testResource.id,
       }),
     ),

@@ -1,8 +1,8 @@
 import { useParserStore } from "@/entities/parser";
 import { getParserStoreStateMock } from "@/entities/parser/mocks";
+import { useTranslationProcessStore } from "@/features/translation-process";
+import { getTranslationProcessStoreStateMock } from "@/features/translation-process/mocks";
 import { withStoreState } from "@/shared/lib/storybook";
-import { getSessionStoreStateMock } from "@/shared/mocks/sessionStore";
-import { useSessionStore } from "@/shared/model/sessionStore";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { NewProjectButton } from "./NewProjectButton";
 
@@ -20,8 +20,8 @@ export const Default: Story = {};
 export const InTranslating: Story = {
   decorators: [
     withStoreState(
-      useSessionStore,
-      getSessionStoreStateMock({ status: "translating" }),
+      useTranslationProcessStore,
+      getTranslationProcessStoreStateMock({ status: "translating" }),
     ),
   ],
 };

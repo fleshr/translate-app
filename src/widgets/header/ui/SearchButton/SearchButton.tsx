@@ -1,7 +1,7 @@
 import {
   selectIsTranslating,
-  useSessionStore,
-} from "@/shared/model/sessionStore";
+  useTranslationProcessStore,
+} from "@/features/translation-process";
 import { ActionIconWithTooltip } from "@/shared/ui/ActionIconWithTooltip";
 import { Modal } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
@@ -12,7 +12,7 @@ import { SearchPanel } from "../SearchPanel/SearchPanel";
 export const SearchButton = () => {
   const content = useIntlayer("SearchButton");
   const [opened, { open, close }] = useDisclosure(false);
-  const isTranslating = useSessionStore(selectIsTranslating);
+  const isTranslating = useTranslationProcessStore(selectIsTranslating);
 
   return (
     <>

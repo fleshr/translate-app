@@ -1,4 +1,4 @@
-import { TranslationControl } from "@/features/translation";
+import { TranslationControls } from "@/features/translation-process";
 import { Divider, Group, Tooltip } from "@mantine/core";
 import { TranslatorSelect } from "../TranslatorSelect/TranslatorSelect";
 
@@ -8,7 +8,7 @@ export const TranslatorPanel = () => {
       <Group gap="xs" wrap="nowrap">
         <TranslatorSelect />
         <Divider orientation="vertical" />
-        <TranslationControl />
+        <TranslationControls />
       </Group>
     </Tooltip.Group>
   );

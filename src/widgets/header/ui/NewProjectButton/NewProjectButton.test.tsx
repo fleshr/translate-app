@@ -1,7 +1,7 @@
 import { useParserStore } from "@/entities/parser";
 import { getParserStoreStateMock } from "@/entities/parser/mocks";
+import { useTranslationProcessStore } from "@/features/translation-process";
 import { render, resetStore } from "@/shared/lib/testing";
-import { useSessionStore } from "@/shared/model/sessionStore";
 import { userEvent } from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { NewProjectButton } from "./NewProjectButton";
@@ -12,7 +12,7 @@ describe("widgets/header/ui/NewProjectButton", () => {
   });
 
   afterEach(() => {
-    resetStore(useSessionStore, useParserStore);
+    resetStore(useTranslationProcessStore, useParserStore);
   });
 
   it("should open modal", async () => {
@@ -24,7 +24,7 @@ describe("widgets/header/ui/NewProjectButton", () => {
   });
 
   it("should be disabled when translating", () => {
-    useSessionStore.setState({ status: "translating" });
+    useTranslationProcessStore.setState({ status: "translating" });
     const { getByTestId } = render(<NewProjectButton />);
 
     expect(getByTestId("NewProjectButton")).toBeDisabled();

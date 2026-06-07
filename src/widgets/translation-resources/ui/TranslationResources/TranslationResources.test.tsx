@@ -1,7 +1,7 @@
 import { useTranslationStore } from "@/entities/translation";
 import { getTranslationStoreStateMock } from "@/entities/translation/mocks";
+import { useTranslationProcessStore } from "@/features/translation-process";
 import { render, resetStore } from "@/shared/lib/testing";
-import { getSessionStoreStateMock } from "@/shared/mocks/sessionStore";
 import { useSessionStore } from "@/shared/model/sessionStore";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { TranslationResources } from "./TranslationResources";
@@ -13,16 +13,18 @@ vi.mock("@/shared/model/sessionStore", { spy: true });
 
 describe("widgets/translation-resources/ui/TranslationResources", () => {
   beforeEach(() => {
-    useSessionStore.setState(
-      getSessionStoreStateMock({
-        selectedResource: testResource.id,
-        translatingResource: testResource.id,
-      }),
-    );
+    useSessionStore.setState({ selectedResource: testResource.id });
+    useTranslationProcessStore.setState({
+      translatingResource: testResource.id,
+    });
   });
 
   afterEach(() => {
-    resetStore(useTranslationStore, useSessionStore);
+    resetStore(
+      useSessionStore,
+      useTranslationStore,
+      useTranslationProcessStore,
+    );
   });
 
   it("should render empty list if no resources", () => {

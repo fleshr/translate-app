@@ -1,8 +1,8 @@
 import { resolveParser, type Parser } from "@/entities/parser";
 import { useTranslationStore } from "@/entities/translation";
 import { getTranslationStoreStateMock } from "@/entities/translation/mocks";
+import { useTranslationProcessStore } from "@/features/translation-process";
 import { render, resetStore } from "@/shared/lib/testing";
-import { useSessionStore } from "@/shared/model/sessionStore";
 import { notifications } from "@mantine/notifications";
 import userEvent from "@testing-library/user-event";
 import { fileSave } from "browser-fs-access";
@@ -34,11 +34,11 @@ describe("widgets/header/ui/ExportButton", () => {
   });
 
   afterEach(() => {
-    resetStore(useSessionStore, useTranslationStore);
+    resetStore(useTranslationProcessStore, useTranslationStore);
   });
 
   it("should be disabled when translating", () => {
-    useSessionStore.setState({ status: "translating" });
+    useTranslationProcessStore.setState({ status: "translating" });
     const { getByTestId } = render(<ExportButton />);
 
     const button = getByTestId("ExportButton");

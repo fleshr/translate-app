@@ -1,12 +1,12 @@
 import { initTranslation } from "@/entities/translation";
+import {
+  selectIsTranslating,
+  useTranslationProcessStore,
+} from "@/features/translation-process";
 import { readFile } from "@/shared/lib/file";
 import { parseJson } from "@/shared/lib/json";
 import { initProject } from "@/shared/model/projectStore";
-import {
-  initSession,
-  selectIsTranslating,
-  useSessionStore,
-} from "@/shared/model/sessionStore";
+import { initSession } from "@/shared/model/sessionStore";
 import { ActionIconWithTooltip } from "@/shared/ui/ActionIconWithTooltip";
 import { notifications } from "@mantine/notifications";
 import { IconFolderOpen } from "@tabler/icons-react";
@@ -16,7 +16,7 @@ import { ProjectFileSchema } from "../../model/projectFile";
 
 export const OpenProjectButton = () => {
   const content = useIntlayer("OpenProjectButton");
-  const isTranslating = useSessionStore(selectIsTranslating);
+  const isTranslating = useTranslationProcessStore(selectIsTranslating);
 
   const handleOpenProject = async () => {
     try {

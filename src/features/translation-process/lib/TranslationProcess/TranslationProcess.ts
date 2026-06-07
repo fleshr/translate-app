@@ -14,6 +14,7 @@ import {
   times,
 } from "remeda";
 import z from "zod";
+import type { TranslationProcessMode } from "../../model/translation/types";
 
 interface Callbacks {
   onStart: () => void;
@@ -35,7 +36,7 @@ interface Callbacks {
 }
 
 export interface TranslationOptions extends Partial<Callbacks> {
-  batch?: boolean;
+  mode: TranslationProcessMode;
   translator: Translator;
   translatorConfig?: TranslatorConfig;
 }
@@ -46,7 +47,7 @@ export class TranslationProcess {
 
   async start(segments: TranslationBaseSegment[], options: TranslationOptions) {
     const {
-      batch,
+      mode,
       onStart,
       onStop,
       onEnd,
@@ -64,7 +65,7 @@ export class TranslationProcess {
       for (const [resourceId, segments] of entries(groups)) {
         onResourceStart?.(resourceId);
 
-        if (batch) {
+        if (mode === "batch") {
           await this.translateBatch(segments, options);
         } else {
           await this.translateSequential(segments, options);

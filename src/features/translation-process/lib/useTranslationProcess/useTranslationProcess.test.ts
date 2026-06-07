@@ -3,32 +3,33 @@ import {
   setTranslationSegmentsField,
   useTranslationStore,
 } from "@/entities/translation";
-import { getTranslationSegmentMock } from "@/entities/translation/mocks";
+import { getTranslationStoreStateMock } from "@/entities/translation/mocks";
 import * as translatorModule from "@/entities/translator";
 import { useTranslatorStore } from "@/entities/translator";
-import { getTranslatorMock } from "@/entities/translator/mocks";
+import {
+  getTranslatorMock,
+  getTranslatorStoreStateMock,
+} from "@/entities/translator/mocks";
 import { logger } from "@/shared/lib/logger";
 import { renderHook, resetStore } from "@/shared/lib/testing";
-import {
-  setSessionStatus,
-  setSessionTranslatingResource,
-  useSessionStore,
-} from "@/shared/model/sessionStore";
 import { notifications } from "@mantine/notifications";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  setTranslationProcessStatus,
+  setTranslationProcessTranslatingResource,
+} from "../../model/processStore/actions";
+import { useTranslationProcessStore } from "../../model/processStore/store";
 import type {
   TranslationOptions,
   TranslationProcess,
 } from "../TranslationProcess/TranslationProcess";
-import { useTranslation } from "./useTranslation";
+import { useTranslationProcess } from "./useTranslationProcess";
+
+const testTranslator = getTranslatorMock();
+const testStore = getTranslationStoreStateMock();
+const untranslatedSegment = testStore.segments.byId["segment-3"]!;
 
 let capturedOptions: TranslationOptions;
-
-const untranslatedSegment = getTranslationSegmentMock({
-  id: "segment-1",
-  manualTranslation: "",
-  machineTranslation: "",
-});
 
 const mockTranslationProcess = vi.hoisted(() => {
   return {
@@ -41,7 +42,7 @@ const mockTranslationProcess = vi.hoisted(() => {
 });
 
 vi.mock("@/shared/lib/logger");
-vi.mock("@/shared/model/sessionStore", { spy: true });
+vi.mock("../../model/processStore/actions", { spy: true });
 vi.mock("@/entities/translation", { spy: true });
 vi.mock("@/entities/translator", { spy: true });
 
@@ -50,32 +51,25 @@ vi.mock(import("../TranslationProcess/TranslationProcess"), () => ({
 }));
 
 vi.spyOn(translatorModule, "translators", "get").mockReturnValue({
-  test1: getTranslatorMock(),
+  openai: testTranslator,
 });
 
-describe("features/translation/lib/useTranslation", () => {
+describe("features/translation-process/lib/useTranslationProcess", () => {
   beforeEach(() => {
-    useTranslationStore.setState({
-      segments: {
-        allIds: ["segment-1", "segment-2"],
-        byId: {
-          "segment-1": untranslatedSegment,
-          "segment-2": getTranslationSegmentMock({ id: "segment-2" }),
-        },
-      },
-    });
-    useTranslatorStore.setState({
-      selected: "test1",
-      configs: { test1: { testField1: "test" } },
-    });
+    useTranslationStore.setState(testStore);
+    useTranslatorStore.setState(getTranslatorStoreStateMock());
   });
 
   afterEach(() => {
-    resetStore(useSessionStore, useTranslationStore, useTranslatorStore);
+    resetStore(
+      useTranslationProcessStore,
+      useTranslationStore,
+      useTranslatorStore,
+    );
   });
 
   it("should stop translation process on stop", () => {
-    const { result } = renderHook(() => useTranslation());
+    const { result } = renderHook(() => useTranslationProcess());
 
     result.current.stop();
 
@@ -83,8 +77,8 @@ describe("features/translation/lib/useTranslation", () => {
   });
 
   it("should not start process and show notification if already translating", async () => {
-    useSessionStore.setState({ status: "translating" });
-    const { result } = renderHook(() => useTranslation());
+    useTranslationProcessStore.setState({ status: "translating" });
+    const { result } = renderHook(() => useTranslationProcess());
 
     await result.current.start();
 
@@ -93,8 +87,8 @@ describe("features/translation/lib/useTranslation", () => {
   });
 
   it("should not start process and show notification if translator not found", async () => {
-    useTranslatorStore.setState({ selected: "test2", configs: {} });
-    const { result } = renderHook(() => useTranslation());
+    useTranslatorStore.setState({ selected: "test" });
+    const { result } = renderHook(() => useTranslationProcess());
 
     await result.current.start();
 
@@ -103,46 +97,45 @@ describe("features/translation/lib/useTranslation", () => {
   });
 
   it("should call translation process with correct arguments", async () => {
-    const { result } = renderHook(() => useTranslation());
+    const { result } = renderHook(() => useTranslationProcess());
 
     await result.current.start();
 
     expect(mockTranslationProcess.start).toHaveBeenCalledWith(
       [untranslatedSegment],
       expect.objectContaining({
-        batch: true,
-        translator: expect.objectContaining({
-          name: "Mock Translator",
-          version: "0.0.1",
-        }),
-        translatorConfig: { testField1: "test" },
+        mode: "sequential",
+        translator: testTranslator,
+        translatorConfig: { model: "gpt-3.5-turbo" },
       }),
     );
   });
 
   it("should set status to translating, logging message and show notification on start", async () => {
-    const { result } = renderHook(() => useTranslation());
+    const { result } = renderHook(() => useTranslationProcess());
 
     await result.current.start();
     capturedOptions.onStart?.();
 
-    expect(setSessionStatus).toHaveBeenCalledWith("translating");
+    expect(setTranslationProcessStatus).toHaveBeenCalledWith("translating");
 
     expect(logger.info).toHaveBeenCalled();
     expect(notifications.show).toHaveBeenCalled();
   });
 
   it("should set translating resource on resource start", async () => {
-    const { result } = renderHook(() => useTranslation());
+    const { result } = renderHook(() => useTranslationProcess());
 
     await result.current.start();
     capturedOptions.onResourceStart?.("file-1");
 
-    expect(setSessionTranslatingResource).toHaveBeenCalledWith("file-1");
+    expect(setTranslationProcessTranslatingResource).toHaveBeenCalledWith(
+      "file-1",
+    );
   });
 
   it("should logging message on batch start", async () => {
-    const { result } = renderHook(() => useTranslation());
+    const { result } = renderHook(() => useTranslationProcess());
 
     await result.current.start();
     capturedOptions.onSegmentBatchStart?.({ Line1: "test" });
@@ -151,7 +144,7 @@ describe("features/translation/lib/useTranslation", () => {
   });
 
   it("should update segement, add progress and logging message on batch complete", async () => {
-    const { result } = renderHook(() => useTranslation());
+    const { result } = renderHook(() => useTranslationProcess());
 
     await result.current.start();
     capturedOptions.onSegmentBatchComplete?.(
@@ -167,7 +160,7 @@ describe("features/translation/lib/useTranslation", () => {
   });
 
   it("should logging message on sequential start", async () => {
-    const { result } = renderHook(() => useTranslation());
+    const { result } = renderHook(() => useTranslationProcess());
 
     await result.current.start();
     capturedOptions.onSegmentSequentialStart?.(untranslatedSegment);
@@ -176,7 +169,7 @@ describe("features/translation/lib/useTranslation", () => {
   });
 
   it("should update segement, add progress and logging message on sequential complete", async () => {
-    const { result } = renderHook(() => useTranslation());
+    const { result } = renderHook(() => useTranslationProcess());
 
     await result.current.start();
     capturedOptions.onSegmentSequentialComplete?.(untranslatedSegment, "test");
@@ -190,39 +183,39 @@ describe("features/translation/lib/useTranslation", () => {
   });
 
   it("should set status to idle, clear translating resource, logging message and show notification on end", async () => {
-    const { result } = renderHook(() => useTranslation());
+    const { result } = renderHook(() => useTranslationProcess());
 
     await result.current.start();
     capturedOptions.onEnd?.();
 
-    expect(setSessionStatus).toHaveBeenCalledWith("idle");
-    expect(setSessionTranslatingResource).toHaveBeenCalledWith(null);
+    expect(setTranslationProcessStatus).toHaveBeenCalledWith("idle");
+    expect(setTranslationProcessTranslatingResource).toHaveBeenCalledWith(null);
 
     expect(logger.info).toHaveBeenCalled();
     expect(notifications.show).toHaveBeenCalled();
   });
 
-  it("should set status to stopped, clear translating resource, logging message and show notification on stop", async () => {
-    const { result } = renderHook(() => useTranslation());
+  it("should set status to idle, clear translating resource, logging message and show notification on stop", async () => {
+    const { result } = renderHook(() => useTranslationProcess());
 
     await result.current.start();
     capturedOptions.onStop?.();
 
-    expect(setSessionStatus).toHaveBeenCalledWith("stopped");
-    expect(setSessionTranslatingResource).toHaveBeenCalledWith(null);
+    expect(setTranslationProcessStatus).toHaveBeenCalledWith("idle");
+    expect(setTranslationProcessTranslatingResource).toHaveBeenCalledWith(null);
 
     expect(logger.info).toHaveBeenCalled();
     expect(notifications.show).toHaveBeenCalled();
   });
 
-  it("should set status to stopped, clear translating resource, logging message and show notification on error", async () => {
-    const { result } = renderHook(() => useTranslation());
+  it("should set status to idle, clear translating resource, logging message and show notification on error", async () => {
+    const { result } = renderHook(() => useTranslationProcess());
 
     await result.current.start();
     capturedOptions.onError?.(new Error("error"));
 
-    expect(setSessionStatus).toHaveBeenCalledWith("stopped");
-    expect(setSessionTranslatingResource).toHaveBeenCalledWith(null);
+    expect(setTranslationProcessStatus).toHaveBeenCalledWith("idle");
+    expect(setTranslationProcessTranslatingResource).toHaveBeenCalledWith(null);
 
     expect(logger.error).toHaveBeenCalled();
     expect(notifications.show).toHaveBeenCalled();

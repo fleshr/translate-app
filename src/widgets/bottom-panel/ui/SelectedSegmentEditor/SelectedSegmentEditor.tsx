@@ -5,6 +5,9 @@ import {
 } from "@/entities/translation";
 import {
   selectIsTranslating,
+  useTranslationProcessStore,
+} from "@/features/translation-process";
+import {
   selectSelectedSegment,
   useSessionStore,
 } from "@/shared/model/sessionStore";
@@ -17,7 +20,7 @@ import { SegmentEditForm } from "../SegmentEditForm/SegmentEditForm";
 
 export const SelectedSegmentEditor = () => {
   const content = useIntlayer("SelectedSegmentEditor");
-  const isTranslating = useSessionStore(selectIsTranslating);
+  const isTranslating = useTranslationProcessStore(selectIsTranslating);
   const selectedSegment = useSessionStore(selectSelectedSegment);
   const segment = useTranslationStore(selectSegment(selectedSegment));
 

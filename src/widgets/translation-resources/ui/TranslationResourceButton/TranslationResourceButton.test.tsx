@@ -1,5 +1,6 @@
 import { useTranslationStore } from "@/entities/translation";
 import { getTranslationStoreStateMock } from "@/entities/translation/mocks";
+import { useTranslationProcessStore } from "@/features/translation-process";
 import { render, resetStore } from "@/shared/lib/testing";
 import {
   setSessionSelectedResource,
@@ -20,7 +21,11 @@ describe("widgets/translation-resources/ui/TranslationResourceButton", () => {
   });
 
   afterEach(() => {
-    resetStore(useSessionStore, useTranslationStore);
+    resetStore(
+      useSessionStore,
+      useTranslationStore,
+      useTranslationProcessStore,
+    );
   });
 
   it("should render with correct label and progress", () => {
@@ -35,9 +40,11 @@ describe("widgets/translation-resources/ui/TranslationResourceButton", () => {
   });
 
   it("should be selected and processing", () => {
+    useTranslationProcessStore.setState({
+      translatingResource: testResource.id,
+    });
     useSessionStore.setState({
       selectedResource: testResource.id,
-      translatingResource: testResource.id,
     });
     const { getByTestId } = render(
       <TranslationResourceButton resource={testResource} />,
