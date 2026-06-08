@@ -44,7 +44,10 @@ export const initTranslation = (resources: TranslationResource[]) => {
 export const setTranslationSegmentField = (
   id: Id,
   translation: string,
-  field: Exclude<keyof TranslationBaseSegment, "id"> = "machineTranslation",
+  field: Exclude<
+    keyof TranslationBaseSegment,
+    "id" | "resourceId"
+  > = "machineTranslation",
 ) => {
   useTranslationStore.setState(
     (state) => {
@@ -59,7 +62,10 @@ export const setTranslationSegmentField = (
 
 export const setTranslationSegmentsField = (
   translations: { id: Id; translation: string }[],
-  field: Exclude<keyof TranslationBaseSegment, "id"> = "machineTranslation",
+  field: Exclude<
+    keyof TranslationBaseSegment,
+    "id" | "resourceId"
+  > = "machineTranslation",
 ) => {
   useTranslationStore.setState(
     (state) => {

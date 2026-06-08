@@ -7,10 +7,10 @@ import {
   selectResources,
   selectResourceSegments,
   selectResourcesProgress,
+  selectResourcesWithUntranslatedSegments,
   selectSegment,
   selectSegments,
   selectSegmentsProgress,
-  selectUntranslatedSegments,
 } from "./selectors";
 
 const testStore = getTranslationStoreStateMock();
@@ -90,10 +90,10 @@ describe("entities/translation/model/store/selectors", () => {
     });
   });
 
-  describe("selectUntranslatedSegments", () => {
+  describe("selectResourcesWithUntranslatedSegments", () => {
     it("should return all untranslated segments", () => {
-      const segments = selectUntranslatedSegments(testStore);
-      expect(segments).toEqual([segment3]);
+      const segments = selectResourcesWithUntranslatedSegments(testStore);
+      expect(segments).toEqual([{ ...file1, segments: [segment3] }]);
     });
   });
 
