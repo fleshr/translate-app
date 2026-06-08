@@ -1,5 +1,5 @@
 import {
-  selectUntranslatedSegments,
+  selectResourcesWithUntranslatedSegments,
   setTranslationSegmentField,
   setTranslationSegmentsField,
   useTranslationStore,
@@ -52,29 +52,34 @@ export const useTranslationProcess = () => {
     }
 
     const mode = selectMode(useTranslationProcessSettingsStore.getState());
-    const segments = selectUntranslatedSegments(useTranslationStore.getState());
+    const resources = selectResourcesWithUntranslatedSegments(
+      useTranslationStore.getState(),
+    );
 
-    await translationProcess.start(segments, {
+    await translationProcess.translateResources(resources, {
       mode,
       translator,
       translatorConfig,
       onStart: () => {
         setTranslationProcessStatus("translating");
-
         logger.info(content.startMessage);
         notifications.show({ message: content.startMessage });
       },
-      onResourceStart: (resourceId) => {
-        setTranslationProcessTranslatingResource(resourceId);
+      onResourceStart: (resource) => {
+        setTranslationProcessTranslatingResource(resource.id);
       },
-      onSegmentBatchStart(batch) {
+      onSegmentBatchStart(_, batch) {
         logger.info(
           content.startSegmentMessage({ text: stringifyJson(batch) }),
         );
       },
       onSegmentBatchComplete(translations, response) {
-        setTranslationSegmentsField(translations);
-
+        setTranslationSegmentsField(
+          translations.map(({ segment, translation }) => ({
+            id: segment.id,
+            translation,
+          })),
+        );
         logger.info(
           content.completeSegmentMessage({ text: stringifyJson(response) }),
         );
@@ -86,27 +91,23 @@ export const useTranslationProcess = () => {
       },
       onSegmentSequentialComplete(segment, translation) {
         setTranslationSegmentField(segment.id, translation);
-
         logger.info(content.completeSegmentMessage({ text: translation }));
       },
       onEnd: () => {
         setTranslationProcessStatus("idle");
         setTranslationProcessTranslatingResource(null);
-
         logger.info(content.completeMessage);
         notifications.show({ message: content.completeMessage });
       },
       onStop: () => {
         setTranslationProcessStatus("idle");
         setTranslationProcessTranslatingResource(null);
-
         logger.info(content.stopMessage);
         notifications.show({ message: content.stopMessage });
       },
       onError() {
         setTranslationProcessStatus("idle");
         setTranslationProcessTranslatingResource(null);
-
         logger.error(content.errorMessage);
         notifications.show({ message: content.errorMessage });
       },
