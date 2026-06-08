@@ -1,84 +1,136 @@
+import OpenAI, { APIUserAbortError } from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
-import { describe, expect, it, vi } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "vitest";
 import { z } from "zod";
-import { defaultConfig, OpenAITranslator } from "./OpenAITranslator";
+import { OpenAITranslator, type Config } from "./OpenAITranslator";
 
-const testConfig = {
+const testConfig: Config = {
   apiKey: "testKey",
   baseURL: "testUrl",
   model: "testModel",
   instructions: "testInstructions",
 };
 
-const testSchema = z.object({
-  test: z.string(),
-});
-
 const { mockCreate, mockOpenAI } = vi.hoisted(() => {
-  const mockCreate = vi.fn(() => ({ output_text: "testOutput" }));
+  const mockCreate = vi.fn();
   const mockOpenAI = vi.fn(
     class {
       responses = { create: mockCreate };
-    },
+    } as unknown as typeof OpenAI,
   );
 
   return { mockCreate, mockOpenAI };
 });
 
-vi.mock("openai", () => ({ default: mockOpenAI }));
+vi.mock("openai", { spy: true });
+vi.mocked(OpenAI).mockImplementation(mockOpenAI);
 
 describe("entities/translator/lib/OpenAITranslator", () => {
-  it("should apply config to OpenAI client", async () => {
-    const abortController = new AbortController();
-
-    await OpenAITranslator.translate("test", {
-      config: testConfig,
-      signal: abortController.signal,
-      schema: testSchema,
+  describe("translate", () => {
+    beforeAll(() => {
+      mockCreate.mockResolvedValue({ output_text: "testOutput" });
     });
 
-    expect(mockOpenAI).toHaveBeenCalledWith({
-      apiKey: testConfig.apiKey,
-      baseURL: testConfig.baseURL,
-      dangerouslyAllowBrowser: true,
+    it("should apply config to OpenAI client", async () => {
+      await OpenAITranslator.translate("test", { config: testConfig });
+
+      expect(mockOpenAI).toHaveBeenCalledWith({
+        apiKey: testConfig.apiKey,
+        baseURL: testConfig.baseURL,
+        dangerouslyAllowBrowser: true,
+      });
     });
 
-    expect(mockCreate).toHaveBeenCalledWith(
-      {
-        input: "test",
-        instructions: testConfig.instructions,
-        model: testConfig.model,
-        stream: false,
-        text: { format: zodTextFormat(testSchema, "response") },
-      },
-      { signal: abortController.signal },
-    );
+    it("should apply config to request", async () => {
+      const abortController = new AbortController();
+
+      await OpenAITranslator.translate("test", {
+        config: testConfig,
+        signal: abortController.signal,
+      });
+
+      expect(mockCreate).toHaveBeenCalledWith(
+        {
+          input: "test",
+          instructions: testConfig.instructions,
+          model: testConfig.model,
+          stream: false,
+        },
+        { signal: abortController.signal },
+      );
+    });
+
+    it("should throw DOMException on abort", async () => {
+      mockCreate.mockRejectedValueOnce(new APIUserAbortError());
+
+      await expect(OpenAITranslator.translate("test")).rejects.toThrow(
+        DOMException,
+      );
+    });
+
+    it("should translate text with OpenAI client", async () => {
+      const result = await OpenAITranslator.translate("test");
+
+      expect(result).toBe("testOutput");
+    });
   });
 
-  it("should apply defaults to OpenAI client", async () => {
-    await OpenAITranslator.translate("test");
-
-    expect(mockOpenAI).toHaveBeenCalledWith({
-      apiKey: defaultConfig.apiKey,
-      baseURL: defaultConfig.baseURL,
-      dangerouslyAllowBrowser: true,
+  describe("translateBatch", () => {
+    beforeAll(() => {
+      mockCreate.mockResolvedValue({
+        output_text: '{"Line1":"text1","Line2":"text2"}',
+      });
     });
 
-    expect(mockCreate).toHaveBeenCalledWith(
-      {
-        input: "test",
-        instructions: defaultConfig.instructions,
-        model: defaultConfig.model,
-        stream: false,
-        text: { format: zodTextFormat(z.object(), "response") },
-      },
-      { signal: undefined },
-    );
-  });
+    it("should apply config to OpenAI client", async () => {
+      await OpenAITranslator.translateBatch(["test1", "test2"], {
+        config: testConfig,
+      });
 
-  it("should translate text with OpenAI client", async () => {
-    const result = await OpenAITranslator.translate("test");
+      expect(mockOpenAI).toHaveBeenCalledWith({
+        apiKey: testConfig.apiKey,
+        baseURL: testConfig.baseURL,
+        dangerouslyAllowBrowser: true,
+      });
+    });
 
-    expect(result).toBe("testOutput");
+    it("should apply config to request", async () => {
+      const abortController = new AbortController();
+
+      await OpenAITranslator.translateBatch(["test1", "test2"], {
+        config: testConfig,
+        signal: abortController.signal,
+      });
+
+      expect(mockCreate).toHaveBeenCalledWith(
+        {
+          input: '{\n  "Line1": "test1",\n  "Line2": "test2"\n}',
+          instructions: testConfig.instructions,
+          model: testConfig.model,
+          stream: false,
+          text: {
+            format: zodTextFormat(
+              z.object({ Line1: z.string(), Line2: z.string() }),
+              "response",
+            ),
+          },
+        },
+        { signal: abortController.signal },
+      );
+    });
+
+    it("should throw DOMException on abort", async () => {
+      mockCreate.mockRejectedValueOnce(new APIUserAbortError());
+
+      await expect(
+        OpenAITranslator.translateBatch(["test1", "test2"]),
+      ).rejects.toThrow(DOMException);
+    });
+
+    it("should translate text with OpenAI client", async () => {
+      const result = await OpenAITranslator.translateBatch(["test1", "test2"]);
+
+      expect(result).toEqual(["text1", "text2"]);
+    });
   });
 });

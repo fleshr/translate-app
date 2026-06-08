@@ -1,5 +1,5 @@
 import type { Progress } from "@/shared/model/common";
-import { filter, isDefined, map, pick, pipe } from "remeda";
+import { filter, isDefined, isEmpty, map, pick, pipe } from "remeda";
 import { isSegmentTranslated, isSegmentUntranslated } from "../../lib/helpers";
 import type {
   TranslationBaseResource,
@@ -28,13 +28,9 @@ export const selectBaseResources = (
 export const selectResource = (id: TranslationResource["id"]) => {
   return (state: State): TranslationResource | undefined => {
     const resource = state.resources.byId[id];
+    const segments = selectResourceSegments(id)(state);
 
-    return (
-      resource && {
-        ...resource,
-        segments: selectResourceSegments(id)(state),
-      }
-    );
+    return resource && { ...resource, segments };
   };
 };
 
@@ -72,14 +68,16 @@ export const selectSegments = (state: State): TranslationSegment[] => {
   );
 };
 
-export const selectUntranslatedSegments = (
+export const selectResourcesWithUntranslatedSegments = (
   state: State,
-): TranslationSegment[] => {
+): TranslationResource[] => {
   return pipe(
-    state.segments.allIds,
-    map((id) => selectSegment(id)(state)),
-    filter(isDefined),
-    filter(isSegmentUntranslated),
+    selectResources(state),
+    map((resource) => ({
+      ...resource,
+      segments: filter(resource.segments, isSegmentUntranslated),
+    })),
+    filter(({ segments }) => !isEmpty(segments)),
   );
 };
 

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
+import { DEFAULT_BATCH_SIZE } from "../../config";
 import type { TranslationProcessMode } from "../translation/types";
 
 export interface State {
@@ -10,7 +11,7 @@ export interface State {
 
 export const defaultState: State = {
   mode: "sequential",
-  batchSize: 10,
+  batchSize: DEFAULT_BATCH_SIZE,
 };
 
 export const useTranslationProcessSettingsStore = create<State>()(

@@ -5,7 +5,6 @@ export type TranslatorConfig = Record<string, unknown>;
 
 export interface TranslatorOptions<Config extends TranslatorConfig> {
   config?: Config;
-  schema?: z.ZodObject;
   signal?: AbortSignal;
 }
 
@@ -20,4 +19,8 @@ export interface Translator<
     input: string,
     options?: TranslatorOptions<Config>,
   ): Promise<string>;
+  translateBatch?(
+    input: string[],
+    options?: TranslatorOptions<Config>,
+  ): Promise<string[]>;
 }

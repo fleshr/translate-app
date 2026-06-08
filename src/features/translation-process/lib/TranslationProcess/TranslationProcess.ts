@@ -1,95 +1,76 @@
-import type { TranslationBaseSegment } from "@/entities/translation";
-import type { Translator, TranslatorConfig } from "@/entities/translator";
-import { parseJson, stringifyJson } from "@/shared/lib/json";
-import type { Id } from "@/shared/model/common";
-import { jsonrepair } from "jsonrepair";
-import {
-  chunk,
-  entries,
-  fromKeys,
-  groupByProp,
-  map,
-  mapToObj,
-  pipe,
-  times,
-} from "remeda";
-import z from "zod";
-import type { TranslationProcessMode } from "../../model/translation/types";
-
-interface Callbacks {
-  onStart: () => void;
-  onStop: () => void;
-  onEnd: () => void;
-  onError: (e: unknown) => void;
-  onResourceStart: (resourceId: string) => void;
-  onResourceComplete: (resourceId: string) => void;
-  onSegmentBatchStart: (batch: Record<string, string>) => void;
-  onSegmentBatchComplete: (
-    translations: { id: Id; translation: string }[],
-    response: Record<string, string>,
-  ) => void;
-  onSegmentSequentialStart: (segment: TranslationBaseSegment) => void;
-  onSegmentSequentialComplete: (
-    segment: TranslationBaseSegment,
-    translation: string,
-  ) => void;
-}
-
-export interface TranslationOptions extends Partial<Callbacks> {
-  mode: TranslationProcessMode;
-  translator: Translator;
-  translatorConfig?: TranslatorConfig;
-}
+import type {
+  TranslationBaseSegment,
+  TranslationResource,
+} from "@/entities/translation";
+import { chunk } from "remeda";
+import { DEFAULT_BATCH_SIZE } from "../../config";
+import type { ProcessOptions } from "../../model/process";
 
 export class TranslationProcess {
-  batchSize = 10;
-  abortController: AbortController | null = null;
+  private abortController: AbortController | null = null;
 
-  async start(segments: TranslationBaseSegment[], options: TranslationOptions) {
-    const {
-      mode,
-      onStart,
-      onStop,
-      onEnd,
-      onError,
-      onResourceStart,
-      onResourceComplete,
-    } = options;
-
-    onStart?.();
-
+  private async translateWrapper(
+    callback: () => Promise<void>,
+    options: ProcessOptions,
+  ): Promise<void> {
+    const { onStart, onEnd, onError, onStop } = options;
     this.abortController = new AbortController();
-    const groups = groupByProp(segments, "resourceId");
 
     try {
-      for (const [resourceId, segments] of entries(groups)) {
-        onResourceStart?.(resourceId);
-
-        if (mode === "batch") {
-          await this.translateBatch(segments, options);
-        } else {
-          await this.translateSequential(segments, options);
-        }
-
-        onResourceComplete?.(resourceId);
-      }
+      onStart?.();
+      await callback();
+      onEnd?.();
     } catch (e) {
       if (e instanceof DOMException && e.name === "AbortError") {
         onStop?.();
-        return;
+      } else {
+        onError?.(e);
       }
-
-      onError?.(e);
-      return;
     }
-
-    onEnd?.();
   }
 
-  async translateSequential(
+  async translateResources(
+    resources: TranslationResource[],
+    options: ProcessOptions,
+  ): Promise<void> {
+    const { onResourceStart, onResourceComplete } = options;
+
+    await this.translateWrapper(async () => {
+      for (const resource of resources) {
+        onResourceStart?.(resource);
+        await this.translate(resource.segments, options);
+        onResourceComplete?.(resource);
+      }
+    }, options);
+  }
+
+  async translateSegments(
     segments: TranslationBaseSegment[],
-    options: TranslationOptions,
-  ) {
+    options: ProcessOptions,
+  ): Promise<void> {
+    await this.translateWrapper(
+      () => this.translate(segments, options),
+      options,
+    );
+  }
+
+  private async translate(
+    segments: TranslationBaseSegment[],
+    options: ProcessOptions,
+  ): Promise<void> {
+    const { mode } = options;
+
+    if (mode === "batch") {
+      await this.translateBatch(segments, options);
+    } else {
+      await this.translateSequential(segments, options);
+    }
+  }
+
+  private async translateSequential(
+    segments: TranslationBaseSegment[],
+    options: ProcessOptions,
+  ): Promise<void> {
     const {
       translator,
       translatorConfig,
@@ -107,57 +88,46 @@ export class TranslationProcess {
         signal: this.abortController?.signal,
       });
 
-      this.abortController?.signal.throwIfAborted();
       onSegmentSequentialComplete?.(segment, tranlation);
     }
   }
 
-  async translateBatch(
+  private async translateBatch(
     segments: TranslationBaseSegment[],
-    options: TranslationOptions,
-  ) {
+    options: ProcessOptions,
+  ): Promise<void> {
     const {
       translator,
       translatorConfig,
+      batchSize = DEFAULT_BATCH_SIZE,
       onSegmentBatchStart,
       onSegmentBatchComplete,
     } = options;
 
-    for (const batch of chunk(segments, this.batchSize)) {
-      const batchObj = mapToObj(batch, ({ originalText }, i) => {
-        return [`Line${i + 1}`, originalText];
-      });
+    if (!translator.translateBatch) {
+      throw new Error("Translator does not support batch translation");
+    }
 
-      const batchSchema = z.object(
-        pipe(
-          batch.length,
-          times((i) => `Line${i + 1}`),
-          fromKeys(() => z.string()),
-        ),
-      );
+    for (const batch of chunk(segments, batchSize)) {
+      const batchArray = batch.map(({ originalText }) => originalText);
 
-      onSegmentBatchStart?.(batchObj);
+      onSegmentBatchStart?.(batch, batchArray);
 
-      const responseJson = await translator.translate(stringifyJson(batchObj), {
-        schema: batchSchema,
+      const responseArray = await translator.translateBatch(batchArray, {
         config: translatorConfig,
         signal: this.abortController?.signal,
       });
 
-      const responseObj = batchSchema.parse(
-        parseJson(jsonrepair(responseJson)),
-      );
-      const translations = map(batch, ({ id }, i) => ({
-        id,
-        translation: responseObj[`Line${i + 1}`] ?? "",
+      const translations = batch.map((segment, index) => ({
+        segment,
+        translation: responseArray[index] ?? "",
       }));
 
-      this.abortController?.signal.throwIfAborted();
-      onSegmentBatchComplete?.(translations, responseObj);
+      onSegmentBatchComplete?.(translations, responseArray);
     }
   }
 
-  stop() {
+  stop(): void {
     this.abortController?.abort();
   }
 }

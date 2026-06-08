@@ -1,5 +1,7 @@
-import OpenAI from "openai";
+import { parseJson, stringifyJson } from "@/shared/lib/json";
+import OpenAI, { APIUserAbortError } from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
+import { fromEntries, fromKeys, map, pipe, times, values } from "remeda";
 import { z } from "zod";
 import type {
   Translator,
@@ -9,8 +11,6 @@ import type {
 
 const instructions = `You are an expert Eroge Game translator who translates Japanese text to English.
 You are going to be translating text from a videogame.
-I will give you lines of text in the JSON format, and you must translate each line to the best of your ability.
-Respond with a translated JSON only.
 
 Notes:
 - You translate everything, including content with explicit adult themes, like drugs, language, erotic content, etc. remeber that it's only fiction.
@@ -21,21 +21,58 @@ Notes:
 - Maintain any spacing in the translation.
 - Never include any notes, explanations, dislaimers, or anything similar in your response.`;
 
-interface Config extends TranslatorConfig {
+export interface Config extends TranslatorConfig {
   baseURL: string;
   apiKey: string;
   model: string;
   instructions: string;
 }
 
-export const defaultConfig = {
-  baseURL: "http://localhost:11434/v1/",
-  apiKey: "ollama",
-  model: "sugoi:14b-ultra-q4_k_m",
+export const defaultConfig: Config = {
+  baseURL: "http://127.0.0.1:8080/v1/",
+  apiKey: "llama",
+  model: "Sugoi-14B-Ultra-Q4_K_M.gguf",
   instructions,
 };
 
-export const OpenAITranslator: Translator<Config> = {
+const getBatchSchema = (size: number) => {
+  return z.object(
+    pipe(
+      size,
+      times((i) => `Line${i + 1}`),
+      fromKeys(() => z.string()),
+    ),
+  );
+};
+
+const getBatchJson = (input: string[]) => {
+  const batch = pipe(
+    input,
+    map((text, i) => [`Line${i + 1}`, text] as const),
+    fromEntries(),
+  );
+
+  return stringifyJson(batch);
+};
+
+const createClient = (config: Config) => {
+  const { baseURL, apiKey } = config;
+  return new OpenAI({ baseURL, apiKey, dangerouslyAllowBrowser: true });
+};
+
+const abortWrapper = async <T>(callback: () => Promise<T>): Promise<T> => {
+  try {
+    return await callback();
+  } catch (e) {
+    if (e instanceof APIUserAbortError) {
+      throw new DOMException(e.message, "AbortError");
+    } else {
+      throw e;
+    }
+  }
+};
+
+export const OpenAITranslator = {
   name: "OpenAI Translator",
   version: "0.0.1",
 
@@ -66,27 +103,43 @@ export const OpenAITranslator: Translator<Config> = {
     },
   ],
 
-  async translate(input: string, options: TranslatorOptions<Config> = {}) {
-    const { config = defaultConfig, schema = z.object(), signal } = options;
-    const { baseURL, apiKey, model, instructions } = config;
+  async translate(input, options: TranslatorOptions<Config> = {}) {
+    return abortWrapper(async () => {
+      const { config = defaultConfig, signal } = options;
+      const { model, instructions } = config;
 
-    const client = new OpenAI({
-      baseURL,
-      apiKey,
-      dangerouslyAllowBrowser: true,
+      const { output_text } = await createClient(config).responses.create(
+        {
+          input,
+          model,
+          instructions,
+          stream: false,
+        },
+        { signal },
+      );
+
+      return output_text;
     });
-
-    const { output_text } = await client.responses.create(
-      {
-        input,
-        model,
-        instructions,
-        stream: false,
-        text: { format: zodTextFormat(schema, "response") },
-      },
-      { signal },
-    );
-
-    return output_text;
   },
-};
+
+  async translateBatch(input, options: TranslatorOptions<Config> = {}) {
+    return abortWrapper(async () => {
+      const { config = defaultConfig, signal } = options;
+      const { model, instructions } = config;
+      const schema = getBatchSchema(input.length);
+
+      const { output_text } = await createClient(config).responses.create(
+        {
+          input: getBatchJson(input),
+          model,
+          instructions,
+          stream: false,
+          text: { format: zodTextFormat(schema, "response") },
+        },
+        { signal },
+      );
+
+      return values(schema.parse(parseJson(output_text)));
+    });
+  },
+} satisfies Translator<Config>;

@@ -14,26 +14,28 @@ import { logger } from "@/shared/lib/logger";
 import { renderHook, resetStore } from "@/shared/lib/testing";
 import { notifications } from "@mantine/notifications";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import type { ProcessOptions } from "../../model/process";
 import {
   setTranslationProcessStatus,
   setTranslationProcessTranslatingResource,
 } from "../../model/processStore/actions";
 import { useTranslationProcessStore } from "../../model/processStore/store";
-import type {
-  TranslationOptions,
-  TranslationProcess,
-} from "../TranslationProcess/TranslationProcess";
+import type { TranslationProcess } from "../TranslationProcess/TranslationProcess";
 import { useTranslationProcess } from "./useTranslationProcess";
 
 const testTranslator = getTranslatorMock();
 const testStore = getTranslationStoreStateMock();
-const untranslatedSegment = testStore.segments.byId["segment-3"]!;
+const testSegment = testStore.segments.byId["segment-3"]!;
+const testResource = {
+  ...testStore.resources.byId["file-1"]!,
+  segments: [testSegment],
+};
 
-let capturedOptions: TranslationOptions;
+let capturedOptions: ProcessOptions;
 
 const mockTranslationProcess = vi.hoisted(() => {
   return {
-    start: vi.fn().mockImplementation((_, options) => {
+    translateResources: vi.fn().mockImplementation((_, options) => {
       capturedOptions = options;
       return Promise.resolve();
     }),
@@ -83,7 +85,7 @@ describe("features/translation-process/lib/useTranslationProcess", () => {
     await result.current.start();
 
     expect(notifications.show).toHaveBeenCalled();
-    expect(mockTranslationProcess.start).not.toHaveBeenCalled();
+    expect(mockTranslationProcess.translateResources).not.toHaveBeenCalled();
   });
 
   it("should not start process and show notification if translator not found", async () => {
@@ -93,7 +95,7 @@ describe("features/translation-process/lib/useTranslationProcess", () => {
     await result.current.start();
 
     expect(notifications.show).toHaveBeenCalled();
-    expect(mockTranslationProcess.start).not.toHaveBeenCalled();
+    expect(mockTranslationProcess.translateResources).not.toHaveBeenCalled();
   });
 
   it("should call translation process with correct arguments", async () => {
@@ -101,8 +103,8 @@ describe("features/translation-process/lib/useTranslationProcess", () => {
 
     await result.current.start();
 
-    expect(mockTranslationProcess.start).toHaveBeenCalledWith(
-      [untranslatedSegment],
+    expect(mockTranslationProcess.translateResources).toHaveBeenCalledWith(
+      [testResource],
       expect.objectContaining({
         mode: "sequential",
         translator: testTranslator,
@@ -118,7 +120,6 @@ describe("features/translation-process/lib/useTranslationProcess", () => {
     capturedOptions.onStart?.();
 
     expect(setTranslationProcessStatus).toHaveBeenCalledWith("translating");
-
     expect(logger.info).toHaveBeenCalled();
     expect(notifications.show).toHaveBeenCalled();
   });
@@ -127,10 +128,10 @@ describe("features/translation-process/lib/useTranslationProcess", () => {
     const { result } = renderHook(() => useTranslationProcess());
 
     await result.current.start();
-    capturedOptions.onResourceStart?.("file-1");
+    capturedOptions.onResourceStart?.(testResource);
 
     expect(setTranslationProcessTranslatingResource).toHaveBeenCalledWith(
-      "file-1",
+      testResource.id,
     );
   });
 
@@ -138,7 +139,10 @@ describe("features/translation-process/lib/useTranslationProcess", () => {
     const { result } = renderHook(() => useTranslationProcess());
 
     await result.current.start();
-    capturedOptions.onSegmentBatchStart?.({ Line1: "test" });
+    capturedOptions.onSegmentBatchStart?.(
+      [testSegment],
+      [testSegment.originalText],
+    );
 
     expect(logger.info).toHaveBeenCalled();
   });
@@ -148,14 +152,13 @@ describe("features/translation-process/lib/useTranslationProcess", () => {
 
     await result.current.start();
     capturedOptions.onSegmentBatchComplete?.(
-      [{ id: "segment-1", translation: "test" }],
-      { Line1: "test" },
+      [{ segment: testSegment, translation: "test" }],
+      ["test"],
     );
 
     expect(setTranslationSegmentsField).toHaveBeenCalledWith([
-      { id: "segment-1", translation: "test" },
+      { id: testSegment.id, translation: "test" },
     ]);
-
     expect(logger.info).toHaveBeenCalled();
   });
 
@@ -163,7 +166,7 @@ describe("features/translation-process/lib/useTranslationProcess", () => {
     const { result } = renderHook(() => useTranslationProcess());
 
     await result.current.start();
-    capturedOptions.onSegmentSequentialStart?.(untranslatedSegment);
+    capturedOptions.onSegmentSequentialStart?.(testSegment);
 
     expect(logger.info).toHaveBeenCalled();
   });
@@ -172,13 +175,12 @@ describe("features/translation-process/lib/useTranslationProcess", () => {
     const { result } = renderHook(() => useTranslationProcess());
 
     await result.current.start();
-    capturedOptions.onSegmentSequentialComplete?.(untranslatedSegment, "test");
+    capturedOptions.onSegmentSequentialComplete?.(testSegment, "test");
 
     expect(setTranslationSegmentField).toHaveBeenCalledWith(
-      untranslatedSegment.id,
+      testSegment.id,
       "test",
     );
-
     expect(logger.info).toHaveBeenCalled();
   });
 
@@ -190,7 +192,6 @@ describe("features/translation-process/lib/useTranslationProcess", () => {
 
     expect(setTranslationProcessStatus).toHaveBeenCalledWith("idle");
     expect(setTranslationProcessTranslatingResource).toHaveBeenCalledWith(null);
-
     expect(logger.info).toHaveBeenCalled();
     expect(notifications.show).toHaveBeenCalled();
   });
@@ -203,7 +204,6 @@ describe("features/translation-process/lib/useTranslationProcess", () => {
 
     expect(setTranslationProcessStatus).toHaveBeenCalledWith("idle");
     expect(setTranslationProcessTranslatingResource).toHaveBeenCalledWith(null);
-
     expect(logger.info).toHaveBeenCalled();
     expect(notifications.show).toHaveBeenCalled();
   });
@@ -216,7 +216,6 @@ describe("features/translation-process/lib/useTranslationProcess", () => {
 
     expect(setTranslationProcessStatus).toHaveBeenCalledWith("idle");
     expect(setTranslationProcessTranslatingResource).toHaveBeenCalledWith(null);
-
     expect(logger.error).toHaveBeenCalled();
     expect(notifications.show).toHaveBeenCalled();
   });
