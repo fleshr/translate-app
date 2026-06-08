@@ -1,87 +1,57 @@
-import { stringifyJson } from "@/shared/lib/json";
-import { generate } from "json-schema-faker";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { z } from "zod";
+import { abortableDelayedResolve } from "@/shared/lib/async";
+import { faker } from "@faker-js/faker";
+import { describe, expect, it, vi } from "vitest";
 import { FakeTranslator } from "./FakeTranslator";
 
-const testMock = { test: "test" };
-vi.mock("json-schema-faker", () => ({
-  generate: vi.fn(() => new Promise((resolve) => resolve(testMock))),
-}));
-
-const testSchema = z.object({
-  test: z.string(),
-});
+vi.mock("@/shared/lib/async", { spy: true });
+vi.spyOn(faker.lorem, "sentence").mockReturnValue("text");
 
 describe("entities/translator/lib/FakeTranslator", () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
-  });
+  describe("translate", () => {
+    it("should call abortableDelayedResolve with correct options", () => {
+      const abortController = new AbortController();
 
-  afterEach(() => {
-    vi.useRealTimers();
-  });
+      void FakeTranslator.translate("test", {
+        config: { delay: 5000 },
+        signal: abortController.signal,
+      });
 
-  it("should resolve original text without schema", async () => {
-    const result = FakeTranslator.translate("text");
-    vi.advanceTimersToNextTimer();
-
-    await expect(result).resolves.toBe("text");
-  });
-
-  it("should resolve fake json object with schema", async () => {
-    const result = FakeTranslator.translate("text", { schema: testSchema });
-    vi.advanceTimersToNextTimer();
-
-    expect(generate).toHaveBeenCalledWith(testSchema.toJSONSchema(), {
-      minLength: 3,
-    });
-    await expect(result).resolves.toBe(stringifyJson(testMock));
-  });
-
-  it("should reject on signal abort and clear timeout", async () => {
-    const abortController = new AbortController();
-    const result = FakeTranslator.translate("text", {
-      schema: testSchema,
-      signal: abortController.signal,
+      expect(abortableDelayedResolve).toHaveBeenCalledWith("text", {
+        delay: 5000,
+        signal: abortController.signal,
+      });
     });
 
-    abortController.abort();
+    it("should return fake text", async () => {
+      const result = await FakeTranslator.translate("test", {
+        config: { delay: 0 },
+      });
 
-    expect(vi.getTimerCount()).toBe(0);
-    await expect(result).rejects.toThrow(
-      new DOMException("Aborted", "AbortError"),
-    );
+      expect(result).toBe("text");
+    });
   });
 
-  it("should reject if signal is already aborted", async () => {
-    const abortController = new AbortController();
-    abortController.abort();
+  describe("translateBatch", () => {
+    it("should call abortableDelayedResolve with correct options", () => {
+      const abortController = new AbortController();
 
-    const result = FakeTranslator.translate("text", {
-      schema: testSchema,
-      signal: abortController.signal,
+      void FakeTranslator.translateBatch(["test1", "test2"], {
+        config: { delay: 1000 },
+        signal: abortController.signal,
+      });
+
+      expect(abortableDelayedResolve).toHaveBeenCalledWith(["text", "text"], {
+        delay: 1000,
+        signal: abortController.signal,
+      });
     });
 
-    expect(vi.getTimerCount()).toBe(0);
-    await expect(result).rejects.toThrow(
-      new DOMException("signal is aborted without reason", "AbortError"),
-    );
-  });
+    it("should return fake texts", async () => {
+      const result = await FakeTranslator.translateBatch(["test1", "test2"], {
+        config: { delay: 0 },
+      });
 
-  it("should resolve after given delay", async () => {
-    const result = FakeTranslator.translate("text", {
-      config: { delay: 5000 },
+      expect(result).toEqual(["text", "text"]);
     });
-
-    vi.advanceTimersByTime(3000);
-
-    expect(vi.getTimerCount()).toBe(1);
-    expect(generate).not.toHaveBeenCalled();
-
-    vi.advanceTimersByTime(2000);
-
-    expect(vi.getTimerCount()).toBe(0);
-    await expect(result).resolves.toBe("text");
   });
 });
