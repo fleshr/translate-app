@@ -1,5 +1,5 @@
-import { stringifyJson } from "@/shared/lib/json";
-import { generate, type JsonSchema } from "json-schema-faker";
+import { abortableDelayedResolve } from "@/shared/lib/async";
+import { faker } from "@faker-js/faker";
 import type {
   Translator,
   TranslatorConfig,
@@ -14,7 +14,7 @@ const defaultConfig: Config = {
   delay: 3000,
 };
 
-export const FakeTranslator: Translator<Config> = {
+export const FakeTranslator = {
   name: "Fake Translator",
   version: "0.0.1",
 
@@ -27,37 +27,20 @@ export const FakeTranslator: Translator<Config> = {
     },
   ],
 
-  async translate(
-    text: string,
-    options: TranslatorOptions<Config> = {},
-  ): Promise<string> {
-    const { config = defaultConfig, schema, signal } = options;
-    const { delay } = config;
+  async translate(_, options: TranslatorOptions<Config> = {}) {
+    const { config: { delay } = defaultConfig, signal } = options;
+    const text = faker.lorem.sentence({ min: 3, max: 5 });
 
-    return new Promise((resolve, reject) => {
-      signal?.throwIfAborted();
-
-      const timeoutId = setTimeout(() => {
-        if (!schema) {
-          return resolve(text);
-        }
-
-        void generate(
-          schema.toJSONSchema({ target: "draft-2020-12" }) as JsonSchema,
-          { minLength: 3 },
-        ).then((fakeJson) => {
-          resolve(stringifyJson(fakeJson));
-        });
-      }, delay);
-
-      signal?.addEventListener(
-        "abort",
-        () => {
-          clearTimeout(timeoutId);
-          reject(new DOMException("Aborted", "AbortError"));
-        },
-        { once: true },
-      );
-    });
+    return abortableDelayedResolve(text, { delay, signal });
   },
-};
+
+  async translateBatch(batch, options: TranslatorOptions<Config> = {}) {
+    const { config: { delay } = defaultConfig, signal } = options;
+    const sentences = faker.helpers.multiple(
+      () => faker.lorem.sentence({ min: 3, max: 5 }),
+      { count: batch.length },
+    );
+
+    return abortableDelayedResolve(sentences, { delay, signal });
+  },
+} satisfies Translator<Config>;

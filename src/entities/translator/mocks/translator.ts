@@ -5,7 +5,8 @@ const mockTranslator: Translator = {
   name: "Mock Translator",
   version: "0.0.1",
   configFields: [],
-  translate: () => Promise.resolve(""),
+  translate: () => Promise.resolve("test"),
+  translateBatch: () => Promise.resolve(["test"]),
 };
 
 export const getTranslatorMock = createMockFactory(mockTranslator);
