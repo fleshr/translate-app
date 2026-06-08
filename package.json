@@ -21,6 +21,7 @@
   "dependencies": {
     "@codemirror/lang-javascript": "^6.2.5",
     "@codemirror/lang-json": "^6.0.2",
+    "@faker-js/faker": "^10.4.0",
     "@mantine/core": "^9.3.0",
     "@mantine/form": "^9.3.0",
     "@mantine/hooks": "^9.3.0",
@@ -34,8 +35,6 @@
     "idb-keyval": "^6.2.2",
     "immer": "^11.1.8",
     "intlayer": "^8.10.0",
-    "json-schema-faker": "^0.6.1",
-    "jsonrepair": "^3.14.0",
     "jszip": "^3.10.1",
     "nanoid": "^5.1.11",
     "openai": "^6.38.0",
