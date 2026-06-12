@@ -4,6 +4,7 @@ import {
   selectIsTranslating,
   useTranslationProcessStore,
 } from "@/features/translation-process";
+import { selectFiles, useFilesStore } from "@/shared/model/filesStore";
 import {
   selectProjectParser,
   useProjectStore,
@@ -13,13 +14,13 @@ import { notifications } from "@mantine/notifications";
 import { IconFolderUp } from "@tabler/icons-react";
 import { fileSave } from "browser-fs-access";
 import { useIntlayer } from "react-intlayer";
-import { exportTranslationToZip } from "../../lib/exportTranslationToZip/exportTranslationToZip";
+import { exportResourcesToZip } from "../../lib/exportResourcesToZip";
 
 export const ExportButton = () => {
   const content = useIntlayer("ExportButton");
   const isTranslating = useTranslationProcessStore(selectIsTranslating);
 
-  const handleSaveProject = async () => {
+  const handleExportFiles = async () => {
     try {
       const projectParser = selectProjectParser(useProjectStore.getState());
       const parser = await resolveParser(projectParser);
@@ -29,10 +30,11 @@ export const ExportButton = () => {
         return;
       }
 
+      const files = selectFiles(useFilesStore.getState());
       const resources = selectResources(useTranslationStore.getState());
-      const blob = await exportTranslationToZip(resources, parser);
+      const resourcesZip = await exportResourcesToZip(resources, files, parser);
 
-      await fileSave(blob, { fileName: "translation.zip" });
+      await fileSave(resourcesZip, { fileName: "translation.zip" });
 
       notifications.show({ message: content.successMessage });
     } catch {
@@ -43,7 +45,7 @@ export const ExportButton = () => {
   return (
     <ActionIconWithTooltip
       label={content.tooltipLabel}
-      onClick={handleSaveProject}
+      onClick={handleExportFiles}
       disabled={isTranslating}
       data-testid="ExportButton"
     >
