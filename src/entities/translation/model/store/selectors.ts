@@ -1,17 +1,16 @@
-import type { Progress } from "@/shared/model/common";
-import { filter, isDefined, isEmpty, map, pick, pipe } from "remeda";
+import type { Id, Progress } from "@/shared/model/common";
+import { filter, isDefined, isEmpty, map, pipe } from "remeda";
 import { isSegmentTranslated, isSegmentUntranslated } from "../../lib/helpers";
 import type {
   TranslationBaseResource,
   TranslationResource,
-  TranslationSegment,
-} from "../translation/types";
+} from "../resource/types";
+import type { TranslationSegment } from "../segment/types";
 import { type State } from "./store";
 
-export const selectBaseResource = (id: TranslationResource["id"]) => {
+export const selectBaseResource = (id: Id) => {
   return (state: State): TranslationBaseResource | undefined => {
-    const resource = state.resources.byId[id];
-    return resource && pick(resource, ["id", "name", "relPath"]);
+    return state.resources.byId[id];
   };
 };
 
@@ -25,7 +24,7 @@ export const selectBaseResources = (
   );
 };
 
-export const selectResource = (id: TranslationResource["id"]) => {
+export const selectResource = (id: Id) => {
   return (state: State): TranslationResource | undefined => {
     const resource = state.resources.byId[id];
     const segments = selectResourceSegments(id)(state);
@@ -42,18 +41,20 @@ export const selectResources = (state: State): TranslationResource[] => {
   );
 };
 
-export const selectSegment = (id: TranslationSegment["id"] | null) => {
+export const selectSegment = (id: Id | null) => {
   return (state: State): TranslationSegment | undefined => {
     return id ? state.segments.byId[id] : undefined;
   };
 };
 
-export const selectResourceSegments = (id: TranslationSegment["id"] | null) => {
+export const selectResourceSegments = (id: Id | null) => {
   return (state: State): TranslationSegment[] => {
-    const list = id ? (state.resources.byId[id]?.segments ?? []) : [];
+    if (!id || !state.relations.resourceSegments[id]) {
+      return [];
+    }
 
     return pipe(
-      list,
+      state.relations.resourceSegments[id],
       map((id) => selectSegment(id)(state)),
       filter(isDefined),
     );
@@ -68,7 +69,7 @@ export const selectSegments = (state: State): TranslationSegment[] => {
   );
 };
 
-export const selectResourcesWithUntranslatedSegments = (
+export const selectUntranslatedResources = (
   state: State,
 ): TranslationResource[] => {
   return pipe(
@@ -81,9 +82,7 @@ export const selectResourcesWithUntranslatedSegments = (
   );
 };
 
-export const selectSegmentsProgress = (
-  id: TranslationResource["id"] | null,
-) => {
+export const selectSegmentsProgress = (id: Id | null) => {
   return (state: State): Progress | undefined => {
     if (!id || !state.resources.byId[id]) {
       return;

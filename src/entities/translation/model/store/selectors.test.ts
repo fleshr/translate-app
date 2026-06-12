@@ -7,10 +7,10 @@ import {
   selectResources,
   selectResourceSegments,
   selectResourcesProgress,
-  selectResourcesWithUntranslatedSegments,
   selectSegment,
   selectSegments,
   selectSegmentsProgress,
+  selectUntranslatedResources,
 } from "./selectors";
 
 const testStore = getTranslationStoreStateMock();
@@ -30,6 +30,7 @@ describe("entities/translation/model/store/selectors", () => {
         id: file1.id,
         name: file1.name,
         relPath: file1.relPath,
+        type: file1.type,
       });
     });
   });
@@ -42,11 +43,13 @@ describe("entities/translation/model/store/selectors", () => {
           id: common1.id,
           name: common1.name,
           relPath: common1.relPath,
+          type: common1.type,
         },
         {
           id: file1.id,
           name: file1.name,
           relPath: file1.relPath,
+          type: file1.type,
         },
       ]);
     });
@@ -90,9 +93,9 @@ describe("entities/translation/model/store/selectors", () => {
     });
   });
 
-  describe("selectResourcesWithUntranslatedSegments", () => {
-    it("should return all untranslated segments", () => {
-      const segments = selectResourcesWithUntranslatedSegments(testStore);
+  describe("selectUntranslatedResources", () => {
+    it("should return resources with untranslated segments", () => {
+      const segments = selectUntranslatedResources(testStore);
       expect(segments).toEqual([{ ...file1, segments: [segment3] }]);
     });
   });
