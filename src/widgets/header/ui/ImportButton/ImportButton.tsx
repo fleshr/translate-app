@@ -4,6 +4,7 @@ import {
   selectIsTranslating,
   useTranslationProcessStore,
 } from "@/features/translation-process";
+import { initFiles } from "@/shared/model/filesStore";
 import {
   selectProjectParser,
   useProjectStore,
@@ -14,7 +15,8 @@ import { notifications } from "@mantine/notifications";
 import { IconFileImport } from "@tabler/icons-react";
 import { directoryOpen } from "browser-fs-access";
 import { useIntlayer } from "react-intlayer";
-import { extractTranslations } from "../../lib/extractTranslations/extractTranslations";
+import { extractResources } from "../../lib/extractResources";
+import { getResourcesFiles } from "../../lib/getResourcesFiles";
 
 export const ImportButton = () => {
   const content = useIntlayer("ImportButton");
@@ -31,10 +33,12 @@ export const ImportButton = () => {
       }
 
       const dirFiles = await directoryOpen({ recursive: true });
-      const resources = await extractTranslations(dirFiles, parser);
+      const resources = await extractResources(dirFiles, parser);
+      const files = await getResourcesFiles(dirFiles, resources);
 
-      initSession(resources[0]?.id ?? null);
+      initFiles(files);
       initTranslation(resources);
+      initSession(resources[0]?.id ?? null);
 
       notifications.show({ message: content.successMessage });
     } catch {
