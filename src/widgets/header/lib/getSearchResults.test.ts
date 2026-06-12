@@ -3,7 +3,7 @@ import {
   getTranslationSegmentMock,
 } from "@/entities/translation/mocks";
 import { describe, expect, it } from "vitest";
-import { getTranslationsSearchResults } from "./getTranslationsSearchResults";
+import { getSearchResults } from "./getSearchResults";
 
 const resources = [
   getTranslationFileMock({
@@ -14,9 +14,9 @@ const resources = [
   }),
 ];
 
-describe("widgets/header/lib/getTranslationsSearchResults", () => {
+describe("widgets/header/lib/getSearchResults", () => {
   it("should return empty array on empty search text", () => {
-    const result = getTranslationsSearchResults(resources, {
+    const result = getSearchResults(resources, {
       text: "",
       field: "originalText",
       caseSensitive: true,
@@ -26,7 +26,7 @@ describe("widgets/header/lib/getTranslationsSearchResults", () => {
   });
 
   it("should filter result segements with search text", () => {
-    const result = getTranslationsSearchResults(resources, {
+    const result = getSearchResults(resources, {
       text: "Aboba",
       field: "originalText",
       caseSensitive: true,
