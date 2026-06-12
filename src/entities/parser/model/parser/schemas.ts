@@ -23,11 +23,6 @@ export const ExtractedSegmentSchema = z.discriminatedUnion("type", [
   ExtractedFileSegmentSchema,
 ]);
 
-export const ExtractedDataSchema = z.object({
-  content: z.string(),
-  segments: ExtractedSegmentSchema.array(),
-});
-
 export const ReplacementSchema = z.object({
   original: z.string(),
   translation: z.string(),
@@ -49,15 +44,15 @@ export const ParserShema = z.object({
 
   extractText: createFunctionSchema(
     z.function({
-      input: [z.instanceof(Uint8Array<ArrayBufferLike>)],
-      output: ExtractedDataSchema,
+      input: [z.instanceof(ArrayBuffer)],
+      output: ExtractedSegmentSchema.array(),
     }),
   ),
 
   replaceText: createFunctionSchema(
     z.function({
-      input: [z.string(), z.array(ReplacementSchema)],
-      output: z.instanceof(Uint8Array<ArrayBufferLike>),
+      input: [z.instanceof(ArrayBuffer), ReplacementSchema.array()],
+      output: z.instanceof(ArrayBuffer),
     }),
   ),
 });
