@@ -22,6 +22,8 @@ const content = `
 </xscript>
 `;
 
+const buffer = new TextEncoder().encode(content).buffer;
+
 describe("entities/parser/lib/EntisParser", () => {
   it("should check file", () => {
     expect(EntisParser.checkFile(new File(["test"], "test.srcxml"))).toBe(true);
@@ -29,13 +31,12 @@ describe("entities/parser/lib/EntisParser", () => {
   });
 
   it("should extract text", () => {
-    const result = EntisParser.extractText(new TextEncoder().encode(content));
-
+    const result = EntisParser.extractText(buffer);
     expect(result).toMatchSnapshot();
   });
 
   it("should replace text", () => {
-    const result = EntisParser.replaceText(content, [
+    const result = EntisParser.replaceText(buffer, [
       {
         position: { end: 134, start: 125 },
         original: "testText1",
