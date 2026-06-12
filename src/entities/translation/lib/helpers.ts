@@ -1,4 +1,4 @@
-import type { TranslationBaseSegment } from "../model/translation/types";
+import type { TranslationBaseSegment } from "../model/segment/types";
 
 export const isSegmentTranslated = (
   segment: TranslationBaseSegment,

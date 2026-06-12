@@ -2,7 +2,7 @@ import type {
   TranslationCommon,
   TranslationFile,
   TranslationResource,
-} from "../model/translation/types";
+} from "../model/resource/types";
 
 export const isTranslationFile = (
   resource: TranslationResource,
