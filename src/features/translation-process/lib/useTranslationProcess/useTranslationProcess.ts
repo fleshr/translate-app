@@ -1,5 +1,5 @@
 import {
-  selectResourcesWithUntranslatedSegments,
+  selectUntranslatedResources,
   setTranslationSegmentField,
   setTranslationSegmentsField,
   useTranslationStore,
@@ -52,7 +52,7 @@ export const useTranslationProcess = () => {
     }
 
     const mode = selectMode(useTranslationProcessSettingsStore.getState());
-    const resources = selectResourcesWithUntranslatedSegments(
+    const resources = selectUntranslatedResources(
       useTranslationStore.getState(),
     );
 
