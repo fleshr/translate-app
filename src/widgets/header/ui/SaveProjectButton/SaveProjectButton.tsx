@@ -3,14 +3,15 @@ import {
   selectIsTranslating,
   useTranslationProcessStore,
 } from "@/features/translation-process";
-import { stringifyJson } from "@/shared/lib/json";
+import { projectFileExtension } from "@/shared/config/project";
+import { selectFiles, useFilesStore } from "@/shared/model/filesStore";
 import { selectProject, useProjectStore } from "@/shared/model/projectStore";
 import { ActionIconWithTooltip } from "@/shared/ui/ActionIconWithTooltip";
 import { notifications } from "@mantine/notifications";
 import { IconDeviceFloppy } from "@tabler/icons-react";
 import { fileSave } from "browser-fs-access";
 import { useIntlayer } from "react-intlayer";
-import type { ProjectFile } from "../../model/projectFile";
+import { generateProjectFile } from "../../lib/generateProjectFile";
 
 export const SaveProjectButton = () => {
   const content = useIntlayer("SaveProjectButton");
@@ -18,12 +19,14 @@ export const SaveProjectButton = () => {
 
   const handleSaveProject = async () => {
     try {
+      const files = selectFiles(useFilesStore.getState());
       const project = selectProject(useProjectStore.getState());
       const resources = selectResources(useTranslationStore.getState());
 
-      const projectFile: ProjectFile = { project, resources };
-      const blob = new Blob([stringifyJson(projectFile)]);
-      await fileSave(blob, { fileName: "translation.json" });
+      const projectFile = await generateProjectFile(files, project, resources);
+      await fileSave(projectFile, {
+        fileName: `project${projectFileExtension}`,
+      });
 
       notifications.show({ message: content.savedMessage });
     } catch {

@@ -6,15 +6,14 @@ import {
   getTranslationFileOccurrenceMock,
   getTranslationSegmentMock,
 } from "@/entities/translation/mocks";
-import JSZip from "jszip";
+import { loadAsync } from "jszip";
 import { describe, expect, it, vi } from "vitest";
-import { exportTranslationToZip } from "./exportTranslationToZip";
+import { exportResourcesToZip } from "./exportResourcesToZip";
 
 const testResources: TranslationResource[] = [
   getTranslationFileMock({
     id: "file-1",
     relPath: "files/file-1",
-    content: "content-1",
     segments: [
       getTranslationSegmentMock({
         originalText: "original-1",
@@ -26,7 +25,6 @@ const testResources: TranslationResource[] = [
   getTranslationFileMock({
     id: "file-2",
     relPath: "files/file-2",
-    content: "content-2",
     segments: [
       getTranslationSegmentMock({
         originalText: "original-2",
@@ -47,44 +45,63 @@ const testResources: TranslationResource[] = [
   }),
 ];
 
+const testFiles = {
+  "files/file-1": new TextEncoder().encode("content-1").buffer,
+  "files/file-2": new TextEncoder().encode("content-2").buffer,
+};
+
 const mockParser = vi.mockObject(getParserMock());
 
-describe("widgets/header/lib/exportTranslationToZip", () => {
+describe("widgets/header/lib/exportResourcesToZip", () => {
+  it("should throw error if resource file not found", async () => {
+    const promise = exportResourcesToZip(testResources, {}, mockParser);
+
+    await expect(promise).rejects.toThrow("Resource file not found");
+  });
+
   it("should return a zip with files", async () => {
-    const blob = await exportTranslationToZip(testResources, mockParser);
+    const blob = await exportResourcesToZip(
+      testResources,
+      testFiles,
+      mockParser,
+    );
 
-    const zip = new JSZip();
-    const { files } = await zip.loadAsync(blob);
-
+    const { files } = await loadAsync(blob);
     expect(files).toHaveProperty("files/file-1");
     expect(files).toHaveProperty("files/file-2");
   });
 
   it("should call parser replaceText", async () => {
-    await exportTranslationToZip(testResources, mockParser);
+    await exportResourcesToZip(testResources, testFiles, mockParser);
 
     expect(mockParser.replaceText).toHaveBeenCalledTimes(2);
-    expect(mockParser.replaceText).toHaveBeenCalledWith("content-1", [
-      {
-        original: "original-1",
-        translation: "translated-1",
-        position: { start: 0, end: 10 },
-        metadata: {},
-      },
-      {
-        original: "original-3",
-        translation: "translated-3",
-        position: { start: 0, end: 10 },
-        metadata: {},
-      },
-    ]);
-    expect(mockParser.replaceText).toHaveBeenCalledWith("content-2", [
-      {
-        original: "original-2",
-        translation: "translated-2",
-        position: { start: 0, end: 10 },
-        metadata: {},
-      },
-    ]);
+    expect(mockParser.replaceText).toHaveBeenCalledWith(
+      testFiles["files/file-1"],
+      [
+        {
+          original: "original-1",
+          translation: "translated-1",
+          position: { start: 0, end: 10 },
+          metadata: {},
+        },
+        {
+          original: "original-3",
+          translation: "translated-3",
+          position: { start: 0, end: 10 },
+          metadata: {},
+        },
+      ],
+    );
+    expect(mockParser.replaceText).toHaveBeenCalledWith(
+      testFiles["files/file-2"],
+      [
+        {
+          original: "original-2",
+          translation: "translated-2",
+          position: { start: 0, end: 10 },
+          metadata: {},
+        },
+      ],
+    );
   });
 });

@@ -1,7 +1,7 @@
 import type { Parser } from "@/entities/parser";
 import { nanoid } from "nanoid";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { extractTranslations } from "./extractTranslations";
+import { extractResources } from "./extractResources";
 
 vi.mock("../readFile", () => ({
   readFile: vi.fn(() => Promise.resolve(new Uint8Array())),
@@ -15,69 +15,62 @@ const mockedParser = vi.mocked<Parser>({
   version: "1.0.0",
   shortName: "mock",
   checkFile: vi.fn(() => true),
-  replaceText: vi.fn(() => new Uint8Array()),
-  extractText: vi.fn(() => ({
-    content: "test",
-    segments: [
-      {
-        text: "test",
-        type: "file" as const,
-        position: { start: 0, end: 0 },
-      },
-    ],
-  })),
+  replaceText: vi.fn(() => new ArrayBuffer()),
+  extractText: vi.fn(() => [
+    {
+      text: "test",
+      type: "file" as const,
+      position: { start: 0, end: 0 },
+    },
+  ]),
 });
 
 const testFile = new File([""], "file.txt");
 // @ts-expect-error dont exist in test but exists in browser
 testFile.webkitRelativePath = "test/file.txt";
 
-describe("widgets/header/lib/extractTranslations", () => {
+describe("widgets/header/lib/extractResources", () => {
   afterEach(() => {
     idPrefix = 1;
   });
 
   it("should return an empty array if no files are provided", async () => {
-    const files = await extractTranslations([], mockedParser);
+    const files = await extractResources([], mockedParser);
     expect(files).toEqual([]);
   });
 
   it("should return an empty array if no supported files are provided", async () => {
     mockedParser.checkFile.mockReturnValueOnce(false);
-    const files = await extractTranslations([testFile], mockedParser);
+    const files = await extractResources([testFile], mockedParser);
     expect(files).toEqual([]);
   });
 
   it("should return an empty array if no segments are extracted", async () => {
-    mockedParser.extractText.mockReturnValueOnce({ content: "", segments: [] });
-    const files = await extractTranslations([testFile], mockedParser);
+    mockedParser.extractText.mockReturnValueOnce([]);
+    const files = await extractResources([testFile], mockedParser);
     expect(files).toEqual([]);
   });
 
   it("should dedulicate segments in files", async () => {
-    mockedParser.extractText.mockReturnValueOnce({
-      content: "test",
-      segments: [
-        {
-          text: "test",
-          type: "file",
-          position: { start: 0, end: 0 },
-        },
-        {
-          text: "test",
-          type: "file",
-          position: { start: 1, end: 1 },
-        },
-      ],
-    });
-    const files = await extractTranslations([testFile], mockedParser);
+    mockedParser.extractText.mockReturnValueOnce([
+      {
+        text: "test",
+        type: "file",
+        position: { start: 0, end: 0 },
+      },
+      {
+        text: "test",
+        type: "file",
+        position: { start: 1, end: 1 },
+      },
+    ]);
+    const files = await extractResources([testFile], mockedParser);
     expect(files).toEqual([
       {
         id: "id-1",
         type: "file",
         name: "file.txt",
         relPath: "test/file.txt",
-        content: "test",
         segments: [
           {
             id: "id-2",
@@ -98,34 +91,31 @@ describe("widgets/header/lib/extractTranslations", () => {
   });
 
   it("should extract common segments", async () => {
-    mockedParser.extractText.mockReturnValueOnce({
-      content: "test",
-      segments: [
-        {
-          text: "test1",
-          type: "file",
-          position: { start: 0, end: 0 },
-        },
-        {
-          text: "test2",
-          type: "common",
-          key: "names",
-          path: "*",
-          position: { start: 1, end: 1 },
-        },
-      ],
-    });
-    const files = await extractTranslations([testFile], mockedParser);
+    mockedParser.extractText.mockReturnValueOnce([
+      {
+        text: "test1",
+        type: "file",
+        position: { start: 0, end: 0 },
+      },
+      {
+        text: "test2",
+        type: "common",
+        key: "names",
+        path: "*",
+        position: { start: 1, end: 1 },
+      },
+    ]);
+    const files = await extractResources([testFile], mockedParser);
     expect(files).toEqual([
       {
-        id: "id-2",
+        id: "id-3",
         type: "common",
         name: "Common: names",
         relPath: "*",
         segments: [
           {
-            id: "id-3",
-            resourceId: "id-2",
+            id: "id-4",
+            resourceId: "id-3",
             originalText: "test2",
             machineTranslation: "",
             manualTranslation: "",
@@ -140,10 +130,9 @@ describe("widgets/header/lib/extractTranslations", () => {
         type: "file",
         name: "file.txt",
         relPath: "test/file.txt",
-        content: "test",
         segments: [
           {
-            id: "id-4",
+            id: "id-2",
             resourceId: "id-1",
             originalText: "test1",
             machineTranslation: "",
@@ -158,17 +147,16 @@ describe("widgets/header/lib/extractTranslations", () => {
   });
 
   it("should return an array of translation files", async () => {
-    const files = await extractTranslations([testFile, testFile], mockedParser);
+    const files = await extractResources([testFile, testFile], mockedParser);
     expect(files).toEqual([
       {
         id: "id-1",
         type: "file",
         name: "file.txt",
         relPath: "test/file.txt",
-        content: "test",
         segments: [
           {
-            id: "id-3",
+            id: "id-2",
             resourceId: "id-1",
             originalText: "test",
             machineTranslation: "",
@@ -180,20 +168,19 @@ describe("widgets/header/lib/extractTranslations", () => {
         ],
       },
       {
-        id: "id-2",
+        id: "id-3",
         type: "file",
         name: "file.txt",
         relPath: "test/file.txt",
-        content: "test",
         segments: [
           {
             id: "id-4",
-            resourceId: "id-2",
+            resourceId: "id-3",
             originalText: "test",
             machineTranslation: "",
             manualTranslation: "",
             fileOccurrences: {
-              "id-2": [{ metadata: {}, position: { start: 0, end: 0 } }],
+              "id-3": [{ metadata: {}, position: { start: 0, end: 0 } }],
             },
           },
         ],

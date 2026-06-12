@@ -1,10 +1,7 @@
 import type { Id } from "@/shared/model/common";
-import { forEach } from "remeda";
-import type {
-  TranslationBaseSegment,
-  TranslationResource,
-  TranslationSegment,
-} from "../translation/types";
+import { forEach, omit } from "remeda";
+import type { TranslationResource } from "../resource/types";
+import type { TranslationSegment } from "../segment/types";
 import { useTranslationStore, type State } from "./store";
 
 export const initTranslation = (resources: TranslationResource[]) => {
@@ -13,25 +10,21 @@ export const initTranslation = (resources: TranslationResource[]) => {
       const result: State = {
         resources: { byId: {}, allIds: [] },
         segments: { byId: {}, allIds: [] },
+        relations: { resourceSegments: {}, segmentResource: {} },
       };
 
       for (const resource of resources) {
-        const { id, segments } = resource;
-        const segmentsIds: Id[] = [];
+        result.resources.allIds.push(resource.id);
+        result.resources.byId[resource.id] = omit(resource, ["segments"]);
+        result.relations.resourceSegments[resource.id] = [];
 
-        for (const segment of segments) {
-          const { id } = segment;
+        for (const segment of resource.segments) {
+          result.segments.allIds.push(segment.id);
+          result.segments.byId[segment.id] = segment;
 
-          segmentsIds.push(id);
-          result.segments.allIds.push(id);
-          result.segments.byId[id] = segment;
+          result.relations.segmentResource[segment.id] = resource.id;
+          result.relations.resourceSegments[resource.id]!.push(segment.id);
         }
-
-        result.resources.allIds.push(id);
-        result.resources.byId[id] = {
-          ...resource,
-          segments: segmentsIds,
-        };
       }
 
       return result;
@@ -44,9 +37,9 @@ export const initTranslation = (resources: TranslationResource[]) => {
 export const setTranslationSegmentField = (
   id: Id,
   translation: string,
-  field: Exclude<
-    keyof TranslationBaseSegment,
-    "id" | "resourceId"
+  field: Extract<
+    keyof TranslationSegment,
+    "originalText" | "machineTranslation" | "manualTranslation"
   > = "machineTranslation",
 ) => {
   useTranslationStore.setState(
@@ -62,9 +55,9 @@ export const setTranslationSegmentField = (
 
 export const setTranslationSegmentsField = (
   translations: { id: Id; translation: string }[],
-  field: Exclude<
-    keyof TranslationBaseSegment,
-    "id" | "resourceId"
+  field: Extract<
+    keyof TranslationSegment,
+    "originalText" | "machineTranslation" | "manualTranslation"
   > = "machineTranslation",
 ) => {
   useTranslationStore.setState(
@@ -100,7 +93,10 @@ export const replaceTranslationSegmentsField = (
   ids: Id[],
   searchText: string,
   replaceText: string,
-  field: Exclude<keyof TranslationBaseSegment, "id"> = "machineTranslation",
+  field: Extract<
+    keyof TranslationSegment,
+    "originalText" | "machineTranslation" | "manualTranslation"
+  > = "machineTranslation",
 ) => {
   useTranslationStore.setState(
     (state) => {

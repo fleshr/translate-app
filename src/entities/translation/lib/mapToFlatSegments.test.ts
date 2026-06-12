@@ -1,0 +1,73 @@
+import { describe, expect, it } from "vitest";
+import {
+  getTranslationFileOccurrenceMock,
+  getTranslationSegmentMock,
+} from "../mocks";
+import { mapToFlatSegments } from "./mapToFlatSegments";
+
+const testSegment = getTranslationSegmentMock({
+  fileOccurrences: {
+    "file-1": [
+      getTranslationFileOccurrenceMock({ position: { start: 0, end: 10 } }),
+    ],
+    "file-2": [
+      getTranslationFileOccurrenceMock({
+        position: { start: 10, end: 20 },
+        metadata: { test: "test" },
+      }),
+      getTranslationFileOccurrenceMock({ position: { start: 20, end: 30 } }),
+    ],
+  },
+});
+
+describe("entities/translation/lib/mapToFlatSegments", () => {
+  it("should return all segments without fileId passed", () => {
+    const result = mapToFlatSegments(testSegment);
+
+    expect(result).toEqual([
+      {
+        id: "segment-1",
+        resourceId: "file-1",
+        originalText: "Original text",
+        machineTranslation: "Machine translation",
+        manualTranslation: "Manual translation",
+        position: { start: 0, end: 10 },
+        metadata: {},
+      },
+      {
+        id: "segment-1",
+        resourceId: "file-1",
+        originalText: "Original text",
+        machineTranslation: "Machine translation",
+        manualTranslation: "Manual translation",
+        position: { start: 10, end: 20 },
+        metadata: { test: "test" },
+      },
+      {
+        id: "segment-1",
+        resourceId: "file-1",
+        originalText: "Original text",
+        machineTranslation: "Machine translation",
+        manualTranslation: "Manual translation",
+        position: { start: 20, end: 30 },
+        metadata: {},
+      },
+    ]);
+  });
+
+  it("should return only segments with passed fileId", () => {
+    const result = mapToFlatSegments(testSegment, "file-1");
+
+    expect(result).toEqual([
+      {
+        id: "segment-1",
+        resourceId: "file-1",
+        originalText: "Original text",
+        machineTranslation: "Machine translation",
+        manualTranslation: "Manual translation",
+        position: { start: 0, end: 10 },
+        metadata: {},
+      },
+    ]);
+  });
+});

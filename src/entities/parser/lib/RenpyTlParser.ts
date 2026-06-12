@@ -1,5 +1,4 @@
 import type {
-  ExtractedData,
   ExtractedSegment,
   Parser,
   Replacement,
@@ -14,12 +13,12 @@ export const RenpyTlParser: Parser = {
     return file.name.endsWith(".rpy");
   },
 
-  extractText(array: Uint8Array): ExtractedData {
+  extractText(buffer: ArrayBuffer): ExtractedSegment[] {
     const stringRegex = /^[ ]{4}old "(?<old>.*)"\n^[ ]{4}new "(?<new>.*)"/dgm;
     const dialogueRegex =
       /^[ ]{4}# (?:[\w\d]+[ ])*"(?<old>.*)"\n^[ ]{4}(?:[\w\d]+[ ])*"(?<new>.*)"/dgm;
 
-    const content = new TextDecoder("utf-8").decode(array);
+    const content = new TextDecoder("utf-8").decode(buffer);
 
     const stringMatches = content.matchAll(stringRegex);
     const dialogueMatches = content.matchAll(dialogueRegex);
@@ -39,11 +38,11 @@ export const RenpyTlParser: Parser = {
       }
     }
 
-    return { content, segments };
+    return segments;
   },
 
-  replaceText(content: string, replacements: Replacement[]): Uint8Array {
-    let result = content;
+  replaceText(buffer: ArrayBuffer, replacements: Replacement[]): ArrayBuffer {
+    let result = new TextDecoder("utf-8").decode(buffer);
     const sortedReplacements = [...replacements].sort(
       (a, b) => b.position.start - a.position.start,
     );
@@ -57,6 +56,6 @@ export const RenpyTlParser: Parser = {
         result.slice(position.end);
     }
 
-    return new TextEncoder().encode(result);
+    return new TextEncoder().encode(result).buffer;
   },
 };

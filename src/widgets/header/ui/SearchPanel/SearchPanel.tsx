@@ -1,8 +1,8 @@
-import type { TranslationResource } from "@/entities/translation";
 import {
   replaceTranslationSegmentsField,
   selectResources,
   useTranslationStore,
+  type TranslationResource,
 } from "@/entities/translation";
 import type { Id } from "@/shared/model/common";
 import {
@@ -14,7 +14,7 @@ import { Divider, ScrollArea, Stack, Text } from "@mantine/core";
 import { useState } from "react";
 import { useIntlayer } from "react-intlayer";
 import { flat, pipe, values } from "remeda";
-import { getTranslationsSearchResults } from "../../lib/getTranslationsSearchResults/getTranslationsSearchResults";
+import { getSearchResults } from "../../lib/getSearchResults";
 import type { SearchOptions } from "../../model/search";
 import type { SearchFormValues } from "../../model/searchForm";
 import { SearchForm } from "../SearchForm/SearchForm";
@@ -32,7 +32,7 @@ export const SearchPanel = () => {
   });
 
   const resources = useTranslationStore(selectResources);
-  const results = getTranslationsSearchResults(resources, searchOptions);
+  const results = getSearchResults(resources, searchOptions);
 
   const handleFindClick = (formValues: SearchFormValues) => {
     const { searchText, field, caseSensitive } = formValues;

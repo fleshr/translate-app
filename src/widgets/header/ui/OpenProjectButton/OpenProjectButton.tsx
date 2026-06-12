@@ -3,8 +3,8 @@ import {
   selectIsTranslating,
   useTranslationProcessStore,
 } from "@/features/translation-process";
-import { readFile } from "@/shared/lib/file";
-import { parseJson } from "@/shared/lib/json";
+import { projectFileExtension } from "@/shared/config/project";
+import { initFiles } from "@/shared/model/filesStore";
 import { initProject } from "@/shared/model/projectStore";
 import { initSession } from "@/shared/model/sessionStore";
 import { ActionIconWithTooltip } from "@/shared/ui/ActionIconWithTooltip";
@@ -12,7 +12,7 @@ import { notifications } from "@mantine/notifications";
 import { IconFolderOpen } from "@tabler/icons-react";
 import { fileOpen } from "browser-fs-access";
 import { useIntlayer } from "react-intlayer";
-import { ProjectFileSchema } from "../../model/projectFile";
+import { parseProjectFile } from "../../lib/parseProjectFile";
 
 export const OpenProjectButton = () => {
   const content = useIntlayer("OpenProjectButton");
@@ -20,17 +20,15 @@ export const OpenProjectButton = () => {
 
   const handleOpenProject = async () => {
     try {
-      const translationFile = await fileOpen({
-        mimeTypes: ["application/json"],
-        extensions: [".json"],
+      const projectFile = await fileOpen({
+        extensions: [projectFileExtension],
       });
+      const { files, project, resources } = await parseProjectFile(projectFile);
 
-      const json = await readFile(translationFile);
-      const { project, resources } = ProjectFileSchema.parse(parseJson(json));
-
+      initFiles(files);
       initProject(project);
-      initSession(resources[0]?.id ?? null);
       initTranslation(resources);
+      initSession(resources[0]?.id ?? null);
 
       notifications.show({ message: content.openedMessage });
     } catch {

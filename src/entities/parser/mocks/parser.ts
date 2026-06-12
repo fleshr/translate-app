@@ -6,8 +6,8 @@ const mockParser: Parser = {
   version: "1.0.0",
   shortName: "test",
   checkFile: () => true,
-  replaceText: () => new Uint8Array(),
-  extractText: () => ({ content: "", segments: [] }),
+  replaceText: () => new ArrayBuffer(),
+  extractText: () => [],
 };
 
 export const getParserMock = createMockFactory(mockParser);

@@ -1,5 +1,6 @@
 import { selectParser, selectParsers, useParserStore } from "@/entities/parser";
 import { initTranslation } from "@/entities/translation";
+import { initFiles } from "@/shared/model/filesStore";
 import { initProject } from "@/shared/model/projectStore";
 import { initSession } from "@/shared/model/sessionStore";
 import {
@@ -61,6 +62,7 @@ export const CreateProjectForm = (props: CreateProjectFormProps) => {
 
     const isSaveFully = parserSaveFully && parserModule?.type === "external";
 
+    initFiles({});
     initSession(null);
     initTranslation([]);
     initProject({ parser: isSaveFully ? parserModule : parser });

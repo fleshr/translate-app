@@ -1,11 +1,11 @@
 import { getTranslationFlatSegmentMock } from "@/entities/translation/mocks";
 import { describe, expect, it } from "vitest";
-import { mapFlatSegmentToReplacement } from "./mapFlatSegmentToReplacement";
+import { mapToReplacement } from "./mapToReplacement";
 
-describe("widgets/header/lib/mapFlatSegmentToReplacement", () => {
+describe("widgets/header/lib/mapToReplacement", () => {
   it("should map with machineTranslation", () => {
     const segment = getTranslationFlatSegmentMock();
-    const result = mapFlatSegmentToReplacement(segment);
+    const result = mapToReplacement(segment);
 
     expect(result).toEqual({
       original: segment.originalText,
@@ -17,7 +17,7 @@ describe("widgets/header/lib/mapFlatSegmentToReplacement", () => {
 
   it("should map with manualTranslation", () => {
     const segment = getTranslationFlatSegmentMock({ machineTranslation: "" });
-    const result = mapFlatSegmentToReplacement(segment);
+    const result = mapToReplacement(segment);
 
     expect(result).toEqual({
       original: segment.originalText,
@@ -32,7 +32,7 @@ describe("widgets/header/lib/mapFlatSegmentToReplacement", () => {
       machineTranslation: "",
       manualTranslation: "",
     });
-    const result = mapFlatSegmentToReplacement(segment);
+    const result = mapToReplacement(segment);
 
     expect(result).toEqual({
       original: segment.originalText,

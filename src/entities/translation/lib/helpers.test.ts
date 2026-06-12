@@ -1,11 +1,8 @@
 import { describe, expect, it } from "vitest";
-import {
-  getTranslationBaseSegmentMock,
-  getTranslationSegmentMock,
-} from "../mocks";
+import { getTranslationSegmentMock } from "../mocks";
 import { isSegmentTranslated, isSegmentUntranslated } from "./helpers";
 
-const untranslatedSegment = getTranslationBaseSegmentMock({
+const untranslatedSegment = getTranslationSegmentMock({
   machineTranslation: "",
   manualTranslation: "",
 });

@@ -1,6 +1,5 @@
 import escapeHtml from "escape-html";
 import type {
-  ExtractedData,
   ExtractedSegment,
   Parser,
   Replacement,
@@ -15,15 +14,15 @@ export const EntisParser: Parser = {
     return file.name.endsWith(".srcxml");
   },
 
-  extractText(array: Uint8Array): ExtractedData {
+  extractText(buffer: ArrayBuffer): ExtractedSegment[] {
     const textRegex = /text="([^"]+)"/dg;
     const nameRegex = /name="([^"]+)"/dg;
 
-    const content = new TextDecoder("utf-8").decode(array);
+    const content = new TextDecoder("utf-8").decode(buffer);
     const segments: ExtractedSegment[] = [];
 
     for (const match of content.matchAll(textRegex)) {
-      const text = match[1]?.replaceAll("\\n:", "");
+      const text = match[1];
       const start = match.indices?.[1]?.[0];
       const end = match.indices?.[1]?.[1];
 
@@ -37,7 +36,7 @@ export const EntisParser: Parser = {
     }
 
     for (const match of content.matchAll(nameRegex)) {
-      const text = match[1]?.replaceAll("\\n:", "");
+      const text = match[1];
       const start = match.indices?.[1]?.[0];
       const end = match.indices?.[1]?.[1];
 
@@ -51,11 +50,11 @@ export const EntisParser: Parser = {
       }
     }
 
-    return { content, segments };
+    return segments;
   },
 
-  replaceText(content: string, replacements: Replacement[]): Uint8Array {
-    let result = content;
+  replaceText(buffer: ArrayBuffer, replacements: Replacement[]): ArrayBuffer {
+    let result = new TextDecoder("utf-8").decode(buffer);
     const sortedReplacements = [...replacements].sort(
       (a, b) => b.position.start - a.position.start,
     );
@@ -69,6 +68,6 @@ export const EntisParser: Parser = {
         result.slice(position.end);
     }
 
-    return new TextEncoder().encode(result);
+    return new TextEncoder().encode(result).buffer;
   },
 };

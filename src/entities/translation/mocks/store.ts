@@ -1,23 +1,17 @@
 import { createMockFactory } from "@/shared/lib/testing";
 import type { State } from "../model/store/store";
 import {
-  getTranslationCommonMock,
-  getTranslationFileMock,
-  getTranslationSegmentMock,
-} from "./translation";
+  getTranslationBaseCommonMock,
+  getTranslationBaseFileMock,
+} from "./resource";
+import { getTranslationSegmentMock } from "./segment";
 
 const mockTranslationStoreState: State = {
   resources: {
     allIds: ["common-1", "file-1"],
     byId: {
-      "common-1": {
-        ...getTranslationCommonMock(),
-        segments: ["segment-1"],
-      },
-      "file-1": {
-        ...getTranslationFileMock(),
-        segments: ["segment-2", "segment-3"],
-      },
+      "common-1": getTranslationBaseCommonMock({ id: "common-1" }),
+      "file-1": getTranslationBaseFileMock({ id: "file-1" }),
     },
   },
   segments: {
@@ -25,21 +19,29 @@ const mockTranslationStoreState: State = {
     byId: {
       "segment-1": getTranslationSegmentMock({
         id: "segment-1",
-        resourceId: "common-1",
         originalText: "test1",
       }),
       "segment-2": getTranslationSegmentMock({
         id: "segment-2",
-        resourceId: "file-1",
         originalText: "test2",
       }),
       "segment-3": getTranslationSegmentMock({
         id: "segment-3",
-        resourceId: "file-1",
         originalText: "test3",
         machineTranslation: "",
         manualTranslation: "",
       }),
+    },
+  },
+  relations: {
+    resourceSegments: {
+      "common-1": ["segment-1"],
+      "file-1": ["segment-2", "segment-3"],
+    },
+    segmentResource: {
+      "segment-1": "common-1",
+      "segment-2": "file-1",
+      "segment-3": "file-1",
     },
   },
 };

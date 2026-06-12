@@ -1,7 +1,7 @@
 import type { Replacement } from "@/entities/parser";
 import type { TranslationFlatSegment } from "@/entities/translation";
 
-export const mapFlatSegmentToReplacement = (
+export const mapToReplacement = (
   segment: TranslationFlatSegment,
 ): Replacement => {
   return {
