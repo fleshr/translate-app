@@ -10,3 +10,4 @@ export * from "./model/segment/types";
 
 export { isTranslationCommon, isTranslationFile } from "./lib/guards";
 export { isSegmentTranslated, isSegmentUntranslated } from "./lib/helpers";
+export { mapToFlatSegments } from "./lib/mapToFlatSegments";
