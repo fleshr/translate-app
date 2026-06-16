@@ -8,8 +8,6 @@ export const mapToFlatSegments = (
   fileId?: string,
 ): TranslationFlatSegment[] => {
   const {
-    id,
-    resourceId,
     originalText,
     machineTranslation,
     manualTranslation,
@@ -21,8 +19,6 @@ export const mapToFlatSegments = (
     : Object.values(fileOccurrences).flat();
 
   return occurrences.map(({ position, metadata }) => ({
-    id,
-    resourceId,
     originalText,
     machineTranslation,
     manualTranslation,
