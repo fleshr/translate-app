@@ -1,6 +1,6 @@
 import type {
-  TranslationBaseSegment,
   TranslationResource,
+  TranslationSegment,
 } from "@/entities/translation";
 import type { Translator, TranslatorConfig } from "@/entities/translator";
 import type { TranslationProcessMode } from "./translation/types";
@@ -13,16 +13,16 @@ export interface ProcessCallbacks {
   onResourceStart: (resource: TranslationResource) => void;
   onResourceComplete: (resource: TranslationResource) => void;
   onSegmentBatchStart: (
-    segments: TranslationBaseSegment[],
+    segments: TranslationSegment[],
     rawBatch: string[],
   ) => void;
   onSegmentBatchComplete: (
-    translations: { segment: TranslationBaseSegment; translation: string }[],
+    translations: { segment: TranslationSegment; translation: string }[],
     responseBatch: string[],
   ) => void;
-  onSegmentSequentialStart: (segment: TranslationBaseSegment) => void;
+  onSegmentSequentialStart: (segment: TranslationSegment) => void;
   onSegmentSequentialComplete: (
-    segment: TranslationBaseSegment,
+    segment: TranslationSegment,
     translation: string,
   ) => void;
 }

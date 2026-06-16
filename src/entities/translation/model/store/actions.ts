@@ -1,7 +1,10 @@
 import type { Id } from "@/shared/model/common";
 import { forEach, omit } from "remeda";
 import type { TranslationResource } from "../resource/types";
-import type { TranslationSegment } from "../segment/types";
+import type {
+  TranslationSegment,
+  TranslationSegmentFields,
+} from "../segment/types";
 import { useTranslationStore, type State } from "./store";
 
 export const initTranslation = (resources: TranslationResource[]) => {
@@ -37,10 +40,7 @@ export const initTranslation = (resources: TranslationResource[]) => {
 export const setTranslationSegmentField = (
   id: Id,
   translation: string,
-  field: Extract<
-    keyof TranslationSegment,
-    "originalText" | "machineTranslation" | "manualTranslation"
-  > = "machineTranslation",
+  field: keyof TranslationSegmentFields = "machineTranslation",
 ) => {
   useTranslationStore.setState(
     (state) => {
@@ -55,10 +55,7 @@ export const setTranslationSegmentField = (
 
 export const setTranslationSegmentsField = (
   translations: { id: Id; translation: string }[],
-  field: Extract<
-    keyof TranslationSegment,
-    "originalText" | "machineTranslation" | "manualTranslation"
-  > = "machineTranslation",
+  field: keyof TranslationSegmentFields = "machineTranslation",
 ) => {
   useTranslationStore.setState(
     (state) => {
@@ -93,10 +90,7 @@ export const replaceTranslationSegmentsField = (
   ids: Id[],
   searchText: string,
   replaceText: string,
-  field: Extract<
-    keyof TranslationSegment,
-    "originalText" | "machineTranslation" | "manualTranslation"
-  > = "machineTranslation",
+  field: keyof TranslationSegmentFields = "machineTranslation",
 ) => {
   useTranslationStore.setState(
     (state) => {

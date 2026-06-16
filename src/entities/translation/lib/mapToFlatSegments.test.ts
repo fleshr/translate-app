@@ -26,8 +26,6 @@ describe("entities/translation/lib/mapToFlatSegments", () => {
 
     expect(result).toEqual([
       {
-        id: "segment-1",
-        resourceId: "file-1",
         originalText: "Original text",
         machineTranslation: "Machine translation",
         manualTranslation: "Manual translation",
@@ -35,8 +33,6 @@ describe("entities/translation/lib/mapToFlatSegments", () => {
         metadata: {},
       },
       {
-        id: "segment-1",
-        resourceId: "file-1",
         originalText: "Original text",
         machineTranslation: "Machine translation",
         manualTranslation: "Manual translation",
@@ -44,8 +40,6 @@ describe("entities/translation/lib/mapToFlatSegments", () => {
         metadata: { test: "test" },
       },
       {
-        id: "segment-1",
-        resourceId: "file-1",
         originalText: "Original text",
         machineTranslation: "Machine translation",
         manualTranslation: "Manual translation",
@@ -60,8 +54,6 @@ describe("entities/translation/lib/mapToFlatSegments", () => {
 
     expect(result).toEqual([
       {
-        id: "segment-1",
-        resourceId: "file-1",
         originalText: "Original text",
         machineTranslation: "Machine translation",
         manualTranslation: "Manual translation",

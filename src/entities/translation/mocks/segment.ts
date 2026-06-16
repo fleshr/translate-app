@@ -1,22 +1,16 @@
 import { createMockFactory } from "@/shared/lib/testing";
 import type {
-  TranslationBaseSegment,
   TranslationFileOccurrence,
   TranslationFlatSegment,
   TranslationSegment,
+  TranslationSegmentFields,
 } from "../model/segment/types";
 
-const mockTranslationBaseSegment: TranslationBaseSegment = {
-  id: "segment-1",
-  resourceId: "file-1",
+const mockTranslationSegmentFields: TranslationSegmentFields = {
   originalText: "Original text",
   machineTranslation: "Machine translation",
   manualTranslation: "Manual translation",
 };
-
-export const getTranslationBaseSegmentMock = createMockFactory(
-  mockTranslationBaseSegment,
-);
 
 const mockTranslationFileOccurrence: TranslationFileOccurrence = {
   position: { start: 0, end: 10 },
@@ -28,7 +22,8 @@ export const getTranslationFileOccurrenceMock = createMockFactory(
 );
 
 const mockTranslationSegment: TranslationSegment = {
-  ...mockTranslationBaseSegment,
+  ...mockTranslationSegmentFields,
+  id: "segment-1",
   fileOccurrences: {},
 };
 
@@ -37,7 +32,7 @@ export const getTranslationSegmentMock = createMockFactory(
 );
 
 const mockTranslationFlatSegment: TranslationFlatSegment = {
-  ...mockTranslationBaseSegment,
+  ...mockTranslationSegmentFields,
   ...mockTranslationFileOccurrence,
 };
 

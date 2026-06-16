@@ -74,7 +74,6 @@ describe("widgets/header/lib/extractResources", () => {
         segments: [
           {
             id: "id-2",
-            resourceId: "id-1",
             originalText: "test",
             machineTranslation: "",
             manualTranslation: "",
@@ -115,7 +114,6 @@ describe("widgets/header/lib/extractResources", () => {
         segments: [
           {
             id: "id-4",
-            resourceId: "id-3",
             originalText: "test2",
             machineTranslation: "",
             manualTranslation: "",
@@ -133,7 +131,6 @@ describe("widgets/header/lib/extractResources", () => {
         segments: [
           {
             id: "id-2",
-            resourceId: "id-1",
             originalText: "test1",
             machineTranslation: "",
             manualTranslation: "",
@@ -157,7 +154,6 @@ describe("widgets/header/lib/extractResources", () => {
         segments: [
           {
             id: "id-2",
-            resourceId: "id-1",
             originalText: "test",
             machineTranslation: "",
             manualTranslation: "",
@@ -175,7 +171,6 @@ describe("widgets/header/lib/extractResources", () => {
         segments: [
           {
             id: "id-4",
-            resourceId: "id-3",
             originalText: "test",
             machineTranslation: "",
             manualTranslation: "",
