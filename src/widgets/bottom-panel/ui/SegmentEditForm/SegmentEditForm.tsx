@@ -1,4 +1,4 @@
-import { type TranslationBaseSegment } from "@/entities/translation";
+import { type TranslationSegment } from "@/entities/translation";
 import type { BaseProps } from "@/shared/model/component";
 import { Stack, Textarea } from "@mantine/core";
 import { schemaResolver, useForm } from "@mantine/form";
@@ -9,7 +9,7 @@ import {
 } from "../../model/segmentEditForm";
 
 interface SegmentEditFormProps {
-  segment: TranslationBaseSegment;
+  segment: TranslationSegment;
   onChange?: (
     values: SegmentEditFormValues,
     previous: SegmentEditFormValues,

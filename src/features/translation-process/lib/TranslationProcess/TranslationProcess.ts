@@ -1,6 +1,6 @@
 import type {
-  TranslationBaseSegment,
   TranslationResource,
+  TranslationSegment,
 } from "@/entities/translation";
 import { chunk } from "remeda";
 import { DEFAULT_BATCH_SIZE } from "../../config";
@@ -45,7 +45,7 @@ export class TranslationProcess {
   }
 
   async translateSegments(
-    segments: TranslationBaseSegment[],
+    segments: TranslationSegment[],
     options: ProcessOptions,
   ): Promise<void> {
     await this.translateWrapper(
@@ -55,7 +55,7 @@ export class TranslationProcess {
   }
 
   private async translate(
-    segments: TranslationBaseSegment[],
+    segments: TranslationSegment[],
     options: ProcessOptions,
   ): Promise<void> {
     const { mode } = options;
@@ -68,7 +68,7 @@ export class TranslationProcess {
   }
 
   private async translateSequential(
-    segments: TranslationBaseSegment[],
+    segments: TranslationSegment[],
     options: ProcessOptions,
   ): Promise<void> {
     const {
@@ -93,7 +93,7 @@ export class TranslationProcess {
   }
 
   private async translateBatch(
-    segments: TranslationBaseSegment[],
+    segments: TranslationSegment[],
     options: ProcessOptions,
   ): Promise<void> {
     const {

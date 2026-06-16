@@ -42,7 +42,6 @@ export const extractResources = async (
 
         fileSegments[text] ??= {
           id: nanoid(),
-          resourceId: fileId,
           originalText: text,
           machineTranslation: "",
           manualTranslation: "",
@@ -69,7 +68,6 @@ export const extractResources = async (
 
         commons[key].segments[text] ??= {
           id: nanoid(),
-          resourceId: commons[key].resource.id,
           originalText: text,
           machineTranslation: "",
           manualTranslation: "",

@@ -1,13 +1,13 @@
-import type { TranslationBaseSegment } from "../model/segment/types";
+import type { TranslationSegmentFields } from "../model/segment/types";
 
 export const isSegmentTranslated = (
-  segment: TranslationBaseSegment,
+  segment: TranslationSegmentFields,
 ): boolean => {
   return Boolean(segment.machineTranslation || segment.manualTranslation);
 };
 
 export const isSegmentUntranslated = (
-  segment: TranslationBaseSegment,
+  segment: TranslationSegmentFields,
 ): boolean => {
   return !isSegmentTranslated(segment);
 };

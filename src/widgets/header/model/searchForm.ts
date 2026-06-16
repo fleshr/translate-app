@@ -1,12 +1,10 @@
-import { TranslationBaseSegmentSchema } from "@/entities/translation";
+import { TranslationSegmentFieldsSchema } from "@/entities/translation";
 import { z } from "zod";
 
 export const SearchFormSchema = z.object({
   searchText: z.string().min(1),
   replaceText: z.string(),
-  field: z
-    .keyof(TranslationBaseSegmentSchema)
-    .extract(["originalText", "machineTranslation", "manualTranslation"]),
+  field: z.keyof(TranslationSegmentFieldsSchema),
   replace: z.boolean(),
   caseSensitive: z.boolean(),
 });
