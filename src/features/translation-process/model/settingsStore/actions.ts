@@ -17,3 +17,23 @@ export const setTranslationProcessSettingsBatchSize = (
     "setTranslationProcessSettingsBatchSize",
   );
 };
+
+export const setTranslationProcessSettingsSourceLanguage = (
+  sourceLanguage: State["sourceLanguage"],
+) => {
+  useTranslationProcessSettingsStore.setState(
+    { sourceLanguage },
+    undefined,
+    "setTranslationProcessSettingsSourceLanguage",
+  );
+};
+
+export const setTranslationProcessSettingsTargetLanguage = (
+  targetLanguage: State["targetLanguage"],
+) => {
+  useTranslationProcessSettingsStore.setState(
+    { targetLanguage },
+    undefined,
+    "setTranslationProcessSettingsTargetLanguage",
+  );
+};
