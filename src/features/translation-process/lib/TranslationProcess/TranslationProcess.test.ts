@@ -23,34 +23,46 @@ const testTranslationFile = getTranslationFileMock({
   segments: [testSegement2],
 });
 
+const sequentialOptions = {
+  mode: "sequential",
+  translator: mockTranslator,
+  translatorConfig: { test: "test" },
+  sourceLanguage: "en",
+  targetLanguage: "ru",
+} satisfies ProcessOptions;
+
+const batchOptions = {
+  mode: "batch",
+  batchSize: 2,
+  translator: mockTranslator,
+  translatorConfig: { test: "test" },
+  sourceLanguage: "en",
+  targetLanguage: "ru",
+} satisfies ProcessOptions;
+
 describe("features/translation-process/lib/TranslationProcess", () => {
   describe("translateResources", () => {
     it("should translate resources", async () => {
       // @ts-expect-error private method
       const translateSpy = vi.spyOn(translationProcess, "translate");
-      const options = {
-        mode: "sequential",
-        translator: mockTranslator,
-      } satisfies ProcessOptions;
 
       await translationProcess.translateResources(
         [testTransationCommon, testTranslationFile],
-        options,
+        sequentialOptions,
       );
 
       expect(translateSpy).toHaveBeenCalledTimes(2);
-      expect(translateSpy).nthCalledWith(1, [testSegement1], options);
-      expect(translateSpy).nthCalledWith(2, [testSegement2], options);
+      expect(translateSpy).nthCalledWith(1, [testSegement1], sequentialOptions);
+      expect(translateSpy).nthCalledWith(2, [testSegement2], sequentialOptions);
     });
 
     it("should call callbacks", async () => {
       const options = {
+        ...sequentialOptions,
         onStart: vi.fn(),
         onEnd: vi.fn(),
         onResourceStart: vi.fn(),
         onResourceComplete: vi.fn(),
-        mode: "sequential",
-        translator: mockTranslator,
       } satisfies ProcessOptions;
 
       await translationProcess.translateResources(
@@ -74,9 +86,8 @@ describe("features/translation-process/lib/TranslationProcess", () => {
       vi.mocked(mockTranslator.translate).mockRejectedValueOnce("error");
 
       const options = {
+        ...sequentialOptions,
         onError: vi.fn(),
-        mode: "sequential",
-        translator: mockTranslator,
       } satisfies ProcessOptions;
 
       await translationProcess.translateResources(
@@ -102,9 +113,8 @@ describe("features/translation-process/lib/TranslationProcess", () => {
       );
 
       const options = {
+        ...sequentialOptions,
         onStop: vi.fn(),
-        mode: "sequential",
-        translator: mockTranslator,
       } satisfies ProcessOptions;
 
       void translationProcess.translateResources(
@@ -122,29 +132,24 @@ describe("features/translation-process/lib/TranslationProcess", () => {
     it("should translate segments", async () => {
       // @ts-expect-error private method
       const translateSpy = vi.spyOn(translationProcess, "translate");
-      const options = {
-        mode: "sequential",
-        translator: mockTranslator,
-      } satisfies ProcessOptions;
 
       await translationProcess.translateSegments(
         [testSegement1, testSegement2],
-        options,
+        sequentialOptions,
       );
 
       expect(translateSpy).toHaveBeenCalledTimes(1);
       expect(translateSpy).toHaveBeenCalledWith(
         [testSegement1, testSegement2],
-        options,
+        sequentialOptions,
       );
     });
 
     it("should call callbacks", async () => {
       const options = {
+        ...sequentialOptions,
         onStart: vi.fn(),
         onEnd: vi.fn(),
-        mode: "sequential",
-        translator: mockTranslator,
       } satisfies ProcessOptions;
 
       await translationProcess.translateSegments(
@@ -160,9 +165,8 @@ describe("features/translation-process/lib/TranslationProcess", () => {
       vi.mocked(mockTranslator.translate).mockRejectedValueOnce("error");
 
       const options = {
+        ...sequentialOptions,
         onError: vi.fn(),
-        mode: "sequential",
-        translator: mockTranslator,
       } satisfies ProcessOptions;
 
       await translationProcess.translateSegments(
@@ -188,9 +192,8 @@ describe("features/translation-process/lib/TranslationProcess", () => {
       );
 
       const options = {
+        ...sequentialOptions,
         onStop: vi.fn(),
-        mode: "sequential",
-        translator: mockTranslator,
       } satisfies ProcessOptions;
 
       void translationProcess.translateSegments(
@@ -206,35 +209,34 @@ describe("features/translation-process/lib/TranslationProcess", () => {
 
   describe("translateSequential", () => {
     it("should translate segments", async () => {
-      const options = {
-        mode: "sequential",
-        translator: mockTranslator,
-        translatorConfig: { test: "test" },
-      } satisfies ProcessOptions;
-
       await translationProcess.translateSegments(
         [testSegement1, testSegement2],
-        options,
+        sequentialOptions,
       );
 
       expect(mockTranslator.translate).nthCalledWith(
         1,
         testSegement1.originalText,
-        { config: options.translatorConfig, signal: expect.any(AbortSignal) },
+        {
+          config: sequentialOptions.translatorConfig,
+          signal: expect.any(AbortSignal),
+        },
       );
       expect(mockTranslator.translate).nthCalledWith(
         2,
         testSegement2.originalText,
-        { config: options.translatorConfig, signal: expect.any(AbortSignal) },
+        {
+          config: sequentialOptions.translatorConfig,
+          signal: expect.any(AbortSignal),
+        },
       );
     });
 
     it("should call callbacks", async () => {
       const options = {
+        ...sequentialOptions,
         onSegmentSequentialStart: vi.fn(),
         onSegmentSequentialComplete: vi.fn(),
-        mode: "sequential",
-        translator: mockTranslator,
       } satisfies ProcessOptions;
 
       await translationProcess.translateSegments(
@@ -261,8 +263,8 @@ describe("features/translation-process/lib/TranslationProcess", () => {
   describe("translateBatch", () => {
     it("should call onError when translator not support batch", async () => {
       const options = {
+        ...batchOptions,
         onError: vi.fn(),
-        mode: "batch",
         translator: { ...mockTranslator, translateBatch: undefined },
       } satisfies ProcessOptions;
 
@@ -277,27 +279,26 @@ describe("features/translation-process/lib/TranslationProcess", () => {
     });
 
     it("should translate segments", async () => {
-      const options = {
-        mode: "batch",
-        batchSize: 2,
-        translator: mockTranslator,
-        translatorConfig: { test: "test" },
-      } satisfies ProcessOptions;
-
       await translationProcess.translateSegments(
         [testSegement1, testSegement2, testSegement3],
-        options,
+        batchOptions,
       );
 
       expect(mockTranslator.translateBatch).nthCalledWith(
         1,
         [testSegement1.originalText, testSegement2.originalText],
-        { config: options.translatorConfig, signal: expect.any(AbortSignal) },
+        {
+          config: batchOptions.translatorConfig,
+          signal: expect.any(AbortSignal),
+        },
       );
       expect(mockTranslator.translateBatch).nthCalledWith(
         2,
         [testSegement3.originalText],
-        { config: options.translatorConfig, signal: expect.any(AbortSignal) },
+        {
+          config: batchOptions.translatorConfig,
+          signal: expect.any(AbortSignal),
+        },
       );
     });
 
@@ -307,11 +308,9 @@ describe("features/translation-process/lib/TranslationProcess", () => {
         .mockResolvedValueOnce(["translated"]);
 
       const options = {
+        ...batchOptions,
         onSegmentBatchStart: vi.fn(),
         onSegmentBatchComplete: vi.fn(),
-        mode: "batch",
-        batchSize: 2,
-        translator: mockTranslator,
       } satisfies ProcessOptions;
 
       await translationProcess.translateSegments(

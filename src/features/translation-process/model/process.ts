@@ -3,6 +3,7 @@ import type {
   TranslationSegment,
 } from "@/entities/translation";
 import type { Translator, TranslatorConfig } from "@/entities/translator";
+import type { LanguageCode } from "iso-639-1";
 import type { TranslationProcessMode } from "./translation/types";
 
 export interface ProcessCallbacks {
@@ -32,4 +33,6 @@ export interface ProcessOptions extends Partial<ProcessCallbacks> {
   batchSize?: number;
   translator: Translator;
   translatorConfig?: TranslatorConfig;
+  sourceLanguage: LanguageCode;
+  targetLanguage: LanguageCode;
 }

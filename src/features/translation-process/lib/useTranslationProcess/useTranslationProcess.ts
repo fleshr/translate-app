@@ -20,7 +20,7 @@ import {
 } from "../../model/processStore/actions";
 import { selectIsTranslating } from "../../model/processStore/selectors";
 import { useTranslationProcessStore } from "../../model/processStore/store";
-import { selectMode } from "../../model/settingsStore/selectors";
+import { selectSettings } from "../../model/settingsStore/selectors";
 import { useTranslationProcessSettingsStore } from "../../model/settingsStore/store";
 import { translationProcess } from "../TranslationProcess/TranslationProcess";
 
@@ -51,13 +51,15 @@ export const useTranslationProcess = () => {
       return;
     }
 
-    const mode = selectMode(useTranslationProcessSettingsStore.getState());
+    const settings = selectSettings(
+      useTranslationProcessSettingsStore.getState(),
+    );
     const resources = selectUntranslatedResources(
       useTranslationStore.getState(),
     );
 
     await translationProcess.translateResources(resources, {
-      mode,
+      ...settings,
       translator,
       translatorConfig,
       onStart: () => {

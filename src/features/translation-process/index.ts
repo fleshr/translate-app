@@ -1,5 +1,6 @@
 export { TranslateButton } from "./ui/TranslateButton/TranslateButton";
 export { TranslationControls } from "./ui/TranslationControls/TranslationControls";
+export { TranslationLanguageSelector } from "./ui/TranslationLanguageSelector/TranslationLanguageSelector";
 export { TranslationModeSelector } from "./ui/TranslationModeSelector/TranslationModeSelector";
 export { TranslationProgress } from "./ui/TranslationProgress/TranslationProgress";
 
