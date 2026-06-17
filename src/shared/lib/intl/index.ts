@@ -1,0 +1,1 @@
+export { getLanguageLabel } from "./getLanguageLabel";
