@@ -5,6 +5,8 @@ import { Group, Select, Tooltip, type ComboboxItem } from "@mantine/core";
 import { IconArrowsDiff } from "@tabler/icons-react";
 import ISO6391, { type LanguageCode } from "iso-639-1";
 import { useLocale } from "react-intlayer";
+import { selectIsTranslating } from "../../model/processStore/selectors";
+import { useTranslationProcessStore } from "../../model/processStore/store";
 import {
   setTranslationProcessSettingsSourceLanguage,
   setTranslationProcessSettingsTargetLanguage,
@@ -22,6 +24,7 @@ export const TranslationLanguageSelector = (props: BaseProps) => {
     useTranslationProcessSettingsStore(selectTargetLanguage);
   const sourceLanguage =
     useTranslationProcessSettingsStore(selectSourceLanguage);
+  const isTranslating = useTranslationProcessStore(selectIsTranslating);
 
   const languages: ComboboxItem<LanguageCode>[] = ISO6391.getAllCodes().map(
     (code) => ({
@@ -56,6 +59,7 @@ export const TranslationLanguageSelector = (props: BaseProps) => {
           searchable
           data={languages}
           value={sourceLanguage}
+          disabled={isTranslating}
           onChange={handleSourceLanguageChange}
           data-testid={`${dataTestId}.SourceLanguageSelect`}
         />
@@ -63,6 +67,7 @@ export const TranslationLanguageSelector = (props: BaseProps) => {
       <ActionIconWithTooltip
         size="md"
         label="Swap languages"
+        disabled={isTranslating}
         onClick={handleSwapLanguages}
         data-testid={`${dataTestId}.SwapLanguagesButton`}
       >
@@ -75,6 +80,7 @@ export const TranslationLanguageSelector = (props: BaseProps) => {
           searchable
           data={languages}
           value={targetLanguage}
+          disabled={isTranslating}
           onChange={handleTargetLanguageChange}
           data-testid={`${dataTestId}.TargetLanguageSelect`}
         />

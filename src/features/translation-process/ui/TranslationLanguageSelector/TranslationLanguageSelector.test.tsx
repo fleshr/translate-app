@@ -1,6 +1,7 @@
 import { render, resetStore } from "@/shared/lib/testing";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { useTranslationProcessStore } from "../../model/processStore/store";
 import {
   setTranslationProcessSettingsSourceLanguage,
   setTranslationProcessSettingsTargetLanguage,
@@ -12,7 +13,7 @@ vi.mock("../../model/settingsStore/actions", { spy: true });
 
 describe("features/translation-process/ui/TranslationLanguageSelector", () => {
   afterEach(() => {
-    resetStore(useTranslationProcessSettingsStore);
+    resetStore(useTranslationProcessStore, useTranslationProcessSettingsStore);
   });
 
   it("should render selects and button", () => {
@@ -31,6 +32,25 @@ describe("features/translation-process/ui/TranslationLanguageSelector", () => {
     expect(sourceSelect).toBeInTheDocument();
     expect(targetSelect).toBeInTheDocument();
     expect(swapButton).toBeInTheDocument();
+  });
+
+  it("should be disabled when translating", () => {
+    useTranslationProcessStore.setState({ status: "translating" });
+    const { getByTestId } = render(<TranslationLanguageSelector />);
+
+    const sourceSelect = getByTestId(
+      "TranslationLanguageSelector.SourceLanguageSelect",
+    );
+    const targetSelect = getByTestId(
+      "TranslationLanguageSelector.TargetLanguageSelect",
+    );
+    const swapButton = getByTestId(
+      "TranslationLanguageSelector.SwapLanguagesButton",
+    );
+
+    expect(sourceSelect).toBeDisabled();
+    expect(targetSelect).toBeDisabled();
+    expect(swapButton).toBeDisabled();
   });
 
   it("should display selected languages by default", () => {
