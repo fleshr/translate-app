@@ -20,6 +20,7 @@ import {
   setTranslationProcessTranslatingResource,
 } from "../../model/processStore/actions";
 import { useTranslationProcessStore } from "../../model/processStore/store";
+import { useTranslationProcessSettingsStore } from "../../model/settingsStore/store";
 import type { TranslationProcess } from "../TranslationProcess/TranslationProcess";
 import { useTranslationProcess } from "./useTranslationProcess";
 
@@ -64,6 +65,7 @@ describe("features/translation-process/lib/useTranslationProcess", () => {
 
   afterEach(() => {
     resetStore(
+      useTranslationProcessSettingsStore,
       useTranslationProcessStore,
       useTranslationStore,
       useTranslatorStore,
@@ -107,8 +109,11 @@ describe("features/translation-process/lib/useTranslationProcess", () => {
       [testResource],
       expect.objectContaining({
         mode: "sequential",
+        batchSize: 10,
         translator: testTranslator,
         translatorConfig: { model: "gpt-3.5-turbo" },
+        sourceLanguage: "ja",
+        targetLanguage: "en",
       }),
     );
   });
