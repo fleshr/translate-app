@@ -76,32 +76,15 @@ export const OpenAITranslator = {
   name: "OpenAI Translator",
   version: "0.0.1",
 
-  configFields: [
-    {
-      key: "baseURL",
-      type: "text",
-      label: "URL",
-      initial: defaultConfig.baseURL,
-    },
-    {
-      key: "apiKey",
-      type: "text",
-      label: "API Key",
-      initial: defaultConfig.apiKey,
-    },
-    {
-      key: "model",
-      type: "text",
-      label: "Model",
-      initial: defaultConfig.model,
-    },
-    {
-      key: "instructions",
-      type: "textarea",
-      label: "Instructions",
-      initial: defaultConfig.instructions,
-    },
-  ],
+  configForm: {
+    default: defaultConfig,
+    fields: [
+      { key: "baseURL", type: "text", label: "URL" },
+      { key: "apiKey", type: "text", label: "API Key" },
+      { key: "model", type: "text", label: "Model" },
+      { key: "instructions", type: "textarea", label: "Instructions" },
+    ],
+  },
 
   async translate(input, options: TranslatorOptions<Config> = {}) {
     return abortWrapper(async () => {

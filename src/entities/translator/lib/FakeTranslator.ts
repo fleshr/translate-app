@@ -18,14 +18,10 @@ export const FakeTranslator = {
   name: "Fake Translator",
   version: "0.0.1",
 
-  configFields: [
-    {
-      key: "delay",
-      type: "number",
-      label: "Delay",
-      initial: defaultConfig.delay,
-    },
-  ],
+  configForm: {
+    default: defaultConfig,
+    fields: [{ key: "delay", type: "number", label: "Delay" }],
+  },
 
   async translate(_, options: TranslatorOptions<Config> = {}) {
     const { config: { delay } = defaultConfig, signal } = options;
