@@ -1,27 +1,24 @@
 import {
   selectSelectedTranslator,
-  selectTranslatorConfig,
   setTranslatorConfig,
   translators,
   useTranslatorStore,
   type TranslatorConfig,
 } from "@/entities/translator";
 import { getComboboxItems } from "@/shared/lib/getComboboxItems";
-import { DynamicForm } from "@/shared/ui/DynamicForm";
+import type { BaseProps } from "@/shared/model/component";
 import { Button, Divider, ScrollArea, Select, Stack } from "@mantine/core";
 import { useId, useState } from "react";
 import { useIntlayer } from "react-intlayer";
+import { TranslatorConfigForm } from "../TranslatorConfigForm/TranslatorConfigForm";
 
-export const TranslatorSettings = () => {
+export const TranslatorSettings = (props: BaseProps) => {
+  const { "data-testid": dataTestId = "TranslatorSettings" } = props;
   const formId = useId();
   const content = useIntlayer("TranslatorSettings");
   const selectedTranslator = useTranslatorStore(selectSelectedTranslator);
   const [activeTranslator, setActiveTranslator] = useState(selectedTranslator);
   const translator = translators[activeTranslator];
-  const storeConfig = useTranslatorStore(
-    selectTranslatorConfig(activeTranslator),
-  );
-
   const items = getComboboxItems(translators);
 
   const handleChange = (value: string | null) => {
@@ -44,18 +41,17 @@ export const TranslatorSettings = () => {
             data={items}
             value={activeTranslator}
             onChange={handleChange}
-            data-testid="TranslatorSettings.TranslatorSelect"
+            data-testid={`${dataTestId}.TranslatorSelect`}
           />
           <Divider />
-          {translator && (
-            <DynamicForm
+          {translator?.configForm && (
+            <TranslatorConfigForm
               formId={formId}
               key={activeTranslator}
-              fields={translator.configFields}
-              schema={translator.configSchema}
-              initialValues={storeConfig}
+              translator={activeTranslator}
+              configForm={translator.configForm}
               onSubmit={handleSubmit}
-              data-testid="TranslatorSettings.DynamicForm"
+              data-testid={`${dataTestId}.TranslatorConfigForm`}
             />
           )}
         </Stack>
@@ -63,7 +59,7 @@ export const TranslatorSettings = () => {
       <Button
         type="submit"
         form={formId}
-        data-testid="TranslatorSettings.SaveButton"
+        data-testid={`${dataTestId}.SaveButton`}
       >
         {content.saveButtonLabel}
       </Button>
