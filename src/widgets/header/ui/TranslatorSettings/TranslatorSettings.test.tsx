@@ -11,33 +11,26 @@ vi.mock("@/entities/translator", { spy: true });
 vi.spyOn(translatorModule, "translators", "get").mockReturnValue({
   test1: getTranslatorMock({
     name: "test1",
-    configFields: [
-      {
-        key: "testField1",
-        label: "Test Field 1",
-        type: "text",
-        initial: "initial value 1",
-      },
-    ],
+    configForm: {
+      default: { test1: "initial value 1" },
+      fields: [{ key: "test1", label: "Test Field 1", type: "text" }],
+    },
   }),
   test2: getTranslatorMock({
     name: "test2",
-    configFields: [
-      {
-        key: "testField2",
-        label: "Test Field 2",
-        type: "text",
-        initial: "initial value 2",
-      },
-    ],
+    configForm: {
+      default: { test2: "initial value 2" },
+      fields: [{ key: "test2", label: "Test Field 2", type: "text" }],
+    },
   }),
+  test3: getTranslatorMock({ name: "test3" }),
 });
 
 describe("widgets/header/ui/TranslatorSettings", () => {
   beforeEach(() => {
     useTranslatorStore.setState({
       selected: "test1",
-      configs: { test1: { testField1: "test" } },
+      configs: { test1: { test1: "test" } },
     });
   });
 
@@ -45,12 +38,12 @@ describe("widgets/header/ui/TranslatorSettings", () => {
     resetStore(useTranslatorStore);
   });
 
-  it("should not render DynamicForm when translator is not found", () => {
+  it("should not render TranslatorConfigForm when translator not found or dont have config form", () => {
     useTranslatorStore.setState({ selected: "test3", configs: {} });
     const { queryByTestId } = render(<TranslatorSettings />);
 
-    const dynamicForm = queryByTestId("TranslatorSettings.DynamicForm");
-    expect(dynamicForm).not.toBeInTheDocument();
+    const form = queryByTestId("TranslatorSettings.TranslatorConfigForm");
+    expect(form).not.toBeInTheDocument();
   });
 
   it("should render selected translator", () => {
@@ -59,19 +52,19 @@ describe("widgets/header/ui/TranslatorSettings", () => {
     const select = getByTestId("TranslatorSettings.TranslatorSelect");
     expect(select).toHaveValue("test1");
 
-    const dynamicForm = getByTestId("TranslatorSettings.DynamicForm");
-    expect(dynamicForm).toBeInTheDocument();
+    const form = getByTestId("TranslatorSettings.TranslatorConfigForm");
+    expect(form).toBeInTheDocument();
   });
 
-  it("should render DynamicForm for selected translator", async () => {
+  it("should render TranslatorConfigForm for selected translator", async () => {
     const { getByTestId, getByRole, queryByTestId } = render(
       <TranslatorSettings />,
     );
 
-    let field1 = queryByTestId("TranslatorSettings.DynamicForm.testField1");
+    let field1 = queryByTestId("TranslatorSettings.TranslatorConfigForm.test1");
     expect(field1).toBeInTheDocument();
 
-    let field2 = queryByTestId("TranslatorSettings.DynamicForm.testField2");
+    let field2 = queryByTestId("TranslatorSettings.TranslatorConfigForm.test2");
     expect(field2).not.toBeInTheDocument();
 
     const select = getByTestId("TranslatorSettings.TranslatorSelect");
@@ -80,17 +73,17 @@ describe("widgets/header/ui/TranslatorSettings", () => {
     const option = getByRole("option", { name: "test2" });
     await userEvent.click(option);
 
-    field1 = queryByTestId("TranslatorSettings.DynamicForm.testField1");
+    field1 = queryByTestId("TranslatorSettings.TranslatorConfigForm.test1");
     expect(field1).not.toBeInTheDocument();
 
-    field2 = queryByTestId("TranslatorSettings.DynamicForm.testField2");
+    field2 = queryByTestId("TranslatorSettings.TranslatorConfigForm.test2");
     expect(field2).toBeInTheDocument();
   });
 
   it("should set config in store on submit", async () => {
     const { getByTestId } = render(<TranslatorSettings />);
 
-    const field1 = getByTestId("TranslatorSettings.DynamicForm.testField1");
+    const field1 = getByTestId("TranslatorSettings.TranslatorConfigForm.test1");
     const button = getByTestId("TranslatorSettings.SaveButton");
 
     await userEvent.clear(field1);
@@ -98,7 +91,7 @@ describe("widgets/header/ui/TranslatorSettings", () => {
     await userEvent.click(button);
 
     expect(setTranslatorConfig).toHaveBeenCalledWith("test1", {
-      testField1: "new value",
+      test1: "new value",
     });
 
     await userEvent.clear(field1);
@@ -106,7 +99,7 @@ describe("widgets/header/ui/TranslatorSettings", () => {
     await userEvent.click(button);
 
     expect(setTranslatorConfig).toHaveBeenCalledWith("test1", {
-      testField1: "test",
+      test1: "test",
     });
   });
 });

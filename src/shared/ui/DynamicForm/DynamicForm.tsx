@@ -14,7 +14,7 @@ export interface DynamicFormProps<
   schema?: Schema;
   fields: FormField[];
   initialValues?: Values;
-  onSubmit: (config: Values) => void;
+  onSubmit?: (config: Values) => void;
 }
 
 export const DynamicForm = (props: BaseProps<DynamicFormProps>) => {
@@ -74,7 +74,7 @@ export const DynamicForm = (props: BaseProps<DynamicFormProps>) => {
   return (
     <form
       id={formId}
-      onSubmit={form.onSubmit(onSubmit)}
+      onSubmit={onSubmit && form.onSubmit(onSubmit)}
       data-testid={dataTestId}
     >
       <Stack gap="xs">{fields.map(renderInput)}</Stack>

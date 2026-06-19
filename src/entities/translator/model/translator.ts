@@ -8,13 +8,20 @@ export interface TranslatorOptions<Config extends TranslatorConfig> {
   signal?: AbortSignal;
 }
 
+export interface TranslatorConfigForm<
+  Config extends TranslatorConfig = TranslatorConfig,
+> {
+  default: Config;
+  fields: FormField[];
+  schema?: z.ZodObject<Record<string, z.ZodType>>;
+}
+
 export interface Translator<
   Config extends TranslatorConfig = TranslatorConfig,
 > {
   name: string;
   version: string;
-  configFields: FormField[];
-  configSchema?: z.ZodObject<Record<string, z.ZodType>>;
+  configForm?: TranslatorConfigForm<Config>;
   translate(
     input: string,
     options?: TranslatorOptions<Config>,

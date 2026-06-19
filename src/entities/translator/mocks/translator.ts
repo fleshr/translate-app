@@ -4,7 +4,6 @@ import type { Translator } from "../model/translator";
 const mockTranslator: Translator = {
   name: "Mock Translator",
   version: "0.0.1",
-  configFields: [],
   translate: () => Promise.resolve("test"),
   translateBatch: () => Promise.resolve(["test"]),
 };
