@@ -1,9 +1,8 @@
 import type { BaseProps } from "@/shared/model/component";
 import type { FormField } from "@/shared/model/form";
-import { NumberInput, Stack, Textarea, TextInput } from "@mantine/core";
+import { NumberInput, Select, Stack, Textarea, TextInput } from "@mantine/core";
 import { schemaResolver, useForm } from "@mantine/form";
 import type { ReactElement } from "react";
-import { mapToObj } from "remeda";
 import { z } from "zod";
 
 export interface DynamicFormProps<
@@ -23,7 +22,7 @@ export const DynamicForm = (props: BaseProps<DynamicFormProps>) => {
     fields,
     schema,
     onSubmit,
-    initialValues = mapToObj(fields, ({ key, initial }) => [key, initial]),
+    initialValues,
     "data-testid": dataTestId = "DynamicForm",
   } = props;
 
@@ -32,12 +31,15 @@ export const DynamicForm = (props: BaseProps<DynamicFormProps>) => {
     initialValues,
   });
 
-  const renderInput = ({ key, type, label }: FormField): ReactElement => {
+  const renderInput = (field: FormField): ReactElement => {
+    const { type, label, key, description } = field;
+
     switch (type) {
       case "text":
         return (
           <TextInput
             label={label}
+            description={description}
             key={form.key(key)}
             data-testid={`${dataTestId}.${key}`}
             {...form.getInputProps(key)}
@@ -48,6 +50,7 @@ export const DynamicForm = (props: BaseProps<DynamicFormProps>) => {
         return (
           <NumberInput
             label={label}
+            description={description}
             key={form.key(key)}
             data-testid={`${dataTestId}.${key}`}
             {...form.getInputProps(key)}
@@ -59,6 +62,20 @@ export const DynamicForm = (props: BaseProps<DynamicFormProps>) => {
           <Textarea
             autosize
             label={label}
+            description={description}
+            key={form.key(key)}
+            data-testid={`${dataTestId}.${key}`}
+            {...form.getInputProps(key)}
+          />
+        );
+
+      case "select":
+        return (
+          <Select
+            searchable
+            label={label}
+            description={description}
+            data={field.options}
             key={form.key(key)}
             data-testid={`${dataTestId}.${key}`}
             {...form.getInputProps(key)}
