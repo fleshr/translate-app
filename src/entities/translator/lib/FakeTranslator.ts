@@ -23,14 +23,14 @@ export const FakeTranslator = {
     fields: [{ key: "delay", type: "number", label: "Delay" }],
   },
 
-  async translate(_, options: TranslatorOptions<Config> = {}) {
+  async translate(_, options: TranslatorOptions<Config>) {
     const { config: { delay } = defaultConfig, signal } = options;
     const text = faker.lorem.sentence({ min: 3, max: 5 });
 
     return abortableDelayedResolve(text, { delay, signal });
   },
 
-  async translateBatch(batch, options: TranslatorOptions<Config> = {}) {
+  async translateBatch(batch, options: TranslatorOptions<Config>) {
     const { config: { delay } = defaultConfig, signal } = options;
     const sentences = faker.helpers.multiple(
       () => faker.lorem.sentence({ min: 3, max: 5 }),

@@ -1,4 +1,5 @@
 import type { FormField } from "@/shared/model/form";
+import type { LanguageCode } from "iso-639-1";
 import type { z } from "zod";
 
 export type TranslatorConfig = Record<string, unknown>;
@@ -6,6 +7,8 @@ export type TranslatorConfig = Record<string, unknown>;
 export interface TranslatorOptions<Config extends TranslatorConfig> {
   config?: Config;
   signal?: AbortSignal;
+  source: LanguageCode;
+  target: LanguageCode;
 }
 
 export interface TranslatorConfigForm<
@@ -22,12 +25,9 @@ export interface Translator<
   name: string;
   version: string;
   configForm?: TranslatorConfigForm<Config>;
-  translate(
-    input: string,
-    options?: TranslatorOptions<Config>,
-  ): Promise<string>;
+  translate(input: string, options: TranslatorOptions<Config>): Promise<string>;
   translateBatch?(
     input: string[],
-    options?: TranslatorOptions<Config>,
+    options: TranslatorOptions<Config>,
   ): Promise<string[]>;
 }

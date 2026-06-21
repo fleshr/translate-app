@@ -74,6 +74,8 @@ export class TranslationProcess {
     const {
       translator,
       translatorConfig,
+      sourceLanguage,
+      targetLanguage,
       onSegmentSequentialStart,
       onSegmentSequentialComplete,
     } = options;
@@ -84,6 +86,8 @@ export class TranslationProcess {
       onSegmentSequentialStart?.(segment);
 
       const tranlation = await translator.translate(originalText, {
+        source: sourceLanguage,
+        target: targetLanguage,
         config: translatorConfig,
         signal: this.abortController?.signal,
       });
@@ -99,6 +103,8 @@ export class TranslationProcess {
     const {
       translator,
       translatorConfig,
+      sourceLanguage,
+      targetLanguage,
       batchSize = DEFAULT_BATCH_SIZE,
       onSegmentBatchStart,
       onSegmentBatchComplete,
@@ -114,6 +120,8 @@ export class TranslationProcess {
       onSegmentBatchStart?.(batch, batchArray);
 
       const responseArray = await translator.translateBatch(batchArray, {
+        source: sourceLanguage,
+        target: targetLanguage,
         config: translatorConfig,
         signal: this.abortController?.signal,
       });

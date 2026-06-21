@@ -3,6 +3,11 @@ import { faker } from "@faker-js/faker";
 import { describe, expect, it, vi } from "vitest";
 import { FakeTranslator } from "./FakeTranslator";
 
+const testOptions = {
+  source: "ja",
+  target: "ru",
+} as const;
+
 vi.mock("@/shared/lib/async", { spy: true });
 vi.spyOn(faker.lorem, "sentence").mockReturnValue("text");
 
@@ -12,6 +17,7 @@ describe("entities/translator/lib/FakeTranslator", () => {
       const abortController = new AbortController();
 
       void FakeTranslator.translate("test", {
+        ...testOptions,
         config: { delay: 5000 },
         signal: abortController.signal,
       });
@@ -24,6 +30,7 @@ describe("entities/translator/lib/FakeTranslator", () => {
 
     it("should return fake text", async () => {
       const result = await FakeTranslator.translate("test", {
+        ...testOptions,
         config: { delay: 0 },
       });
 
@@ -36,6 +43,7 @@ describe("entities/translator/lib/FakeTranslator", () => {
       const abortController = new AbortController();
 
       void FakeTranslator.translateBatch(["test1", "test2"], {
+        ...testOptions,
         config: { delay: 1000 },
         signal: abortController.signal,
       });
@@ -48,6 +56,7 @@ describe("entities/translator/lib/FakeTranslator", () => {
 
     it("should return fake texts", async () => {
       const result = await FakeTranslator.translateBatch(["test1", "test2"], {
+        ...testOptions,
         config: { delay: 0 },
       });
 

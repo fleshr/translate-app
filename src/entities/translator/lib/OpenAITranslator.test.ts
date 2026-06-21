@@ -4,11 +4,17 @@ import { beforeAll, describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 import { OpenAITranslator, type Config } from "./OpenAITranslator";
 
+const testOptions = {
+  source: "ja",
+  target: "ru",
+} as const;
+
 const testConfig: Config = {
   apiKey: "testKey",
   baseURL: "testUrl",
   model: "testModel",
-  instructions: "testInstructions",
+  promptLang: "en",
+  systemPrompt: "test {source_lang} {target_lang}",
 };
 
 const { mockCreate, mockOpenAI } = vi.hoisted(() => {
@@ -32,7 +38,10 @@ describe("entities/translator/lib/OpenAITranslator", () => {
     });
 
     it("should apply config to OpenAI client", async () => {
-      await OpenAITranslator.translate("test", { config: testConfig });
+      await OpenAITranslator.translate("test", {
+        ...testOptions,
+        config: testConfig,
+      });
 
       expect(mockOpenAI).toHaveBeenCalledWith({
         apiKey: testConfig.apiKey,
@@ -45,6 +54,7 @@ describe("entities/translator/lib/OpenAITranslator", () => {
       const abortController = new AbortController();
 
       await OpenAITranslator.translate("test", {
+        ...testOptions,
         config: testConfig,
         signal: abortController.signal,
       });
@@ -52,7 +62,7 @@ describe("entities/translator/lib/OpenAITranslator", () => {
       expect(mockCreate).toHaveBeenCalledWith(
         {
           input: "test",
-          instructions: testConfig.instructions,
+          instructions: "test Japanese Russian",
           model: testConfig.model,
           stream: false,
         },
@@ -63,13 +73,13 @@ describe("entities/translator/lib/OpenAITranslator", () => {
     it("should throw DOMException on abort", async () => {
       mockCreate.mockRejectedValueOnce(new APIUserAbortError());
 
-      await expect(OpenAITranslator.translate("test")).rejects.toThrow(
-        DOMException,
-      );
+      await expect(
+        OpenAITranslator.translate("test", testOptions),
+      ).rejects.toThrow(DOMException);
     });
 
     it("should translate text with OpenAI client", async () => {
-      const result = await OpenAITranslator.translate("test");
+      const result = await OpenAITranslator.translate("test", testOptions);
 
       expect(result).toBe("testOutput");
     });
@@ -84,6 +94,7 @@ describe("entities/translator/lib/OpenAITranslator", () => {
 
     it("should apply config to OpenAI client", async () => {
       await OpenAITranslator.translateBatch(["test1", "test2"], {
+        ...testOptions,
         config: testConfig,
       });
 
@@ -98,6 +109,7 @@ describe("entities/translator/lib/OpenAITranslator", () => {
       const abortController = new AbortController();
 
       await OpenAITranslator.translateBatch(["test1", "test2"], {
+        ...testOptions,
         config: testConfig,
         signal: abortController.signal,
       });
@@ -105,7 +117,7 @@ describe("entities/translator/lib/OpenAITranslator", () => {
       expect(mockCreate).toHaveBeenCalledWith(
         {
           input: '{\n  "Line1": "test1",\n  "Line2": "test2"\n}',
-          instructions: testConfig.instructions,
+          instructions: "test Japanese Russian",
           model: testConfig.model,
           stream: false,
           text: {
@@ -123,12 +135,15 @@ describe("entities/translator/lib/OpenAITranslator", () => {
       mockCreate.mockRejectedValueOnce(new APIUserAbortError());
 
       await expect(
-        OpenAITranslator.translateBatch(["test1", "test2"]),
+        OpenAITranslator.translateBatch(["test1", "test2"], testOptions),
       ).rejects.toThrow(DOMException);
     });
 
     it("should translate text with OpenAI client", async () => {
-      const result = await OpenAITranslator.translateBatch(["test1", "test2"]);
+      const result = await OpenAITranslator.translateBatch(
+        ["test1", "test2"],
+        testOptions,
+      );
 
       expect(result).toEqual(["text1", "text2"]);
     });

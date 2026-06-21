@@ -1,9 +1,9 @@
-import { getLanguageLabel } from "@/shared/lib/intl";
+import { getLanguageOptions } from "@/shared/lib/intl";
 import type { BaseProps } from "@/shared/model/component";
 import { ActionIconWithTooltip } from "@/shared/ui/ActionIconWithTooltip";
-import { Group, Select, Tooltip, type ComboboxItem } from "@mantine/core";
+import { Group, Select, Tooltip } from "@mantine/core";
 import { IconArrowsDiff } from "@tabler/icons-react";
-import ISO6391, { type LanguageCode } from "iso-639-1";
+import { type LanguageCode } from "iso-639-1";
 import { useIntlayer, useLocale } from "react-intlayer";
 import { selectIsTranslating } from "../../model/processStore/selectors";
 import { useTranslationProcessStore } from "../../model/processStore/store";
@@ -26,13 +26,7 @@ export const TranslationLanguageSelector = (props: BaseProps) => {
   const sourceLanguage =
     useTranslationProcessSettingsStore(selectSourceLanguage);
   const isTranslating = useTranslationProcessStore(selectIsTranslating);
-
-  const languages: ComboboxItem<LanguageCode>[] = ISO6391.getAllCodes().map(
-    (code) => ({
-      label: getLanguageLabel(code, locale),
-      value: code,
-    }),
-  );
+  const languages = getLanguageOptions(locale);
 
   const handleSourceLanguageChange = (value: LanguageCode | null) => {
     if (value) {
