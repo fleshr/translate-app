@@ -218,6 +218,8 @@ describe("features/translation-process/lib/TranslationProcess", () => {
         1,
         testSegement1.originalText,
         {
+          source: sequentialOptions.sourceLanguage,
+          target: sequentialOptions.targetLanguage,
           config: sequentialOptions.translatorConfig,
           signal: expect.any(AbortSignal),
         },
@@ -226,6 +228,8 @@ describe("features/translation-process/lib/TranslationProcess", () => {
         2,
         testSegement2.originalText,
         {
+          source: sequentialOptions.sourceLanguage,
+          target: sequentialOptions.targetLanguage,
           config: sequentialOptions.translatorConfig,
           signal: expect.any(AbortSignal),
         },
@@ -288,6 +292,8 @@ describe("features/translation-process/lib/TranslationProcess", () => {
         1,
         [testSegement1.originalText, testSegement2.originalText],
         {
+          source: batchOptions.sourceLanguage,
+          target: batchOptions.targetLanguage,
           config: batchOptions.translatorConfig,
           signal: expect.any(AbortSignal),
         },
@@ -296,6 +302,8 @@ describe("features/translation-process/lib/TranslationProcess", () => {
         2,
         [testSegement3.originalText],
         {
+          source: batchOptions.sourceLanguage,
+          target: batchOptions.targetLanguage,
           config: batchOptions.translatorConfig,
           signal: expect.any(AbortSignal),
         },
