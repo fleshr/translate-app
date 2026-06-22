@@ -1,5 +1,7 @@
 import { resolveParser } from "@/entities/parser";
 import { getParserMock } from "@/entities/parser/mocks";
+import { useProjectStore } from "@/entities/project";
+import { getProjectStoreStateMock } from "@/entities/project/mocks";
 import { initTranslation } from "@/entities/translation";
 import { getTranslationFileMock } from "@/entities/translation/mocks";
 import { useTranslationProcessStore } from "@/features/translation-process";
@@ -9,7 +11,7 @@ import { initSession } from "@/shared/model/sessionStore";
 import { notifications } from "@mantine/notifications";
 import userEvent from "@testing-library/user-event";
 import { directoryOpen } from "browser-fs-access";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { extractResources } from "../../lib/extractResources";
 import { getResourcesFiles } from "../../lib/getResourcesFiles";
 import { ImportButton } from "./ImportButton";
@@ -18,6 +20,7 @@ const testFile = new File(["test"], "file.js");
 const testParser = getParserMock();
 const testResource = getTranslationFileMock();
 const testFiles = { test: new TextEncoder().encode("test").buffer };
+const testProjectStore = getProjectStoreStateMock();
 
 vi.mock("@/entities/parser", { spy: true });
 vi.mocked(resolveParser).mockResolvedValue(testParser);
@@ -35,8 +38,12 @@ vi.mock("@/entities/translation", { spy: true });
 vi.mocked(directoryOpen).mockResolvedValue([testFile]);
 
 describe("widgets/header/ui/ImportButton", () => {
+  beforeEach(() => {
+    useProjectStore.setState(testProjectStore);
+  });
+
   afterEach(() => {
-    resetStore(useTranslationProcessStore);
+    resetStore(useProjectStore, useTranslationProcessStore);
   });
 
   it("should be disabled when translating", () => {
@@ -47,12 +54,13 @@ describe("widgets/header/ui/ImportButton", () => {
     expect(button).toBeDisabled();
   });
 
-  it("should open directory and extract resources", async () => {
+  it("should open directory and extract resources with project parser", async () => {
     const { getByTestId } = render(<ImportButton />);
 
     const button = getByTestId("ImportButton");
     await userEvent.click(button);
 
+    expect(resolveParser).toHaveBeenCalledWith(testProjectStore.parser);
     expect(directoryOpen).toHaveBeenCalledWith({ recursive: true });
     expect(extractResources).toHaveBeenCalledWith([testFile], testParser);
     expect(getResourcesFiles).toHaveBeenCalledWith([testFile], [testResource]);

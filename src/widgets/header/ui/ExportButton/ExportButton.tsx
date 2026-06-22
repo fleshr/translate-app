@@ -1,14 +1,11 @@
 import { resolveParser } from "@/entities/parser";
+import { selectProjectParser, useProjectStore } from "@/entities/project";
 import { selectResources, useTranslationStore } from "@/entities/translation";
 import {
   selectIsTranslating,
   useTranslationProcessStore,
 } from "@/features/translation-process";
 import { selectFiles, useFilesStore } from "@/shared/model/filesStore";
-import {
-  selectProjectParser,
-  useProjectStore,
-} from "@/shared/model/projectStore";
 import { ActionIconWithTooltip } from "@/shared/ui/ActionIconWithTooltip";
 import { notifications } from "@mantine/notifications";
 import { IconFolderUp } from "@tabler/icons-react";

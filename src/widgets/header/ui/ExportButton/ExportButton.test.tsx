@@ -1,4 +1,6 @@
 import { resolveParser, type Parser } from "@/entities/parser";
+import { useProjectStore } from "@/entities/project";
+import { getProjectStoreStateMock } from "@/entities/project/mocks";
 import { useTranslationStore } from "@/entities/translation";
 import { getTranslationStoreStateMock } from "@/entities/translation/mocks";
 import { useTranslationProcessStore } from "@/features/translation-process";
@@ -14,14 +16,15 @@ import { ExportButton } from "./ExportButton";
 const testBlob = new Blob(["test"]);
 const testParser = { name: "test" } as Parser;
 
-const testStore = getTranslationStoreStateMock();
+const testTranslationStore = getTranslationStoreStateMock();
+const testProjectStore = getProjectStoreStateMock();
 
-const common1 = testStore.resources.byId["common-1"]!;
-const file1 = testStore.resources.byId["file-1"]!;
+const common1 = testTranslationStore.resources.byId["common-1"]!;
+const file1 = testTranslationStore.resources.byId["file-1"]!;
 
-const segment1 = testStore.segments.byId["segment-1"]!;
-const segment2 = testStore.segments.byId["segment-2"]!;
-const segment3 = testStore.segments.byId["segment-3"]!;
+const segment1 = testTranslationStore.segments.byId["segment-1"]!;
+const segment2 = testTranslationStore.segments.byId["segment-2"]!;
+const segment3 = testTranslationStore.segments.byId["segment-3"]!;
 
 const testFiles = {
   "files/file-1": new TextEncoder().encode("content-1").buffer,
@@ -35,12 +38,18 @@ vi.mocked(exportResourcesToZip).mockResolvedValue(testBlob);
 
 describe("widgets/header/ui/ExportButton", () => {
   beforeEach(() => {
-    useTranslationStore.setState(testStore);
+    useProjectStore.setState(testProjectStore);
     useFilesStore.setState({ files: testFiles });
+    useTranslationStore.setState(testTranslationStore);
   });
 
   afterEach(() => {
-    resetStore(useTranslationProcessStore, useTranslationStore, useFilesStore);
+    resetStore(
+      useFilesStore,
+      useProjectStore,
+      useTranslationStore,
+      useTranslationProcessStore,
+    );
   });
 
   it("should be disabled when translating", () => {
@@ -51,12 +60,13 @@ describe("widgets/header/ui/ExportButton", () => {
     expect(button).toBeDisabled();
   });
 
-  it("should zip game files from translations", async () => {
+  it("should zip game files from translations with project parser", async () => {
     const { getByTestId } = render(<ExportButton />);
 
     const button = getByTestId("ExportButton");
     await userEvent.click(button);
 
+    expect(resolveParser).toHaveBeenCalledWith(testProjectStore.parser);
     expect(exportResourcesToZip).toHaveBeenCalledWith(
       [
         { ...common1, segments: [segment1] },

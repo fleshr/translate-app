@@ -1,9 +1,9 @@
+import { ProjectSchema, type Project } from "@/entities/project";
 import {
   TranslationResourceSchema,
   type TranslationResource,
 } from "@/entities/translation";
 import { parseJson } from "@/shared/lib/json";
-import { ProjectSchema, type Project } from "@/shared/model/project";
 import { loadAsync } from "jszip";
 
 export const parseProjectFile = async (
