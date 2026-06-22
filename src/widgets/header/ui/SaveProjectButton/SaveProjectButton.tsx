@@ -1,11 +1,15 @@
 import { selectProject, useProjectStore } from "@/entities/project";
-import { selectResources, useTranslationStore } from "@/entities/translation";
+import {
+  selectFiles,
+  selectResources,
+  useFilesStore,
+  useTranslationStore,
+} from "@/entities/translation";
 import {
   selectIsTranslating,
   useTranslationProcessStore,
 } from "@/features/translation-process";
 import { projectFileExtension } from "@/shared/config/project";
-import { selectFiles, useFilesStore } from "@/shared/model/filesStore";
 import { ActionIconWithTooltip } from "@/shared/ui/ActionIconWithTooltip";
 import { notifications } from "@mantine/notifications";
 import { IconDeviceFloppy } from "@tabler/icons-react";

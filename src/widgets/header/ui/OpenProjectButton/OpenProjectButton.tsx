@@ -1,11 +1,10 @@
 import { initProject } from "@/entities/project";
-import { initTranslation } from "@/entities/translation";
+import { initFiles, initTranslation } from "@/entities/translation";
 import {
   selectIsTranslating,
   useTranslationProcessStore,
 } from "@/features/translation-process";
 import { projectFileExtension } from "@/shared/config/project";
-import { initFiles } from "@/shared/model/filesStore";
 import { initSession } from "@/shared/model/sessionStore";
 import { ActionIconWithTooltip } from "@/shared/ui/ActionIconWithTooltip";
 import { notifications } from "@mantine/notifications";

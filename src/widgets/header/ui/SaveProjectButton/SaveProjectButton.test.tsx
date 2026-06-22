@@ -1,10 +1,13 @@
 import { selectProject, useProjectStore } from "@/entities/project";
-import { useTranslationStore } from "@/entities/translation";
-import { getTranslationBaseFileMock } from "@/entities/translation/mocks";
+import { getProjectStoreStateMock } from "@/entities/project/mocks";
+import { useFilesStore, useTranslationStore } from "@/entities/translation";
+import {
+  getFilesStoreStateMock,
+  getTranslationBaseFileMock,
+} from "@/entities/translation/mocks";
 import { useTranslationProcessStore } from "@/features/translation-process";
 import { projectFileExtension } from "@/shared/config/project";
 import { render, resetStore } from "@/shared/lib/testing";
-import { useFilesStore } from "@/shared/model/filesStore";
 import { notifications } from "@mantine/notifications";
 import userEvent from "@testing-library/user-event";
 import { fileSave } from "browser-fs-access";
@@ -14,8 +17,8 @@ import { SaveProjectButton } from "./SaveProjectButton";
 
 const testFile = getTranslationBaseFileMock();
 const testBlob = new Blob(["test"]);
-const testProject = { parser: "test" };
-const testFiles = { "files/file-1": new TextEncoder().encode("test").buffer };
+const testProjectStore = getProjectStoreStateMock();
+const testFilesStore = getFilesStoreStateMock();
 
 vi.mock("@/entities/project", { spy: true });
 vi.mock("@/entities/translation", { spy: true });
@@ -31,8 +34,8 @@ describe("widgets/header/ui/SaveProjectButton", () => {
         byId: { "file-1": testFile },
       },
     });
-    useProjectStore.setState(testProject);
-    useFilesStore.setState({ files: testFiles });
+    useProjectStore.setState(testProjectStore);
+    useFilesStore.setState(testFilesStore);
   });
 
   afterEach(() => {
@@ -71,9 +74,11 @@ describe("widgets/header/ui/SaveProjectButton", () => {
     const button = getByTestId("SaveProjectButton");
     await userEvent.click(button);
 
-    expect(generateProjectFile).toHaveBeenCalledWith(testFiles, testProject, [
-      { ...testFile, segments: [] },
-    ]);
+    expect(generateProjectFile).toHaveBeenCalledWith(
+      testFilesStore.files,
+      testProjectStore,
+      [{ ...testFile, segments: [] }],
+    );
     expect(fileSave).toHaveBeenCalledWith(testBlob, {
       fileName: `project${projectFileExtension}`,
     });
