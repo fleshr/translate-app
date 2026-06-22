@@ -10,8 +10,9 @@ import {
   getTranslatorMock,
   getTranslatorStoreStateMock,
 } from "@/entities/translator/mocks";
-import { logger } from "@/shared/lib/logger";
+import { stringifyJson } from "@/shared/lib/json";
 import { renderHook, resetStore } from "@/shared/lib/testing";
+import { addLog } from "@/shared/model/logsStore";
 import { notifications } from "@mantine/notifications";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ProcessOptions } from "../../model/process";
@@ -44,8 +45,8 @@ const mockTranslationProcess = vi.hoisted(() => {
   } as unknown as TranslationProcess;
 });
 
-vi.mock("@/shared/lib/logger");
 vi.mock("../../model/processStore/actions", { spy: true });
+vi.mock("@/shared/model/logsStore", { spy: true });
 vi.mock("@/entities/translation", { spy: true });
 vi.mock("@/entities/translator", { spy: true });
 
@@ -125,7 +126,7 @@ describe("features/translation-process/lib/useTranslationProcess", () => {
     capturedOptions.onStart?.();
 
     expect(setTranslationProcessStatus).toHaveBeenCalledWith("translating");
-    expect(logger.info).toHaveBeenCalled();
+    expect(addLog).toHaveBeenCalledWith("info", "Translation started");
     expect(notifications.show).toHaveBeenCalled();
   });
 
@@ -149,7 +150,10 @@ describe("features/translation-process/lib/useTranslationProcess", () => {
       [testSegment.originalText],
     );
 
-    expect(logger.info).toHaveBeenCalled();
+    expect(addLog).toHaveBeenCalledWith(
+      "info",
+      `Original: ${stringifyJson([testSegment.originalText])}`,
+    );
   });
 
   it("should update segement, add progress and logging message on batch complete", async () => {
@@ -164,7 +168,11 @@ describe("features/translation-process/lib/useTranslationProcess", () => {
     expect(setTranslationSegmentsField).toHaveBeenCalledWith([
       { id: testSegment.id, translation: "test" },
     ]);
-    expect(logger.info).toHaveBeenCalled();
+
+    expect(addLog).toHaveBeenCalledWith(
+      "info",
+      `Translation: ${stringifyJson(["test"])}`,
+    );
   });
 
   it("should logging message on sequential start", async () => {
@@ -173,7 +181,10 @@ describe("features/translation-process/lib/useTranslationProcess", () => {
     await result.current.start();
     capturedOptions.onSegmentSequentialStart?.(testSegment);
 
-    expect(logger.info).toHaveBeenCalled();
+    expect(addLog).toHaveBeenCalledWith(
+      "info",
+      `Original: ${testSegment.originalText}`,
+    );
   });
 
   it("should update segement, add progress and logging message on sequential complete", async () => {
@@ -186,7 +197,8 @@ describe("features/translation-process/lib/useTranslationProcess", () => {
       testSegment.id,
       "test",
     );
-    expect(logger.info).toHaveBeenCalled();
+
+    expect(addLog).toHaveBeenCalledWith("info", "Translation: test");
   });
 
   it("should set status to idle, clear translating resource, logging message and show notification on end", async () => {
@@ -197,7 +209,8 @@ describe("features/translation-process/lib/useTranslationProcess", () => {
 
     expect(setTranslationProcessStatus).toHaveBeenCalledWith("idle");
     expect(setTranslationProcessTranslatingResource).toHaveBeenCalledWith(null);
-    expect(logger.info).toHaveBeenCalled();
+
+    expect(addLog).toHaveBeenCalledWith("info", "Translation completed");
     expect(notifications.show).toHaveBeenCalled();
   });
 
@@ -209,7 +222,8 @@ describe("features/translation-process/lib/useTranslationProcess", () => {
 
     expect(setTranslationProcessStatus).toHaveBeenCalledWith("idle");
     expect(setTranslationProcessTranslatingResource).toHaveBeenCalledWith(null);
-    expect(logger.info).toHaveBeenCalled();
+
+    expect(addLog).toHaveBeenCalledWith("info", "Translation stopped");
     expect(notifications.show).toHaveBeenCalled();
   });
 
@@ -221,7 +235,8 @@ describe("features/translation-process/lib/useTranslationProcess", () => {
 
     expect(setTranslationProcessStatus).toHaveBeenCalledWith("idle");
     expect(setTranslationProcessTranslatingResource).toHaveBeenCalledWith(null);
-    expect(logger.error).toHaveBeenCalled();
+
+    expect(addLog).toHaveBeenCalledWith("error", "Translation error");
     expect(notifications.show).toHaveBeenCalled();
   });
 });

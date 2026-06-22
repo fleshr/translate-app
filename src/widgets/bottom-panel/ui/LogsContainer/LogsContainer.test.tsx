@@ -1,11 +1,16 @@
-import { logger } from "@/shared/lib/logger";
-import { render } from "@/shared/lib/testing";
-import { act } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { render, resetStore } from "@/shared/lib/testing";
+import { getLogsStoreStateMock } from "@/shared/mocks/logsStore";
+import { useLogsStore } from "@/shared/model/logsStore";
+import { afterEach, describe, expect, it } from "vitest";
 import { LogsContainer } from "./LogsContainer";
 
 describe("widgets/bottom-panel/ui/LogsContainer", () => {
+  afterEach(() => {
+    resetStore(useLogsStore);
+  });
+
   it("should show placeholder if no logs", () => {
+    useLogsStore.setState({ logs: [] });
     const { queryByTestId } = render(<LogsContainer />);
 
     const placeholder = queryByTestId("LogsContainer.Placeholder");
@@ -16,19 +21,18 @@ describe("widgets/bottom-panel/ui/LogsContainer", () => {
   });
 
   it("should show logs", () => {
+    useLogsStore.setState(getLogsStoreStateMock());
     const { queryByTestId } = render(<LogsContainer />);
 
-    act(() => {
-      logger.info("test");
-    });
-
-    const placeholder = queryByTestId("LogsContainer.Placeholder");
     const logs = queryByTestId("LogsContainer");
-    const log = queryByTestId("LogsContainer.Log.0");
+    const logInfo = queryByTestId("LogsContainer.Log.0");
+    const logDebug = queryByTestId("LogsContainer.Log.1");
+    const logError = queryByTestId("LogsContainer.Log.2");
 
-    expect(placeholder).not.toBeInTheDocument();
     expect(logs).toBeInTheDocument();
-    expect(log).toHaveTextContent("[INFO] test");
+    expect(logInfo).toHaveTextContent("[INFO] Info message");
+    expect(logDebug).toHaveTextContent("[DEBUG] Debug message");
+    expect(logError).toHaveTextContent("[ERROR] Error message");
   });
 
   it.todo("auto scroll test");

@@ -1,16 +1,9 @@
 import { useTranslationStore } from "@/entities/translation";
 import { getTranslationStoreStateMock } from "@/entities/translation/mocks";
-import {
-  withHeight,
-  withLoggerMessages,
-  withStoreState,
-} from "@/shared/lib/storybook";
-import {
-  mockDebugMessage,
-  mockErrorMessage,
-  mockInfoMessage,
-} from "@/shared/mocks/logger";
+import { withHeight, withStoreState } from "@/shared/lib/storybook";
+import { getLogsStoreStateMock } from "@/shared/mocks/logsStore";
 import { getSessionStoreStateMock } from "@/shared/mocks/sessionStore";
+import { useLogsStore } from "@/shared/model/logsStore";
 import { useSessionStore } from "@/shared/model/sessionStore";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { BottomPanel } from "./BottomPanel";
@@ -39,9 +32,7 @@ export const LogsEmpty: Story = {
 };
 
 export const LogsFilled: Story = {
-  decorators: [
-    withLoggerMessages([mockInfoMessage, mockDebugMessage, mockErrorMessage]),
-  ],
+  decorators: [withStoreState(useLogsStore, getLogsStoreStateMock())],
   play: async ({ canvas, userEvent }) => {
     const tab = canvas.getByTestId("BottomPanel.LogsTab");
     await userEvent.click(tab);
@@ -63,9 +54,7 @@ export const SegmentEditorWithSelectedSegment: Story = {
   decorators: [
     withStoreState(
       useSessionStore,
-      getSessionStoreStateMock({
-        selectedSegment: "segment-1",
-      }),
+      getSessionStoreStateMock({ selectedSegment: "segment-1" }),
     ),
   ],
   play: async ({ canvas, userEvent }) => {
@@ -89,9 +78,7 @@ export const SegmentRawWithSelectedSegment: Story = {
   decorators: [
     withStoreState(
       useSessionStore,
-      getSessionStoreStateMock({
-        selectedSegment: "segment-1",
-      }),
+      getSessionStoreStateMock({ selectedSegment: "segment-1" }),
     ),
   ],
   play: async ({ canvas, userEvent }) => {
