@@ -1,30 +1,18 @@
-import { logger } from "@/shared/lib/logger";
-import type { LoggerMessage } from "@/shared/model/logger";
+import { selectLogs, useLogsStore } from "@/shared/model/logsStore";
 import { Placeholder } from "@/shared/ui/Placeholder";
 import { Stack, Text } from "@mantine/core";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useIntlayer } from "react-intlayer";
-import { LOGS_LIMIT } from "../../config/logs";
 import classes from "./LogsContainer.module.css";
 
 export const LogsContainer = () => {
   const content = useIntlayer("LogsContainer");
   const ref = useRef<HTMLParagraphElement>(null);
-  const [logs, setLogs] = useState<LoggerMessage[]>([]);
+  const logs = useLogsStore(selectLogs);
 
   useEffect(() => {
     ref.current?.scrollIntoView();
   });
-
-  useEffect(() => {
-    logger.setHandler((log) => {
-      setLogs((logs) => [...logs.slice(logs.length - LOGS_LIMIT + 1), log]);
-    });
-
-    return () => {
-      logger.clearHandler();
-    };
-  }, []);
 
   if (logs.length === 0) {
     return (

@@ -11,7 +11,7 @@ import {
   useTranslatorStore,
 } from "@/entities/translator";
 import { stringifyJson } from "@/shared/lib/json";
-import { logger } from "@/shared/lib/logger";
+import { addLog } from "@/shared/model/logsStore";
 import { notifications } from "@mantine/notifications";
 import { useIntlayer } from "react-intlayer";
 import {
@@ -64,16 +64,14 @@ export const useTranslationProcess = () => {
       translatorConfig,
       onStart: () => {
         setTranslationProcessStatus("translating");
-        logger.info(content.startMessage);
+        addLog("info", "Translation started");
         notifications.show({ message: content.startMessage });
       },
       onResourceStart: (resource) => {
         setTranslationProcessTranslatingResource(resource.id);
       },
       onSegmentBatchStart(_, batch) {
-        logger.info(
-          content.startSegmentMessage({ text: stringifyJson(batch) }),
-        );
+        addLog("info", `Original: ${stringifyJson(batch)}`);
       },
       onSegmentBatchComplete(translations, response) {
         setTranslationSegmentsField(
@@ -82,35 +80,31 @@ export const useTranslationProcess = () => {
             translation,
           })),
         );
-        logger.info(
-          content.completeSegmentMessage({ text: stringifyJson(response) }),
-        );
+        addLog("info", `Translation: ${stringifyJson(response)}`);
       },
       onSegmentSequentialStart(segment) {
-        logger.info(
-          content.startSegmentMessage({ text: segment.originalText }),
-        );
+        addLog("info", `Original: ${segment.originalText}`);
       },
       onSegmentSequentialComplete(segment, translation) {
         setTranslationSegmentField(segment.id, translation);
-        logger.info(content.completeSegmentMessage({ text: translation }));
+        addLog("info", `Translation: ${translation}`);
       },
       onEnd: () => {
         setTranslationProcessStatus("idle");
         setTranslationProcessTranslatingResource(null);
-        logger.info(content.completeMessage);
+        addLog("info", "Translation completed");
         notifications.show({ message: content.completeMessage });
       },
       onStop: () => {
         setTranslationProcessStatus("idle");
         setTranslationProcessTranslatingResource(null);
-        logger.info(content.stopMessage);
+        addLog("info", "Translation stopped");
         notifications.show({ message: content.stopMessage });
       },
       onError() {
         setTranslationProcessStatus("idle");
         setTranslationProcessTranslatingResource(null);
-        logger.error(content.errorMessage);
+        addLog("error", "Translation error");
         notifications.show({ message: content.errorMessage });
       },
     });

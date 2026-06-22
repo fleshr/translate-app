@@ -1,4 +1,4 @@
-import { insert, t, type Dictionary } from "intlayer";
+import { t, type Dictionary } from "intlayer";
 
 export default {
   key: "useTranslationProcess",
@@ -22,14 +22,6 @@ export default {
     notFoundMessage: t({
       en: "Translator not found",
       ru: "Переводчик не найден",
-    }),
-    startSegmentMessage: t({
-      en: insert("Original: {{text}}"),
-      ru: insert("Оригинал: {{text}}"),
-    }),
-    completeSegmentMessage: t({
-      en: insert("Translation: {{text}}"),
-      ru: insert("Перевод: {{text}}"),
     }),
     alreadyTranslatingMessage: t({
       en: "Translation is already in progress",

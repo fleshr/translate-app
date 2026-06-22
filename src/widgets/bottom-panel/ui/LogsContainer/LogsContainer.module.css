@@ -8,9 +8,9 @@
 }
 
 [data-mantine-color-scheme="dark"] .text {
-  --text-color-error: var(--mantine-color-red-4);
+  --text-color-error: var(--mantine-color-red-5);
   --text-color-debug: var(--mantine-color-violet-4);
-  --text-color-info: var(--mantine-color-dark-2);
+  --text-color-info: var(--mantine-color-dark-1);
 }
 
 .text[data-type="error"] {
@@ -23,4 +23,8 @@
 
 .text[data-type="info"] {
   --text-color: var(--text-color-info);
+}
+
+.text {
+  color: var(--text-color);
 }
