@@ -1,5 +1,5 @@
 import { initProject } from "@/entities/project";
-import { initTranslation } from "@/entities/translation";
+import { initFiles, initTranslation } from "@/entities/translation";
 import {
   getTranslationCommonMock,
   getTranslationFileMock,
@@ -7,7 +7,6 @@ import {
 import { useTranslationProcessStore } from "@/features/translation-process";
 import { projectFileExtension } from "@/shared/config/project";
 import { render, resetStore } from "@/shared/lib/testing";
-import { initFiles } from "@/shared/model/filesStore";
 import { initSession } from "@/shared/model/sessionStore";
 import { notifications } from "@mantine/notifications";
 import userEvent from "@testing-library/user-event";
@@ -16,7 +15,6 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { parseProjectFile } from "../../lib/parseProjectFile";
 import { OpenProjectButton } from "./OpenProjectButton";
 
-vi.mock("@/shared/model/filesStore", { spy: true });
 vi.mock("@/shared/model/sessionStore", { spy: true });
 vi.mock("@/entities/project", { spy: true });
 vi.mock("@/entities/translation", { spy: true });

@@ -1,11 +1,13 @@
 import { resolveParser, type Parser } from "@/entities/parser";
 import { useProjectStore } from "@/entities/project";
 import { getProjectStoreStateMock } from "@/entities/project/mocks";
-import { useTranslationStore } from "@/entities/translation";
-import { getTranslationStoreStateMock } from "@/entities/translation/mocks";
+import { useFilesStore, useTranslationStore } from "@/entities/translation";
+import {
+  getFilesStoreStateMock,
+  getTranslationStoreStateMock,
+} from "@/entities/translation/mocks";
 import { useTranslationProcessStore } from "@/features/translation-process";
 import { render, resetStore } from "@/shared/lib/testing";
-import { useFilesStore } from "@/shared/model/filesStore";
 import { notifications } from "@mantine/notifications";
 import userEvent from "@testing-library/user-event";
 import { fileSave } from "browser-fs-access";
@@ -18,6 +20,7 @@ const testParser = { name: "test" } as Parser;
 
 const testTranslationStore = getTranslationStoreStateMock();
 const testProjectStore = getProjectStoreStateMock();
+const testFilesStore = getFilesStoreStateMock();
 
 const common1 = testTranslationStore.resources.byId["common-1"]!;
 const file1 = testTranslationStore.resources.byId["file-1"]!;
@@ -25,10 +28,6 @@ const file1 = testTranslationStore.resources.byId["file-1"]!;
 const segment1 = testTranslationStore.segments.byId["segment-1"]!;
 const segment2 = testTranslationStore.segments.byId["segment-2"]!;
 const segment3 = testTranslationStore.segments.byId["segment-3"]!;
-
-const testFiles = {
-  "files/file-1": new TextEncoder().encode("content-1").buffer,
-};
 
 vi.mock("@/entities/parser", { spy: true });
 vi.mocked(resolveParser).mockResolvedValue(testParser);
@@ -38,8 +37,8 @@ vi.mocked(exportResourcesToZip).mockResolvedValue(testBlob);
 
 describe("widgets/header/ui/ExportButton", () => {
   beforeEach(() => {
+    useFilesStore.setState(testFilesStore);
     useProjectStore.setState(testProjectStore);
-    useFilesStore.setState({ files: testFiles });
     useTranslationStore.setState(testTranslationStore);
   });
 
@@ -72,7 +71,7 @@ describe("widgets/header/ui/ExportButton", () => {
         { ...common1, segments: [segment1] },
         { ...file1, segments: [segment2, segment3] },
       ],
-      testFiles,
+      testFilesStore.files,
       testParser,
     );
     expect(fileSave).toHaveBeenCalledWith(testBlob, {

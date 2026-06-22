@@ -1,6 +1,10 @@
-export * from "./model/store/actions";
-export * from "./model/store/selectors";
-export { useTranslationStore } from "./model/store/store";
+export * from "./model/translationStore/actions";
+export * from "./model/translationStore/selectors";
+export { useTranslationStore } from "./model/translationStore/store";
+
+export * from "./model/filesStore/actions";
+export * from "./model/filesStore/selectors";
+export { useFilesStore } from "./model/filesStore/store";
 
 export * from "./model/resource/schema";
 export * from "./model/segment/schema";

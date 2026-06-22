@@ -1,9 +1,8 @@
 import { useParserStore } from "@/entities/parser";
 import { getParserStoreStateMock } from "@/entities/parser/mocks";
 import { initProject } from "@/entities/project";
-import { initTranslation } from "@/entities/translation";
+import { initFiles, initTranslation } from "@/entities/translation";
 import { render, resetStore } from "@/shared/lib/testing";
-import { initFiles } from "@/shared/model/filesStore";
 import type { ModuleExternal } from "@/shared/model/module";
 import { initSession } from "@/shared/model/sessionStore";
 import { notifications } from "@mantine/notifications";
@@ -14,7 +13,6 @@ import { CreateProjectForm } from "./CreateProjectForm";
 const testStore = getParserStoreStateMock();
 const testParser = testStore.parsers["test1@1.0.0"] as ModuleExternal;
 
-vi.mock("@/shared/model/filesStore", { spy: true });
 vi.mock("@/shared/model/sessionStore", { spy: true });
 vi.mock("@/entities/project", { spy: true });
 vi.mock("@/entities/translation", { spy: true });

@@ -2,11 +2,10 @@ import { resolveParser } from "@/entities/parser";
 import { getParserMock } from "@/entities/parser/mocks";
 import { useProjectStore } from "@/entities/project";
 import { getProjectStoreStateMock } from "@/entities/project/mocks";
-import { initTranslation } from "@/entities/translation";
+import { initFiles, initTranslation } from "@/entities/translation";
 import { getTranslationFileMock } from "@/entities/translation/mocks";
 import { useTranslationProcessStore } from "@/features/translation-process";
 import { render, resetStore } from "@/shared/lib/testing";
-import { initFiles } from "@/shared/model/filesStore";
 import { initSession } from "@/shared/model/sessionStore";
 import { notifications } from "@mantine/notifications";
 import userEvent from "@testing-library/user-event";
@@ -31,7 +30,6 @@ vi.mocked(extractResources).mockResolvedValue([testResource]);
 vi.mock("../../lib/getResourcesFiles");
 vi.mocked(getResourcesFiles).mockResolvedValue(testFiles);
 
-vi.mock("@/shared/model/filesStore", { spy: true });
 vi.mock("@/shared/model/sessionStore", { spy: true });
 vi.mock("@/entities/translation", { spy: true });
 
