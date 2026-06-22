@@ -1,11 +1,10 @@
-import { initProject } from "@/entities/project";
+import { initProject, PROJECT_FILE_EXTENSION } from "@/entities/project";
 import { initFiles, initTranslation } from "@/entities/translation";
 import {
   getTranslationCommonMock,
   getTranslationFileMock,
 } from "@/entities/translation/mocks";
 import { useTranslationProcessStore } from "@/features/translation-process";
-import { projectFileExtension } from "@/shared/config/project";
 import { render, resetStore } from "@/shared/lib/testing";
 import { initSession } from "@/shared/model/sessionStore";
 import { notifications } from "@mantine/notifications";
@@ -73,7 +72,7 @@ describe("widgets/header/ui/OpenProjectButton", () => {
     await userEvent.click(button);
 
     expect(fileOpen).toHaveBeenCalledWith({
-      extensions: [projectFileExtension],
+      extensions: [PROJECT_FILE_EXTENSION],
     });
     expect(parseProjectFile).toHaveBeenCalledWith(testFile);
   });
