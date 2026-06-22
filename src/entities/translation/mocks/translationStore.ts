@@ -1,5 +1,5 @@
 import { createMockFactory } from "@/shared/lib/testing";
-import type { State } from "../model/store/store";
+import type { State } from "../model/translationStore/store";
 import {
   getTranslationBaseCommonMock,
   getTranslationBaseFileMock,

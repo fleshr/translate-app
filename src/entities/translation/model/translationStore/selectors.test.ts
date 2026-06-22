@@ -22,7 +22,7 @@ const segment1 = testStore.segments.byId["segment-1"]!;
 const segment2 = testStore.segments.byId["segment-2"]!;
 const segment3 = testStore.segments.byId["segment-3"]!;
 
-describe("entities/translation/model/store/selectors", () => {
+describe("entities/translation/model/translationStore/selectors", () => {
   describe("selectBaseResource", () => {
     it("should return base resource", () => {
       const resource = selectBaseResource("file-1")(testStore);
