@@ -10,16 +10,15 @@ export interface State {
   parsers: Record<string, Module>;
 }
 
-export const defaultState: State = { parsers: builtinParsersMeta };
+export const defaultState: State = {
+  parsers: builtinParsersMeta,
+};
 
 export const useParserStore = createWithEqualityFn<State>()(
   devtools(
     persist(
       immer(() => defaultState),
-      {
-        name: "parserStore",
-        storage: createJSONStorage(() => idbStorage),
-      },
+      { name: "parserStore", storage: createJSONStorage(() => idbStorage) },
     ),
     { name: "parserStore" },
   ),

@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
+import { immer } from "zustand/middleware/immer";
 
 export interface State {
   files: Record<string, ArrayBuffer>;
@@ -10,5 +11,8 @@ export const defaultState: State = {
 };
 
 export const useFilesStore = create<State>()(
-  devtools(() => defaultState, { name: "filesStore" }),
+  devtools(
+    immer(() => defaultState),
+    { name: "filesStore" },
+  ),
 );
