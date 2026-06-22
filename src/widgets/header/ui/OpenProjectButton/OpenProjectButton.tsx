@@ -1,10 +1,9 @@
-import { initProject } from "@/entities/project";
+import { initProject, PROJECT_FILE_EXTENSION } from "@/entities/project";
 import { initFiles, initTranslation } from "@/entities/translation";
 import {
   selectIsTranslating,
   useTranslationProcessStore,
 } from "@/features/translation-process";
-import { projectFileExtension } from "@/shared/config/project";
 import { initSession } from "@/shared/model/sessionStore";
 import { ActionIconWithTooltip } from "@/shared/ui/ActionIconWithTooltip";
 import { notifications } from "@mantine/notifications";
@@ -20,7 +19,7 @@ export const OpenProjectButton = () => {
   const handleOpenProject = async () => {
     try {
       const projectFile = await fileOpen({
-        extensions: [projectFileExtension],
+        extensions: [PROJECT_FILE_EXTENSION],
       });
       const { files, project, resources } = await parseProjectFile(projectFile);
 

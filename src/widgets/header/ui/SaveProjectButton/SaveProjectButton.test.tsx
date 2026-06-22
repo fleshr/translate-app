@@ -1,4 +1,8 @@
-import { selectProject, useProjectStore } from "@/entities/project";
+import {
+  PROJECT_FILE_EXTENSION,
+  selectProject,
+  useProjectStore,
+} from "@/entities/project";
 import { getProjectStoreStateMock } from "@/entities/project/mocks";
 import { useFilesStore, useTranslationStore } from "@/entities/translation";
 import {
@@ -6,7 +10,6 @@ import {
   getTranslationBaseFileMock,
 } from "@/entities/translation/mocks";
 import { useTranslationProcessStore } from "@/features/translation-process";
-import { projectFileExtension } from "@/shared/config/project";
 import { render, resetStore } from "@/shared/lib/testing";
 import { notifications } from "@mantine/notifications";
 import userEvent from "@testing-library/user-event";
@@ -80,7 +83,7 @@ describe("widgets/header/ui/SaveProjectButton", () => {
       [{ ...testFile, segments: [] }],
     );
     expect(fileSave).toHaveBeenCalledWith(testBlob, {
-      fileName: `project${projectFileExtension}`,
+      fileName: `project${PROJECT_FILE_EXTENSION}`,
     });
     expect(notifications.show).toHaveBeenCalled();
   });

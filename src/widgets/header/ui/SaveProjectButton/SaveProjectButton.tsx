@@ -1,4 +1,8 @@
-import { selectProject, useProjectStore } from "@/entities/project";
+import {
+  PROJECT_FILE_EXTENSION,
+  selectProject,
+  useProjectStore,
+} from "@/entities/project";
 import {
   selectFiles,
   selectResources,
@@ -9,7 +13,6 @@ import {
   selectIsTranslating,
   useTranslationProcessStore,
 } from "@/features/translation-process";
-import { projectFileExtension } from "@/shared/config/project";
 import { ActionIconWithTooltip } from "@/shared/ui/ActionIconWithTooltip";
 import { notifications } from "@mantine/notifications";
 import { IconDeviceFloppy } from "@tabler/icons-react";
@@ -29,7 +32,7 @@ export const SaveProjectButton = () => {
 
       const projectFile = await generateProjectFile(files, project, resources);
       await fileSave(projectFile, {
-        fileName: `project${projectFileExtension}`,
+        fileName: `project${PROJECT_FILE_EXTENSION}`,
       });
 
       notifications.show({ message: content.savedMessage });
