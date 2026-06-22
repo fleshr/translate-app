@@ -1,10 +1,10 @@
+import { selectProject, useProjectStore } from "@/entities/project";
 import { useTranslationStore } from "@/entities/translation";
 import { getTranslationBaseFileMock } from "@/entities/translation/mocks";
 import { useTranslationProcessStore } from "@/features/translation-process";
 import { projectFileExtension } from "@/shared/config/project";
 import { render, resetStore } from "@/shared/lib/testing";
 import { useFilesStore } from "@/shared/model/filesStore";
-import { selectProject, useProjectStore } from "@/shared/model/projectStore";
 import { notifications } from "@mantine/notifications";
 import userEvent from "@testing-library/user-event";
 import { fileSave } from "browser-fs-access";
@@ -17,7 +17,7 @@ const testBlob = new Blob(["test"]);
 const testProject = { parser: "test" };
 const testFiles = { "files/file-1": new TextEncoder().encode("test").buffer };
 
-vi.mock("@/shared/model/projectStore", { spy: true });
+vi.mock("@/entities/project", { spy: true });
 vi.mock("@/entities/translation", { spy: true });
 vi.mock("../../lib/generateProjectFile", { spy: true });
 

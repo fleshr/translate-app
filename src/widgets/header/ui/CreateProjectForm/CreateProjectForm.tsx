@@ -1,7 +1,7 @@
 import { selectParser, selectParsers, useParserStore } from "@/entities/parser";
+import { initProject } from "@/entities/project";
 import { initTranslation } from "@/entities/translation";
 import { initFiles } from "@/shared/model/filesStore";
-import { initProject } from "@/shared/model/projectStore";
 import { initSession } from "@/shared/model/sessionStore";
 import {
   Button,

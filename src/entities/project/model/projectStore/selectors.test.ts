@@ -5,7 +5,7 @@ import { type State } from "./store";
 
 const testStore: State = { parser: getModuleExternalMock() };
 
-describe("shared/model/projectStore/selectors", () => {
+describe("entities/project/model/projectStore/selectors", () => {
   describe("selectProjectParser", () => {
     it("should return project parser", () => {
       const parser = selectProjectParser(testStore);

@@ -1,6 +1,6 @@
+import type { Project } from "@/entities/project";
 import type { TranslationResource } from "@/entities/translation";
 import { stringifyJson } from "@/shared/lib/json";
-import type { Project } from "@/shared/model/project";
 import JSZip from "jszip";
 
 export const generateProjectFile = async (

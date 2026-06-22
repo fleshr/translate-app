@@ -6,7 +6,7 @@ import { useProjectStore } from "./store";
 
 const testModule = getModuleExternalMock();
 
-describe("shared/model/projectStore/actions", () => {
+describe("entities/project/model/projectStore/actions", () => {
   afterEach(() => {
     resetStore(useProjectStore);
   });
