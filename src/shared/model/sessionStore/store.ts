@@ -1,7 +1,6 @@
+import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import { createWithEqualityFn } from "zustand/traditional";
-import { shallow } from "zustand/vanilla/shallow";
 import type { Id } from "../common";
 
 export interface State {
@@ -14,10 +13,9 @@ export const defaultState: State = {
   selectedSegment: null,
 };
 
-export const useSessionStore = createWithEqualityFn<State>()(
+export const useSessionStore = create<State>()(
   devtools(
     immer(() => defaultState),
     { name: "sessionStore" },
   ),
-  shallow,
 );
