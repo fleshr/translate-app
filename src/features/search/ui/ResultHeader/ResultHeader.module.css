@@ -1,0 +1,7 @@
+.container {
+  padding: 0 4px;
+  border-radius: 4px;
+  background-color: var(--mantine-color-dark-filled);
+  color: var(--mantine-color-white);
+  flex-wrap: nowrap;
+}
