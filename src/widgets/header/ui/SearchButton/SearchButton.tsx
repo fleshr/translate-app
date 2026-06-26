@@ -1,3 +1,4 @@
+import { SearchPanel } from "@/features/search";
 import {
   selectIsTranslating,
   useTranslationProcessStore,
@@ -7,7 +8,6 @@ import { Modal } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconListSearch } from "@tabler/icons-react";
 import { useIntlayer } from "react-intlayer";
-import { SearchPanel } from "../SearchPanel/SearchPanel";
 
 export const SearchButton = () => {
   const content = useIntlayer("SearchButton");
