@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ScriptEditor } from "./ScriptEditor";
 
 const meta = {
-  title: "widgets/header/ScriptEditor",
+  title: "features/script-editor/ScriptEditor",
   component: ScriptEditor,
 } satisfies Meta<typeof ScriptEditor>;
 

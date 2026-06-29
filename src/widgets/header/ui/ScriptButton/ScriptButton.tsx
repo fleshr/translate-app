@@ -1,3 +1,4 @@
+import { ScriptEditor } from "@/features/script-editor";
 import {
   selectIsTranslating,
   useTranslationProcessStore,
@@ -7,7 +8,6 @@ import { Modal } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconCode, IconX } from "@tabler/icons-react";
 import { useIntlayer } from "react-intlayer";
-import { ScriptEditor } from "../ScriptEditor/ScriptEditor";
 import classes from "./ScriptButton.module.css";
 
 export const ScriptButton = () => {

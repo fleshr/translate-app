@@ -26,7 +26,7 @@ const segments = [
 vi.mock("@/entities/translation");
 vi.mocked(selectSegments).mockReturnValue(segments);
 
-describe("widgets/header/ui/ScriptEditor", () => {
+describe("features/script-editor/ui/ScriptEditor", () => {
   afterEach(() => {
     useTranslationStore.setState(useTranslationStore.getInitialState());
   });
