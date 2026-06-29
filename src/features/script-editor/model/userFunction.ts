@@ -3,5 +3,7 @@ import { createAsyncFunctionSchema } from "@/shared/lib/schema";
 import { z } from "zod";
 
 export const UserFunctionSchema = createAsyncFunctionSchema(
-  z.function({ input: [TranslationSegmentSchema] }),
+  z.function({ input: [TranslationSegmentSchema], output: z.void() }),
 );
+
+export type UserFunction = z.infer<typeof UserFunctionSchema>;

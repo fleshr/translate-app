@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ScriptEditor } from "./ScriptEditor";
+import { EditorToolbar } from "./EditorToolbar";
 
 const meta = {
-  title: "widgets/header/ScriptEditor",
-  component: ScriptEditor,
-} satisfies Meta<typeof ScriptEditor>;
+  title: "features/script-editor/EditorToolbar",
+  component: EditorToolbar,
+} satisfies Meta<typeof EditorToolbar>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
