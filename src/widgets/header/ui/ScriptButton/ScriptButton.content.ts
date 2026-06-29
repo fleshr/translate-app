@@ -7,5 +7,9 @@ export default {
       en: "User script",
       ru: "Пользовательский скрипт",
     }),
+    closeLabel: t({
+      en: "Close",
+      ru: "Закрыть",
+    }),
   },
 } satisfies Dictionary;

@@ -35,10 +35,10 @@ export const ScriptButton = () => {
       >
         <ScriptEditor />
         <ActionIconWithTooltip
-          label="Close"
-          variant="default"
           size="md"
           onClick={close}
+          variant="default"
+          label={content.closeLabel}
           className={classes.closeButton}
         >
           <IconX size={18} />
