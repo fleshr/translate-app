@@ -22,11 +22,11 @@ const content = `
 </xscript>
 `;
 
-const buffer = new TextEncoder().encode(content).buffer;
+const sourceContent = new TextEncoder().encode(content);
 
 describe("entities/parser/lib/EntisParser/extractText", () => {
   it("should extract text", () => {
-    const result = extractText(buffer);
+    const result = extractText(sourceContent);
     expect(result).toMatchSnapshot();
   });
 });

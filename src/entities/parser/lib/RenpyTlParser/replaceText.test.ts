@@ -27,12 +27,12 @@ translate russian strings:
     new ""
 `;
 
-const buffer1 = new TextEncoder().encode(content1).buffer;
-const buffer2 = new TextEncoder().encode(content2).buffer;
+const sourceContent1 = new TextEncoder().encode(content1);
+const sourceContent2 = new TextEncoder().encode(content2);
 
 describe("entities/parser/lib/RenpyTlParser/replaceText", () => {
   it("should replace text", () => {
-    const result1 = replaceText(buffer1, [
+    const result1 = replaceText(sourceContent1, [
       {
         position: { end: 157, start: 157 },
         original: "You've created a new Ren'Py game.",
@@ -48,7 +48,7 @@ describe("entities/parser/lib/RenpyTlParser/replaceText", () => {
 
     expect(new TextDecoder("utf-8").decode(result1)).toMatchSnapshot();
 
-    const result2 = replaceText(buffer2, [
+    const result2 = replaceText(sourceContent2, [
       {
         position: { end: 128, start: 128 },
         original: "Test",
