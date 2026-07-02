@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { EntisParser } from "./EntisParser";
+import { replaceText } from "./replaceText";
 
 const content = `
 <?xml version="1.0" encoding="utf-8"?>
@@ -24,19 +24,9 @@ const content = `
 
 const buffer = new TextEncoder().encode(content).buffer;
 
-describe("entities/parser/lib/EntisParser", () => {
-  it("should check file", () => {
-    expect(EntisParser.checkFile(new File(["test"], "test.srcxml"))).toBe(true);
-    expect(EntisParser.checkFile(new File(["test"], "test.js"))).toBe(false);
-  });
-
-  it("should extract text", () => {
-    const result = EntisParser.extractText(buffer);
-    expect(result).toMatchSnapshot();
-  });
-
+describe("entities/parser/lib/EntisParser/replaceText", () => {
   it("should replace text", () => {
-    const result = EntisParser.replaceText(buffer, [
+    const result = replaceText(buffer, [
       {
         position: { end: 134, start: 125 },
         original: "testText1",
