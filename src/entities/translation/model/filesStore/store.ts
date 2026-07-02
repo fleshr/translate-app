@@ -3,7 +3,7 @@ import { devtools } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 export interface State {
-  files: Record<string, ArrayBuffer>;
+  files: Record<string, Uint8Array<ArrayBuffer>>;
 }
 
 export const defaultState: State = {

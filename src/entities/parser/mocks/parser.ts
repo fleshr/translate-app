@@ -6,7 +6,7 @@ const mockParser: Parser = {
   version: "1.0.0",
   shortName: "test",
   checkFile: () => true,
-  replaceText: () => new ArrayBuffer(),
+  replaceText: () => new Uint8Array(),
   extractText: () => [],
 };
 
