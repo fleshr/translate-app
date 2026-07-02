@@ -16,16 +16,16 @@ const testResources = [
   getTranslationFileMock({ id: "file-1", relPath: "files/file-1" }),
 ];
 
-const testBuffer = new TextEncoder().encode("content-1").buffer;
+const testFile = new TextEncoder().encode("content-1");
 
-const testFile = await JSZip()
+const testProjectFile = await JSZip()
   .file("project.json", stringifyJson(testProject))
   .file("resources.json", stringifyJson(testResources))
-  .file("resources/files/file-1", testBuffer)
+  .file("resources/files/file-1", testFile)
   .generateAsync({ type: "blob" });
 
 const testNoMetaFile = await JSZip()
-  .file("resources/files/file-1", testBuffer)
+  .file("resources/files/file-1", testFile)
   .generateAsync({ type: "blob" });
 
 const testNoResourcesFile = await JSZip()
@@ -48,12 +48,12 @@ describe("widgets/header/lib/parseProjectFile", () => {
 
   it("should parse project file", async () => {
     const { project, resources, files } = await parseProjectFile(
-      new File([testFile], "test.zip"),
+      new File([testProjectFile], "test.zip"),
     );
 
     expect(project).toEqual(testProject);
     expect(resources).toEqual(testResources);
     expect(files).toHaveProperty("files/file-1");
-    expect(files["files/file-1"]).toEqual(testBuffer);
+    expect(files["files/file-1"]).toEqual(testFile);
   });
 });

@@ -22,11 +22,11 @@ const content = `
 </xscript>
 `;
 
-const buffer = new TextEncoder().encode(content).buffer;
+const sourceContent = new TextEncoder().encode(content);
 
 describe("entities/parser/lib/EntisParser/replaceText", () => {
   it("should replace text", () => {
-    const result = replaceText(buffer, [
+    const result = replaceText(sourceContent, [
       {
         position: { end: 134, start: 125 },
         original: "testText1",

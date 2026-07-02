@@ -11,7 +11,7 @@ import { mapToReplacement } from "./mapToReplacement";
 
 export const exportResourcesToZip = async (
   resources: TranslationResource[],
-  files: Record<string, ArrayBuffer>,
+  files: Record<string, Uint8Array<ArrayBuffer>>,
   parser: Parser,
 ): Promise<Blob> => {
   const zip = new JSZip();

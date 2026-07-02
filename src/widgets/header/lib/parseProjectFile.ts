@@ -11,7 +11,7 @@ export const parseProjectFile = async (
 ): Promise<{
   project: Project;
   resources: TranslationResource[];
-  files: Record<string, ArrayBuffer>;
+  files: Record<string, Uint8Array<ArrayBuffer>>;
 }> => {
   const zip = await loadAsync(file);
 
@@ -27,7 +27,7 @@ export const parseProjectFile = async (
     parseJson(resourcesJson),
   );
 
-  const files: Record<string, ArrayBuffer> = {};
+  const files: Record<string, Uint8Array<ArrayBuffer>> = {};
 
   for (const resource of resources) {
     const { relPath, type } = resource;
@@ -39,7 +39,8 @@ export const parseProjectFile = async (
         throw new Error("Resource file not found");
       }
 
-      files[relPath] = await zip.files[zipPath].async("arraybuffer");
+      const buffer = await zip.files[zipPath].async("arraybuffer");
+      files[relPath] = new Uint8Array(buffer);
     }
   }
 

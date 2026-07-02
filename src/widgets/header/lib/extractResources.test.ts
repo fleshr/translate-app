@@ -3,10 +3,6 @@ import { nanoid } from "nanoid";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { extractResources } from "./extractResources";
 
-vi.mock("../readFile", () => ({
-  readFile: vi.fn(() => Promise.resolve(new Uint8Array())),
-}));
-
 let idPrefix = 1;
 vi.mocked(nanoid).mockImplementation(() => `id-${idPrefix++}`);
 
@@ -15,7 +11,7 @@ const mockedParser = vi.mocked<Parser>({
   version: "1.0.0",
   shortName: "mock",
   checkFile: vi.fn(() => true),
-  replaceText: vi.fn(() => new ArrayBuffer()),
+  replaceText: vi.fn(() => new Uint8Array()),
   extractText: vi.fn(() => [
     {
       text: "test",

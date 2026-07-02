@@ -27,15 +27,15 @@ translate russian strings:
     new ""
 `;
 
-const buffer1 = new TextEncoder().encode(content1).buffer;
-const buffer2 = new TextEncoder().encode(content2).buffer;
+const sourceContent1 = new TextEncoder().encode(content1);
+const sourceContent2 = new TextEncoder().encode(content2);
 
 describe("entities/parser/lib/RenpyTlParser/extractText", () => {
   it("should extract text", () => {
-    const result1 = extractText(buffer1);
+    const result1 = extractText(sourceContent1);
     expect(result1).toMatchSnapshot();
 
-    const result2 = extractText(buffer2);
+    const result2 = extractText(sourceContent2);
     expect(result2).toMatchSnapshot();
   });
 });

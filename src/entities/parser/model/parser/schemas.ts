@@ -44,15 +44,15 @@ export const ParserShema = z.object({
 
   extractText: createFunctionSchema(
     z.function({
-      input: [z.instanceof(ArrayBuffer)],
+      input: [z.instanceof(Uint8Array<ArrayBuffer>)],
       output: ExtractedSegmentSchema.array(),
     }),
   ),
 
   replaceText: createFunctionSchema(
     z.function({
-      input: [z.instanceof(ArrayBuffer), ReplacementSchema.array()],
-      output: z.instanceof(ArrayBuffer),
+      input: [z.instanceof(Uint8Array<ArrayBuffer>), ReplacementSchema.array()],
+      output: z.instanceof(Uint8Array<ArrayBuffer>),
     }),
   ),
 });

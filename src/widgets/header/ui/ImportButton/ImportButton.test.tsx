@@ -18,7 +18,7 @@ import { ImportButton } from "./ImportButton";
 const testFile = new File(["test"], "file.js");
 const testParser = getParserMock();
 const testResource = getTranslationFileMock();
-const testFiles = { test: new TextEncoder().encode("test").buffer };
+const testFiles = { test: new TextEncoder().encode("test") };
 const testProjectStore = getProjectStoreStateMock();
 
 vi.mock("@/entities/parser", { spy: true });

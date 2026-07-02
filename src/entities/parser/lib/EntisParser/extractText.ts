@@ -1,10 +1,12 @@
 import type { ExtractedSegment } from "../../model/parser/types";
 
-export const extractText = (buffer: ArrayBuffer): ExtractedSegment[] => {
+export const extractText = (
+  source: Uint8Array<ArrayBuffer>,
+): ExtractedSegment[] => {
   const textRegex = /text="([^"]+)"/dg;
   const nameRegex = /name="([^"]+)"/dg;
 
-  const content = new TextDecoder("utf-8").decode(buffer);
+  const content = new TextDecoder("utf-8").decode(source);
   const segments: ExtractedSegment[] = [];
 
   for (const match of content.matchAll(textRegex)) {
