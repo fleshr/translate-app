@@ -1,0 +1,35 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`entities/parser/lib/RenpyTlParser/extractText > should extract text 1`] = `
+[
+  {
+    "position": {
+      "end": 157,
+      "start": 157,
+    },
+    "text": "You've created a new Ren'Py game.",
+    "type": "file",
+  },
+  {
+    "position": {
+      "end": 309,
+      "start": 309,
+    },
+    "text": "Once you add a story, pictures, and music, you can release it to the world!",
+    "type": "file",
+  },
+]
+`;
+
+exports[`entities/parser/lib/RenpyTlParser/extractText > should extract text 2`] = `
+[
+  {
+    "position": {
+      "end": 128,
+      "start": 128,
+    },
+    "text": "Test",
+    "type": "file",
+  },
+]
+`;
