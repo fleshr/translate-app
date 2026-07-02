@@ -1,0 +1,31 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`entities/parser/lib/RenpyTlParser/replaceText > should replace text 1`] = `
+"
+# TODO: Translation updated at 2026-05-26 10:11
+
+# game/script.rpy:27
+translate russian start_a170b500:
+
+    # e "You've created a new Ren'Py game."
+    e "test1"
+
+# game/script.rpy:29
+translate russian start_f41f55d7:
+
+    # e "Once you add a story, pictures, and music, you can release it to the world!"
+    e "test2"
+"
+`;
+
+exports[`entities/parser/lib/RenpyTlParser/replaceText > should replace text 2`] = `
+"
+# TODO: Translation updated at 2026-05-26 10:11
+
+translate russian strings:
+
+    # game/options.rpy:15
+    old "Test"
+    new "test1"
+"
+`;

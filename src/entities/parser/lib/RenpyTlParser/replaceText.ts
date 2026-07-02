@@ -1,0 +1,22 @@
+import type { Replacement } from "../../model/parser/types";
+
+export const replaceText = (
+  buffer: ArrayBuffer,
+  replacements: Replacement[],
+): ArrayBuffer => {
+  let result = new TextDecoder("utf-8").decode(buffer);
+  const sortedReplacements = [...replacements].sort(
+    (a, b) => b.position.start - a.position.start,
+  );
+
+  for (const replacement of sortedReplacements) {
+    const { translation, position } = replacement;
+
+    result =
+      result.slice(0, position.start) +
+      translation +
+      result.slice(position.end);
+  }
+
+  return new TextEncoder().encode(result).buffer;
+};

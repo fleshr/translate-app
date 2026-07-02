@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { RenpyTlParser } from "./RenpyTlParser";
+import { replaceText } from "./replaceText";
 
 const content1 = `
 # TODO: Translation updated at 2026-05-26 10:11
@@ -30,22 +30,9 @@ translate russian strings:
 const buffer1 = new TextEncoder().encode(content1).buffer;
 const buffer2 = new TextEncoder().encode(content2).buffer;
 
-describe("entities/parser/lib/RenpyTlParser", () => {
-  it("should check file", () => {
-    expect(RenpyTlParser.checkFile(new File(["test"], "test.rpy"))).toBe(true);
-    expect(RenpyTlParser.checkFile(new File(["test"], "test.js"))).toBe(false);
-  });
-
-  it("should extract text", () => {
-    const result1 = RenpyTlParser.extractText(buffer1);
-    expect(result1).toMatchSnapshot();
-
-    const result2 = RenpyTlParser.extractText(buffer2);
-    expect(result2).toMatchSnapshot();
-  });
-
+describe("entities/parser/lib/RenpyTlParser/replaceText", () => {
   it("should replace text", () => {
-    const result1 = RenpyTlParser.replaceText(buffer1, [
+    const result1 = replaceText(buffer1, [
       {
         position: { end: 157, start: 157 },
         original: "You've created a new Ren'Py game.",
@@ -61,7 +48,7 @@ describe("entities/parser/lib/RenpyTlParser", () => {
 
     expect(new TextDecoder("utf-8").decode(result1)).toMatchSnapshot();
 
-    const result2 = RenpyTlParser.replaceText(buffer2, [
+    const result2 = replaceText(buffer2, [
       {
         position: { end: 128, start: 128 },
         original: "Test",
