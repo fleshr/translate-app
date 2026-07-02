@@ -46,8 +46,8 @@ const testResources: TranslationResource[] = [
 ];
 
 const testFiles = {
-  "files/file-1": new TextEncoder().encode("content-1").buffer,
-  "files/file-2": new TextEncoder().encode("content-2").buffer,
+  "files/file-1": new TextEncoder().encode("content-1"),
+  "files/file-2": new TextEncoder().encode("content-2"),
 };
 
 const mockParser = vi.mockObject(getParserMock());

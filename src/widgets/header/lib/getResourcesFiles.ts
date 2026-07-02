@@ -3,9 +3,9 @@ import type { TranslationResource } from "@/entities/translation";
 export const getResourcesFiles = async (
   files: File[],
   resources: TranslationResource[],
-): Promise<Record<string, ArrayBuffer>> => {
+): Promise<Record<string, Uint8Array<ArrayBuffer>>> => {
   const filesMap: Record<string, File> = {};
-  const resourceFiles: Record<string, ArrayBuffer> = {};
+  const resourceFiles: Record<string, Uint8Array<ArrayBuffer>> = {};
 
   for (const file of files) {
     filesMap[file.webkitRelativePath] = file;
@@ -19,7 +19,8 @@ export const getResourcesFiles = async (
         throw new Error("Resource file not found");
       }
 
-      resourceFiles[relPath] = await filesMap[relPath].arrayBuffer();
+      const buffer = await filesMap[relPath].arrayBuffer();
+      resourceFiles[relPath] = new Uint8Array(buffer);
     }
   }
 

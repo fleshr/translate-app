@@ -29,7 +29,7 @@ const testResources = [
 ];
 
 const testFiles = {
-  "files/file-1": new TextEncoder().encode("content-1").buffer,
+  "files/file-1": new TextEncoder().encode("content-1"),
 };
 
 const testFile = new File(["test"], "test.zip");

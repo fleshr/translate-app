@@ -4,7 +4,7 @@ import { stringifyJson } from "@/shared/lib/json";
 import JSZip from "jszip";
 
 export const generateProjectFile = async (
-  files: Record<string, ArrayBuffer>,
+  files: Record<string, Uint8Array<ArrayBuffer>>,
   project: Project,
   resources: TranslationResource[],
 ): Promise<Blob> => {

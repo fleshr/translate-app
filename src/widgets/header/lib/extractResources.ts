@@ -26,8 +26,8 @@ export const extractResources = async (
       continue;
     }
 
-    const buffer = await file.arrayBuffer();
-    const segments = parser.extractText(buffer);
+    const source = new Uint8Array(await file.arrayBuffer());
+    const segments = parser.extractText(source);
 
     if (!segments.length) {
       continue;

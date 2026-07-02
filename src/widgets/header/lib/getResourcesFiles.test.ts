@@ -37,7 +37,10 @@ describe("widgets/header/lib/getResourcesFiles", () => {
     expect(files).toHaveProperty("files/file-2");
     expect(files).not.toHaveProperty("files/file-3");
 
-    expect(files["files/file-1"]).toEqual(await testFiles[0]?.arrayBuffer());
-    expect(files["files/file-2"]).toEqual(await testFiles[1]?.arrayBuffer());
+    const fileContent1 = new Uint8Array(await testFiles[0]!.arrayBuffer());
+    const fileContent2 = new Uint8Array(await testFiles[1]!.arrayBuffer());
+
+    expect(files["files/file-1"]).toEqual(fileContent1);
+    expect(files["files/file-2"]).toEqual(fileContent2);
   });
 });
