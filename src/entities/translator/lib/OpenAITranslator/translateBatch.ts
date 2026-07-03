@@ -16,13 +16,20 @@ export const translateBatch = async (
 ): Promise<string[]> => {
   return abortWrapper(async () => {
     const { config = defaultConfig, signal, source, target } = options;
+    const { model, systemPrompt } = config;
+
     const schema = getBatchSchema(input.length);
+    const instructions = prepareInstructions(systemPrompt, {
+      source,
+      target,
+      isBatch: true,
+    });
 
     const { output_text } = await createClient(config).responses.create(
       {
         input: getBatchJson(input),
-        model: config.model,
-        instructions: prepareInstructions(source, target, config),
+        model,
+        instructions,
         stream: false,
         text: { format: zodTextFormat(schema, "response") },
       },

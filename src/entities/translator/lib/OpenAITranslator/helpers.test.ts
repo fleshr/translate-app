@@ -2,6 +2,7 @@ import { APIUserAbortError, OpenAI } from "openai";
 import { describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 import type { Config } from "./config";
+import { batchAddition } from "./constants";
 import {
   abortWrapper,
   createClient,
@@ -11,21 +12,45 @@ import {
   prepareInstructions,
 } from "./helpers";
 
+const systemPrompt1 = "test {source_lang} {target_lang} {batch_addition}";
+const systemPrompt2 = "test {source_lang} {target_lang}";
+
 const testConfig: Config = {
   apiKey: "testKey",
   baseURL: "testUrl",
   model: "testModel",
   promptLang: "en",
-  systemPrompt: "test {source_lang} {target_lang}",
+  systemPrompt: systemPrompt1,
 };
 
 vi.mock("openai", { spy: true });
 
 describe("entities/translator/lib/OpenAITranslator/helpers", () => {
   describe("prepareInstructions", () => {
-    it("should replace tags in instructions", () => {
-      const instructions = prepareInstructions("ja", "en", testConfig);
+    it("should replace only languages tags when not batch", () => {
+      const instructions = prepareInstructions(systemPrompt1, {
+        source: "ja",
+        target: "en",
+      });
       expect(instructions).toBe("test Japanese English");
+    });
+
+    it("should replace languages and batch tags when batch", () => {
+      const instructions = prepareInstructions(systemPrompt1, {
+        source: "ja",
+        target: "en",
+        isBatch: true,
+      });
+      expect(instructions).toBe(`test Japanese English ${batchAddition}`);
+    });
+
+    it("should add batch addition to prompt without batch tag when batch", () => {
+      const instructions = prepareInstructions(systemPrompt2, {
+        source: "ja",
+        target: "en",
+        isBatch: true,
+      });
+      expect(instructions).toBe(`test Japanese English\n${batchAddition}`);
     });
   });
 

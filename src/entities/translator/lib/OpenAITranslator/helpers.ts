@@ -1,21 +1,29 @@
 import { getLanguageLabel } from "@/shared/lib/intl";
 import { parseJson, stringifyJson } from "@/shared/lib/json";
 import type { LanguageCode } from "iso-639-1";
+import { jsonrepair } from "jsonrepair";
 import { APIUserAbortError, OpenAI } from "openai";
 import { fromEntries, fromKeys, map, pipe, times, values } from "remeda";
 import { z } from "zod";
 import type { Config } from "./config";
+import { batchAddition, promptLang, tags } from "./constants";
 
 export const prepareInstructions = (
-  source: LanguageCode,
-  target: LanguageCode,
-  config: Config,
+  systemPrompt: string,
+  options: { source: LanguageCode; target: LanguageCode; isBatch?: boolean },
 ) => {
-  const { systemPrompt, promptLang } = config;
+  let prompt = systemPrompt;
+  const { source, target, isBatch } = options;
 
-  return systemPrompt
-    .replaceAll("{source_lang}", getLanguageLabel(source, promptLang, false))
-    .replaceAll("{target_lang}", getLanguageLabel(target, promptLang, false));
+  if (isBatch && !prompt.includes(tags.batchAddition)) {
+    prompt = `${prompt}\n${tags.batchAddition}`;
+  }
+
+  return prompt
+    .replaceAll(tags.sourceLang, getLanguageLabel(source, promptLang, false))
+    .replaceAll(tags.targetLang, getLanguageLabel(target, promptLang, false))
+    .replaceAll(tags.batchAddition, isBatch ? batchAddition : "")
+    .trim();
 };
 
 export const getBatchSchema = (size: number) => {
@@ -42,7 +50,7 @@ export const parseResponse = (
   response: string,
   schema: z.ZodObject<Record<string, z.ZodString>>,
 ) => {
-  return values(schema.parse(parseJson(response)));
+  return values(schema.parse(parseJson(jsonrepair(response))));
 };
 
 export const createClient = (config: Config) => {

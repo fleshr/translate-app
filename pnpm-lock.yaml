@@ -59,6 +59,9 @@ importers:
       iso-639-1:
         specifier: ^3.1.5
         version: 3.1.5
+      jsonrepair:
+        specifier: ^3.14.1
+        version: 3.14.1
       jszip:
         specifier: ^3.10.1
         version: 3.10.1
@@ -2429,6 +2432,10 @@ packages:
   json5@2.2.3:
     resolution: {integrity: sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==}
     engines: {node: '>=6'}
+    hasBin: true
+
+  jsonrepair@3.14.1:
+    resolution: {integrity: sha512-NpGgMhmzG/fajkBEFlS9jZvMSGDvc2xN/9wNCHZ+Nx32GZfLRELU6UE6dQkebvrQUct9S+7bvnpX29NB36Qbdw==}
     hasBin: true
 
   jszip@3.10.1:
@@ -5457,6 +5464,8 @@ snapshots:
   json-stable-stringify-without-jsonify@1.0.1: {}
 
   json5@2.2.3: {}
+
+  jsonrepair@3.14.1: {}
 
   jszip@3.10.1:
     dependencies:
