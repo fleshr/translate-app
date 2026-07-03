@@ -4,6 +4,7 @@ import { beforeAll, describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 import type { TranslatorOptions } from "../../model/translator";
 import { type Config } from "./config";
+import { batchAddition } from "./constants";
 import { translateBatch } from "./translateBatch";
 
 const testOptions: TranslatorOptions<Config> = {
@@ -65,7 +66,7 @@ describe("entities/translator/lib/OpenAITranslator/translateBatch", () => {
     expect(mockCreate).toHaveBeenCalledWith(
       {
         input: '{\n  "Line1": "test1",\n  "Line2": "test2"\n}',
-        instructions: "test Japanese Russian",
+        instructions: `test Japanese Russian\n${batchAddition}`,
         model: testConfig.model,
         stream: false,
         text: {

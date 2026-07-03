@@ -9,14 +9,16 @@ export const translate = async (
 ): Promise<string> => {
   return abortWrapper(async () => {
     const { config = defaultConfig, signal, source, target } = options;
+    const { model, systemPrompt } = config;
+
+    const instructions = prepareInstructions(systemPrompt, {
+      source,
+      target,
+      isBatch: false,
+    });
 
     const { output_text } = await createClient(config).responses.create(
-      {
-        input,
-        model: config.model,
-        instructions: prepareInstructions(source, target, config),
-        stream: false,
-      },
+      { input, model, instructions, stream: false },
       { signal },
     );
 
