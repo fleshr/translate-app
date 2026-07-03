@@ -1,6 +1,7 @@
 import { getLanguageLabel } from "@/shared/lib/intl";
 import { parseJson, stringifyJson } from "@/shared/lib/json";
 import type { LanguageCode } from "iso-639-1";
+import { jsonrepair } from "jsonrepair";
 import { APIUserAbortError, OpenAI } from "openai";
 import { fromEntries, fromKeys, map, pipe, times, values } from "remeda";
 import { z } from "zod";
@@ -49,7 +50,7 @@ export const parseResponse = (
   response: string,
   schema: z.ZodObject<Record<string, z.ZodString>>,
 ) => {
-  return values(schema.parse(parseJson(response)));
+  return values(schema.parse(parseJson(jsonrepair(response))));
 };
 
 export const createClient = (config: Config) => {
