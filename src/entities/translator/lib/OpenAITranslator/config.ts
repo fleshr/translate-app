@@ -15,7 +15,7 @@ export const defaultConfig: Config = {
   baseURL: "http://127.0.0.1:8080/v1/",
   apiKey: "llama-server",
   model: "sugoitoolkit/Sugoi-14B-Ultra-GGUF:Q4_K_M",
-  systemPrompt: `You are a professional localizer whose primary goal is to translate ${tags.sourceLang} to ${tags.targetLang}. You should use colloquial or slang or nsfw vocabulary if it makes the translation more accurate. Always respond in ${tags.targetLang}. ${tags.batchAddition}`,
+  systemPrompt: `You are a professional localizer translating ${tags.sourceLang} to ${tags.targetLang}. Use colloquial, slang, or NSFW vocabulary where it improves accuracy. Do not add any notes, explanations, disclaimers, or extra text. ${tags.batchAddition}`,
 };
 
 export const configForm: TranslatorConfigForm<Config> = {
