@@ -1,9 +1,10 @@
 import type { ModuleBuiltin } from "@/shared/model/module";
 import { EntisParser } from "../lib/EntisParser";
+import { KAGScenarioParser } from "../lib/KAGScenarioParser";
 import { RenpyTlParser } from "../lib/RenpyTlParser";
 import type { Parser } from "./parser/types";
 
-const parsers = [EntisParser, RenpyTlParser];
+const parsers = [EntisParser, RenpyTlParser, KAGScenarioParser];
 
 export const builtinParsersMeta: Record<string, ModuleBuiltin> =
   Object.fromEntries(

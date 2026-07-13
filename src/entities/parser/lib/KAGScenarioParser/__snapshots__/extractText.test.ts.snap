@@ -1,0 +1,40 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`entities/parser/lib/KAGScenarioParser/extractText > should extract text 1`] = `
+[
+  {
+    "position": {
+      "end": 93,
+      "start": 88,
+    },
+    "text": "text1",
+    "type": "file",
+  },
+  {
+    "position": {
+      "end": 106,
+      "start": 101,
+    },
+    "text": "text2",
+    "type": "file",
+  },
+  {
+    "key": "names",
+    "position": {
+      "end": 50,
+      "start": 45,
+    },
+    "text": "name1",
+    "type": "common",
+  },
+  {
+    "key": "names",
+    "position": {
+      "end": 86,
+      "start": 81,
+    },
+    "text": "name2",
+    "type": "common",
+  },
+]
+`;
