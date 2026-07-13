@@ -6,5 +6,4 @@ export const tags = {
   batchAddition: "{batch_addition}",
 } as const;
 
-export const batchAddition =
-  "I will give you lines of text in the JSON format. Respond with a translated JSON only.";
+export const batchAddition = `You will receive JSON with lines of text. Respond ONLY with a valid JSON object, using exactly the same keys.`;
